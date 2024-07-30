@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Table(name = "locations")
-public class Location extends AbstractEntity{
+public class Location extends AbstractEntity {
     private String country;
     private String city;
     private String region;

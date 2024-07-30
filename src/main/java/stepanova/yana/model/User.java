@@ -16,9 +16,3 @@ public class User extends AbstractEntity {
     private String password;
     private Role role;
 }
-
-enum Role {
-    CUSTOMER,
-    MANAGER,
-    ADMIN
-}
