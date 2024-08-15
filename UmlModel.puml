@@ -1,0 +1,83 @@
+@startuml
+
+abstract class AbstractEntity {
+- id: Long
+}
+
+class Accommodation extends AbstractEntity {
+- type : Type
+- location : Location
+- size : String
+- amenities : List<String>
+- dailyRate : BigDecimal
+- availability : Integer
+}
+
+class Location extends AbstractEntity {
+- country : String
+- city : String
+- region : String
+- zipCode : String
+- address : String
+- description : String
+}
+
+class User extends AbstractEntity {
+- email : String
+- password : String
+- firstName : String
+- lastName : String
+- role: Role
+}
+
+class Booking extends AbstractEntity {
+- checkInDate : LocalDate
+- checkOutDate : LocalDate
+- accommodation : Accommodation
+- user : User
+- status : Status
+}
+
+class Payment {
+- status : Status
+- booking : Booking
+- amount : BigDecimal
+- sessionUrl : URL
+- sessionID : String
+}
+
+enum Type {
+    APARTMENT,
+    GUEST_HOUSE,
+    HOSTEL,
+    HOTEL,
+    HOUSE,
+    VACATION_HOME,
+    VILLA
+}
+
+enum Role {
+    CUSTOMER,
+    MANAGER,
+    ADMIN
+}
+
+enum Status {
+    PENDING,
+    CONFIRMED,
+    CANCELED,
+    EXPIRED,
+    PAID
+}
+
+Accommodation <.. Type
+Accommodation "1" -* "1" Location
+User <.. Role
+Booking "n" -o "1" Accommodation
+User "1" o- "n" Booking
+Booking <.. Status
+AbstractEntity <|-- Payment
+Payment <.. Status
+Payment "1" --* "1" Booking
+
+@enduml
