@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-SIRKA-SPORT-into-locations
+      author: yana-stepanova
+      changes:
+        - insert:
+            tableName: locations
+            columns:
+              - column:
+                  name: country
+                  value: 'Ukraine'
+              - column:
+                  name: city
+                  value: 'Novy Yar'
+              - column:
+                  name: region
+                  value: 'Lviv region'
+              - column:
+                  name: zipcode
+                  value: '81050'
+              - column:
+                  name: address
+                  value: 'Yavorian Lake, SIRKA SPORT'
+              - column:
+                  name: description
+                  value: 'cell: +38(073)8761234, https://sirka.ua, Google Maps(49.951422, 23.488195)'
+  - changeSet:
+      id: insert-LUBO-KRAY-into-locations
+      author: yana-stepanova
+      changes:
+        - insert:
+            tableName: locations
+            columns:
+              - column:
+                  name: country
+                  value: 'Ukraine'
+              - column:
+                  name: city
+                  value: 'Skhidnytsia'
+              - column:
+                  name: region
+                  value: 'Lviv region'
+              - column:
+                  name: zipcode
+                  value: '82391'
+              - column:
+                  name: address
+                  value: 'Boryslavska Street, 81'
+              - column:
+                  name: description
+                  value: 'cell: +38(097)7715102, https://www.lubo-kray.com.ua/'
