@@ -1,7 +1,7 @@
 databaseChangeLog:
   - changeSet:
       id: insert-SIRKA-SPORT-into-locations
-      author: yana-stepanova
+      author: yana_stepanova
       changes:
         - insert:
             tableName: locations

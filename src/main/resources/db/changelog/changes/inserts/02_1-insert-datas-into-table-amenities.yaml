@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-WiFi-into-amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: title
+                  value: 'WiFi'
+              - column:
+                  name: description
+                  value: 'WiFi is free'
+  - changeSet:
+      id: insert-Parking-into-amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: title
+                  value: 'Parking'
+              - column:
+                  name: description
+                  value: 'Private parking'
+  - changeSet:
+      id: insert-Hairdryer-into-amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: title
+                  value: 'Hairdryer'
