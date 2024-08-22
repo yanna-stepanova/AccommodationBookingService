@@ -1,0 +1,24 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-users_roles
+      author: yana_stepanova
+      changes:
+        - createTable:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_accommodations_amenities_accommodations
+                    referencedTableName: accommodations
+                    referencedColumnNames: id
+              - column:
+                  name: amenity_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: fk_accommodations_amenities_amenities
+                    referencedTableName: amenities
+                    referencedColumnNames: id

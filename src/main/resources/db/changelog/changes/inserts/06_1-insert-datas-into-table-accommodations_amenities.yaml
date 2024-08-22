@@ -1,0 +1,146 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-WIFI-for-SIRKA-SPORT-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 1
+              - column:
+                  name: amenity_id
+                  valueNumeric: 1
+  - changeSet:
+      id: insert-Parking(secured)-for-SIRKA-SPORT-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 1
+              - column:
+                  name: amenity_id
+                  valueNumeric: 2
+  - changeSet:
+      id: insert-Hairdryer-for-SIRKA-SPORT-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 1
+              - column:
+                  name: amenity_id
+                  valueNumeric: 3
+
+  - changeSet:
+      id: insert-WIFI-for-LUBO-KRAY(apartmrns)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 2
+              - column:
+                  name: amenity_id
+                  valueNumeric: 1
+  - changeSet:
+     id: insert-Hairdryer-for-LUBO-KRAY(apartmrns)-into-accommodations_amenities
+     author: yana_stepanova
+     changes:
+       - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 2
+              - column:
+                  name: amenity_id
+                  valueNumeric: 3
+  - changeSet:
+      id: insert-Swimming_pool-for-LUBO-KRAY(apartmrns)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 2
+              - column:
+                  name: amenity_id
+                  valueNumeric: 4
+  - changeSet:
+      id: insert-Parking(unsecured)-for-LUBO-KRAY(apartmrns)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 2
+              - column:
+                  name: amenity_id
+                  valueNumeric: 5
+
+  - changeSet:
+      id: insert-WIFI-for-LUBO-KRAY(mansards)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 3
+              - column:
+                  name: amenity_id
+                  valueNumeric: 1
+  - changeSet:
+      id: insert-Hairdryer-for-LUBO-KRAY(mansards)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 3
+              - column:
+                  name: amenity_id
+                  valueNumeric: 3
+  - changeSet:
+      id: insert-Swimming_pool-for-LUBO-KRAY(mansards)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 3
+              - column:
+                  name: amenity_id
+                  valueNumeric: 4
+  - changeSet:
+      id: insert-Parking(unsecured)-for-LUBO-KRAY(mansards)-into-accommodations_amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations_amenities
+            columns:
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 3
+              - column:
+                  name: amenity_id
+                  valueNumeric: 5

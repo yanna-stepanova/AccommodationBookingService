@@ -13,7 +13,7 @@ databaseChangeLog:
                   name: description
                   value: 'WiFi is free'
   - changeSet:
-      id: insert-Parking-into-amenities
+      id: insert-Parking(secured)-into-amenities
       author: yana_stepanova
       changes:
         - insert:
@@ -21,7 +21,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: title
-                  value: 'Parking'
+                  value: 'Parking(secured)'
               - column:
                   name: description
                   value: 'Private parking'
@@ -35,3 +35,29 @@ databaseChangeLog:
               - column:
                   name: title
                   value: 'Hairdryer'
+  - changeSet:
+      id: insert-Swimming_pool-into-amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: title
+                  value: 'Swimming pool'
+              - column:
+                  name: description
+                  value: 'Indoor pool with sauna and Finnish bath'
+  - changeSet:
+      id: insert-Parking(unsecured)-into-amenities
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: amenities
+            columns:
+              - column:
+                  name: title
+                  value: 'Parking(unsecured)'
+              - column:
+                  name: description
+                  value: 'Free parking'

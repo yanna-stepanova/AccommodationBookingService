@@ -2,6 +2,8 @@ package stepanova.yana.model;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
@@ -25,17 +27,22 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLRestriction("is_deleted = FALSE")
 @Table(name = "accommodations")
 public class Accommodation extends AbstractEntity {
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private Type type;
-    @OneToOne
-    @JoinColumn(name = "location_id")
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "location_id", nullable = false)
     private Location location;
+    @Column(nullable = false)
     private String size;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "accommodations_amenities",
             joinColumns = @JoinColumn(name = "accommodation_id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id"))
     private Set<Amenity> amenities = new HashSet<>();
+    @Column(nullable = false)
     private BigDecimal dailyRate;
+    @Column(nullable = false)
     private Integer availability;
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;

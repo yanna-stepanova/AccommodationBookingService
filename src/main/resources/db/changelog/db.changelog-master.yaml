@@ -7,6 +7,14 @@ databaseChangeLog:
       file: /db/changelog/changes/03-create-table-roles.yaml
   - include:
       file: /db/changelog/changes/04-create-table-users.yaml
+  - include:
+      file: /db/changelog/changes/05-create-table-accommodations.yaml
+  - include:
+      file: /db/changelog/changes/06-create-table-accommodations_amenities.yaml
+  - include:
+      file: /db/changelog/changes/07-create-table-bookings.yaml
+  - include:
+      file: /db/changelog/changes/08-create-table-payments.yaml
 
   - include:
       file: db/changelog/changes/inserts/01_1-insert-datas-into-table-locations.yaml
@@ -16,5 +24,12 @@ databaseChangeLog:
       file: db/changelog/changes/inserts/03_1-insert-datas-into-table-roles.yaml
   - include:
       file: db/changelog/changes/inserts/04_1-insert-datas-into-table-users.yaml
-
+  - include:
+      file: db/changelog/changes/inserts/05_1-insert-datas-into-table-accommodations.yaml
+  - include:
+      file: db/changelog/changes/inserts/06_1-insert-datas-into-table-accommodations_amenities.yaml
+  - include:
+      file: /db/changelog/changes/inserts/07_1-insert-datas-into-table-bookings.yaml
+  - include:
+      file: /db/changelog/changes/inserts/08_1-insert-datas-into-table-payments.yaml
 

@@ -58,8 +58,9 @@ class Booking {
 
 class Payment {
 - status : Status
+- dateTimeCreated : LocalDateTime
 - booking : Booking
-- amount : BigDecimal
+- amountToPay : BigDecimal
 - sessionUrl : URL
 - sessionID : String
 - isDeleted : boolean
