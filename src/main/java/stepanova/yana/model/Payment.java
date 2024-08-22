@@ -11,7 +11,6 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDateTime;
-
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.SQLDelete;

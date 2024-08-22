@@ -14,7 +14,7 @@ import org.hibernate.annotations.SQLRestriction;
 @SQLDelete(sql = "UPDATE amenities SET is_deleted = TRUE WHERE id = ?")
 @SQLRestriction("is_deleted = FALSE")
 @Table(name = "amenities")
-public class Amenity extends AbstractEntity{
+public class Amenity extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String title;
     private String description;
