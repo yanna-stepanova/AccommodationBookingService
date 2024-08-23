@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
+                  type: bigserial
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -29,7 +29,7 @@ databaseChangeLog:
                   constraints:
                     nullable: false
               - column:
-                  name: zipcode
+                  name: zip_code
                   type: varchar(5)
               - column:
                   name: address

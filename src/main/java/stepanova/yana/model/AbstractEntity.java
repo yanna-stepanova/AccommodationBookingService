@@ -13,7 +13,7 @@ import lombok.Setter;
 @MappedSuperclass
 public abstract class AbstractEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;

@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: id
-                  type: bigint
+                  type: bigserial
                   autoIncrement: true
                   constraints:
                     primaryKey: true
@@ -20,7 +20,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: location_id
-                  type: bigint
+                  type: bigserial
                   constraints:
                     nullable: false
                     foreignKeyName: fk_accommodations_locations

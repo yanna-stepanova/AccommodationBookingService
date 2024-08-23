@@ -16,7 +16,7 @@ databaseChangeLog:
                   name: region
                   value: 'Lviv region'
               - column:
-                  name: zipcode
+                  name: zip_code
                   value: '81050'
               - column:
                   name: address
@@ -41,7 +41,7 @@ databaseChangeLog:
                   name: region
                   value: 'Lviv region'
               - column:
-                  name: zipcode
+                  name: zip_code
                   value: '82391'
               - column:
                   name: address
