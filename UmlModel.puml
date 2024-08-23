@@ -3,47 +3,67 @@
 abstract class AbstractEntity {
 - id: Long
 }
+interface UserDetails
+interface GrantedAuthority
 
-class Accommodation extends AbstractEntity {
+class Accommodation {
 - type : Type
 - location : Location
 - size : String
-- amenities : List<String>
+- amenities : Set<Amenity>
 - dailyRate : BigDecimal
 - availability : Integer
+- isDeleted : boolean
 }
 
-class Location extends AbstractEntity {
+class Location {
 - country : String
 - city : String
 - region : String
 - zipCode : String
 - address : String
 - description : String
+- isDeleted : boolean
 }
 
-class User extends AbstractEntity {
+class Amenity {
+- title : String
+- description : String
+- isDeleted : boolean
+}
+
+class Role {
+- name : RoleName
+- isDeleted : boolean
+}
+
+
+class User {
 - email : String
 - password : String
 - firstName : String
 - lastName : String
 - role: Role
+- isDeleted : boolean
 }
 
-class Booking extends AbstractEntity {
+class Booking {
 - checkInDate : LocalDate
 - checkOutDate : LocalDate
 - accommodation : Accommodation
 - user : User
 - status : Status
+- isDeleted : boolean
 }
 
 class Payment {
 - status : Status
+- dateTimeCreated : LocalDateTime
 - booking : Booking
-- amount : BigDecimal
+- amountToPay : BigDecimal
 - sessionUrl : URL
 - sessionID : String
+- isDeleted : boolean
 }
 
 enum Type {
@@ -56,7 +76,7 @@ enum Type {
     VILLA
 }
 
-enum Role {
+enum RoleName {
     CUSTOMER,
     MANAGER,
     ADMIN
@@ -70,14 +90,30 @@ enum Status {
     PAID
 }
 
-Accommodation <.. Type
-Accommodation "1" -* "1" Location
-User <.. Role
-Booking "n" -o "1" Accommodation
-User "1" o- "n" Booking
-Booking <.. Status
-AbstractEntity <|-- Payment
-Payment <.. Status
-Payment "1" --* "1" Booking
+note "org.springframework.security.core" as MyNote
+MyNote .. UserDetails
+MyNote .. GrantedAuthority
 
+UserDetails <|.. User
+GrantedAuthority <|.. Role
+
+Booking --|> AbstractEntity
+User -|> AbstractEntity
+Role -|> AbstractEntity
+Accommodation --|> AbstractEntity
+Location --|> AbstractEntity
+Payment --|> AbstractEntity
+Amenity --|> AbstractEntity
+
+User "n" o-- "1" Role
+Booking "n" --o "1" User
+Accommodation "n" --o "n" Amenity
+Accommodation "1" --o "1" Location
+Booking "n" -o "1" Accommodation
+Booking "1" *-- "1" Payment
+
+RoleName .> Role
+Accommodation <. Type
+Status ..> Payment
+Booking <.. Status
 @enduml

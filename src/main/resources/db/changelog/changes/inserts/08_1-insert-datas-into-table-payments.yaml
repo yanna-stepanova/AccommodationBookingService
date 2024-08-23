@@ -1,0 +1,51 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-payment-of-SIRKA-SPORT
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: status
+                  value: 'CONFIRMED'
+              - column:
+                  name: date_time_created
+                  valueDate: 2024-07-14 11:30:00
+              - column:
+                  name: booking_id
+                  valueNumeric: 1
+              - column:
+                  name: amount_to_pay
+                  valueNumeric: 4500
+              - column:
+                  name: session_url
+                  value: 'https://eamole.com/payment_success?session_id=11111'
+              - column:
+                  name: session_id
+                  value: '11111'
+  - changeSet:
+      id: insert-payment-of-LUBO-KRAY(apartmrn)
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: payments
+            columns:
+              - column:
+                  name: status
+                  value: 'PAID'
+              - column:
+                  name: date_time_created
+                  valueDate: 2023-09-01 10:30:00
+              - column:
+                  name: booking_id
+                  valueNumeric: 2
+              - column:
+                  name: amount_to_pay
+                  valueNumeric: 8600
+              - column:
+                  name: session_url
+                  value: 'https://example.com/payment_success?session_id=1235484'
+              - column:
+                  name: session_id
+                  value: '1235484'

@@ -1,0 +1,67 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-SIRKA-SPORT-into-accommodations
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations
+            columns:
+              - column:
+                  name: type
+                  value: 'VACATION_HOME'
+              - column:
+                  name: location_id
+                  valueNumeric: 1
+              - column:
+                  name: size
+                  value: '1 Bedroom'
+              - column:
+                  name: daily_rate
+                  valueNumeric: 4500
+              - column:
+                  name: availability
+                  valueNumeric: 2
+  - changeSet:
+      id: insert-LUBO-KRAY(apartments)-into-accommodations
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations
+            columns:
+              - column:
+                  name: type
+                  value: 'HOTEL'
+              - column:
+                  name: location_id
+                  valueNumeric: 2
+              - column:
+                  name: size
+                  value: 'apartment-room'
+              - column:
+                  name: daily_rate
+                  valueNumeric: 4300
+              - column:
+                  name: availability
+                  valueNumeric: 5
+  - changeSet:
+      id: insert-LUBO-KRAY(mansards)-into-accommodations
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: accommodations
+            columns:
+              - column:
+                  name: type
+                  value: 'HOTEL'
+              - column:
+                  name: location_id
+                  valueNumeric: 2
+              - column:
+                  name: size
+                  value: 'mansard-room'
+              - column:
+                  name: daily_rate
+                  valueNumeric: 3200
+              - column:
+                  name: availability
+                  valueNumeric: 8

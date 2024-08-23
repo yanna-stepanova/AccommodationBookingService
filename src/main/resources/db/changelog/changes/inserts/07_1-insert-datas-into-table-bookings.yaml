@@ -1,0 +1,46 @@
+databaseChangeLog:
+  - changeSet:
+      id: insert-SIRKA-SPORT-into-bookings
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: bookings
+            columns:
+              - column:
+                  name: check_in_date
+                  valueDate: 2024-07-13
+              - column:
+                  name: check_out_date
+                  valueDate: 2024-07-14
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 1
+              - column:
+                  name: user_id
+                  valueNumeric: 1
+              - column:
+                  name: status
+                  value: 'PENDING'
+
+  - changeSet:
+      id: insert-LUBO-KRAY(apartments)-into-bookings
+      author: yana_stepanova
+      changes:
+        - insert:
+            tableName: bookings
+            columns:
+              - column:
+                  name: check_in_date
+                  valueDate: 2023-08-30
+              - column:
+                  name: check_out_date
+                  valueDate: 2023-09-01
+              - column:
+                  name: accommodation_id
+                  valueNumeric: 2
+              - column:
+                  name: user_id
+                  valueNumeric: 1
+              - column:
+                  name: status
+                  value: 'PAID'
