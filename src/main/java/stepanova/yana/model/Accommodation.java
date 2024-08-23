@@ -42,6 +42,4 @@ public class Accommodation extends AbstractEntity {
     private BigDecimal dailyRate;
     @Column(nullable = false)
     private Integer availability;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }

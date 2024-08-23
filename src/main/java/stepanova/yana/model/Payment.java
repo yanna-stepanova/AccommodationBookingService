@@ -37,7 +37,5 @@ public class Payment extends AbstractEntity {
     private URL sessionUrl;
     @Column(nullable = false)
     private String sessionID;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }
 

@@ -1,5 +1,6 @@
 package stepanova.yana.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -14,4 +15,6 @@ public abstract class AbstractEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
+    @Column(name = "is_deleted", nullable = false)
+    private boolean isDeleted;
 }

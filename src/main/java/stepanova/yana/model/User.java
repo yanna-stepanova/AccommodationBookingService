@@ -33,8 +33,6 @@ public class User extends AbstractEntity implements UserDetails {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -63,6 +61,6 @@ public class User extends AbstractEntity implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return !isDeleted;
+        return !this.isDeleted();
     }
 }
