@@ -1,6 +1,6 @@
 databaseChangeLog:
   - changeSet:
-      id: create-table-users_roles
+      id: create-table-accommodations_amenities
       author: yana_stepanova
       changes:
         - createTable:
@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: accommodation_id
-                  type: bigint
+                  type: bigserial
                   constraints:
                     nullable: false
                     foreignKeyName: fk_accommodations_amenities_accommodations
@@ -16,7 +16,7 @@ databaseChangeLog:
                     referencedColumnNames: id
               - column:
                   name: amenity_id
-                  type: bigint
+                  type: bigserial
                   constraints:
                     nullable: false
                     foreignKeyName: fk_accommodations_amenities_amenities

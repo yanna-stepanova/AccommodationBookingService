@@ -25,6 +25,4 @@ public class Location extends AbstractEntity {
     @Column(nullable = false)
     private String address;
     private String description;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }

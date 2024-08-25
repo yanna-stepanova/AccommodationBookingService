@@ -35,13 +35,11 @@ public class Accommodation extends AbstractEntity {
     private String size;
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "accommodations_amenities",
-            joinColumns = @JoinColumn(name = "accommodation_id"),
-            inverseJoinColumns = @JoinColumn(name = "amenity_id"))
+            joinColumns = @JoinColumn(name = "accommodation_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "amenity_id", referencedColumnName = "id"))
     private Set<Amenity> amenities = new HashSet<>();
     @Column(nullable = false)
     private BigDecimal dailyRate;
     @Column(nullable = false)
     private Integer availability;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }

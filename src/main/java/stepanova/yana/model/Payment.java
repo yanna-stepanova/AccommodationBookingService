@@ -33,11 +33,9 @@ public class Payment extends AbstractEntity {
     private Booking booking;
     @Column(nullable = false)
     private BigDecimal amountToPay;
-    @Column(nullable = false)
+    @Column(name = "session_url", nullable = false)
     private URL sessionUrl;
-    @Column(nullable = false)
+    @Column(name = "session_id", nullable = false)
     private String sessionID;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }
 

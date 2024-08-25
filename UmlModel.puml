@@ -2,6 +2,7 @@
 
 abstract class AbstractEntity {
 - id: Long
+- isDeleted : boolean
 }
 interface UserDetails
 interface GrantedAuthority
@@ -13,7 +14,6 @@ class Accommodation {
 - amenities : Set<Amenity>
 - dailyRate : BigDecimal
 - availability : Integer
-- isDeleted : boolean
 }
 
 class Location {
@@ -23,18 +23,15 @@ class Location {
 - zipCode : String
 - address : String
 - description : String
-- isDeleted : boolean
 }
 
 class Amenity {
 - title : String
 - description : String
-- isDeleted : boolean
 }
 
 class Role {
 - name : RoleName
-- isDeleted : boolean
 }
 
 
@@ -44,7 +41,6 @@ class User {
 - firstName : String
 - lastName : String
 - role: Role
-- isDeleted : boolean
 }
 
 class Booking {
@@ -53,7 +49,6 @@ class Booking {
 - accommodation : Accommodation
 - user : User
 - status : Status
-- isDeleted : boolean
 }
 
 class Payment {
@@ -63,7 +58,6 @@ class Payment {
 - amountToPay : BigDecimal
 - sessionUrl : URL
 - sessionID : String
-- isDeleted : boolean
 }
 
 enum Type {
@@ -102,18 +96,19 @@ User -|> AbstractEntity
 Role -|> AbstractEntity
 Accommodation --|> AbstractEntity
 Location --|> AbstractEntity
-Payment --|> AbstractEntity
+AbstractEntity <|- Payment
 Amenity --|> AbstractEntity
 
 User "n" o-- "1" Role
 Booking "n" --o "1" User
+Location "1" o- "1" Accommodation
 Accommodation "n" --o "n" Amenity
-Accommodation "1" --o "1" Location
-Booking "n" -o "1" Accommodation
+Booking "n" --o "1" Accommodation
 Booking "1" *-- "1" Payment
 
 RoleName .> Role
 Accommodation <. Type
+Booking <. Status
 Status ..> Payment
-Booking <.. Status
+
 @enduml

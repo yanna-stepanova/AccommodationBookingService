@@ -34,7 +34,5 @@ public class Booking extends AbstractEntity {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 }
 
