@@ -47,7 +47,7 @@ databaseChangeLog:
                   value: 'Default admin'
               - column:
                   name: password
-                  value: 'admin123'
+                  value: 'current_admin'
               - column:
                   name: role_id
                   valueNumeric: 3
