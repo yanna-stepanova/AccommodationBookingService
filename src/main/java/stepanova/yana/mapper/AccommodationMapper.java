@@ -8,9 +8,13 @@ import stepanova.yana.config.MapperConfig;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.model.Accommodation;
+import stepanova.yana.model.Amenity;
 import stepanova.yana.model.Type;
 
-@Mapper(config = MapperConfig.class)
+import java.util.Set;
+import java.util.stream.Collectors;
+
+@Mapper(config = MapperConfig.class, uses = AmenityMapper.class)
 public interface AccommodationMapper {
     @Mapping(target = "amenities", ignore = true)
     @Mapping(target = "type", ignore = true)
@@ -21,6 +25,18 @@ public interface AccommodationMapper {
         if (requestDto.typeName() != null) {
            accommodation.setType(Type.getByType(requestDto.typeName()));
         }
+    }
+
+    @AfterMapping
+    default void setAmenitySet(@MappingTarget Accommodation accommodation, CreateAccommodationRequestDto requestDto) {
+        if (requestDto.amenities() == null) {
+            accommodation.setAmenities(Set.of());
+            return;
+        }
+        accommodation.setAmenities(requestDto.amenities().stream()
+                .map(Amenity::new)
+                .collect(Collectors.toSet())
+        );
     }
 
     AccommodationDto toDto(Accommodation accommodation);
