@@ -10,7 +10,7 @@ import stepanova.yana.model.Type;
 import java.math.BigDecimal;
 import java.util.Set;
 
-public record CreateAccommodationRequestDto(@NotBlank Type type,
+public record CreateAccommodationRequestDto(@NotBlank String typeName,
                                             @NotNull CreateLocationRequestDto location,
                                             @NotBlank String size,
                                             Set<String> amenities,

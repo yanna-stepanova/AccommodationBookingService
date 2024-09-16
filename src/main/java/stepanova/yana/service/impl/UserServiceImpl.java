@@ -8,15 +8,11 @@ import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.exception.RegistrationException;
 import stepanova.yana.mapper.UserMapper;
-import stepanova.yana.model.Role;
 import stepanova.yana.model.RoleName;
 import stepanova.yana.model.User;
 import stepanova.yana.repository.user.RoleRepository;
 import stepanova.yana.repository.user.UserRepository;
 import stepanova.yana.service.UserService;
-
-import java.util.HashSet;
-import java.util.Set;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +36,6 @@ public class UserServiceImpl implements UserService {
                     String.format("Can't find %s in table roles: ", DEFAULT_ROLE))));
         }
         User savedUser = userRepo.save(user);
-        UserResponseDto userResponseDto = userMapper.toResponseDto(savedUser);
-        return userResponseDto;
+        return userMapper.toResponseDto(savedUser);
     }
 }

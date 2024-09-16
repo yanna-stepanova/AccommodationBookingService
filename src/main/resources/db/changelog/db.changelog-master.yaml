@@ -25,7 +25,7 @@ databaseChangeLog:
   - include:
       file: db/changelog/changes/inserts/04_1-insert-datas-into-table-users.yaml
   - include:
-      file: db/changelog/changes/inserts/04_2-update-password-of-admin.yaml
+      file: db/changelog/changes/inserts/04_2-update-password-of-defualt-users.yaml
   - include:
       file: db/changelog/changes/inserts/05_1-insert-datas-into-table-accommodations.yaml
   - include:

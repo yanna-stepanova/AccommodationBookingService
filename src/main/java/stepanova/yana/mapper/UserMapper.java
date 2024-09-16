@@ -20,9 +20,12 @@ public interface UserMapper {
     default void setRole(@MappingTarget User user, UserRegistrationRequestDto requestDto) {
        Role role = new Role();
        if (requestDto.roleName() == null) {
+           role.setId(1L);
            role.setName(RoleName.ROLE_USER);
        } else {
-           role.setName(requestDto.roleName());
+           RoleName roleNameByType = RoleName.getByType(requestDto.roleName());
+           role.setName(roleNameByType);
+           role.setId((long) roleNameByType.ordinal());
        }
        user.setRole(role);
     }
@@ -32,6 +35,6 @@ public interface UserMapper {
 
     @AfterMapping
     default void setRoleName(@MappingTarget UserResponseDto userDto, User user) {
-        userDto.setRoleName(user.getRole().getName());
+        userDto.setRoleName(user.getRole().getAuthority());
     }
 }
