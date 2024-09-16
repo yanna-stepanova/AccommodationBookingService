@@ -2,13 +2,16 @@ package stepanova.yana.service.impl;
 
 import java.util.List;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.model.Accommodation;
+import stepanova.yana.model.Location;
 import stepanova.yana.repository.accommodation.AccommodationRepository;
+import stepanova.yana.repository.accommodation.LocationRepository;
 import stepanova.yana.service.AccommodationService;
 
 @RequiredArgsConstructor
@@ -16,13 +19,16 @@ import stepanova.yana.service.AccommodationService;
 public class AccommodationServiceImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepo;
     private final AccommodationMapper accommodationMapper;
+    private final LocationRepository locationRepo;
 
     @Override
+    @Transactional
     public AccommodationDto save(CreateAccommodationRequestDto requestDto) {
         Accommodation accommodation = accommodationMapper.toModel(requestDto);
+        Location savedLocation = locationRepo.save(accommodation.getLocation());
+        accommodation.setLocation(savedLocation);
         Accommodation savedAcc = accommodationRepo.save(accommodation);
-        AccommodationDto accommodationDto = accommodationMapper.toDto(savedAcc);
-        return accommodationDto;
+        return accommodationMapper.toDto(savedAcc);
     }
 
     @Override
@@ -31,11 +37,11 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
+    @Transactional
     public List<AccommodationDto> getAll() {
-        List<AccommodationDto> accommodationDtos = accommodationRepo.findAll().stream()
+        return accommodationRepo.findAll().stream()
                 .map(accommodationMapper::toDto)
                 .toList();
-        return accommodationDtos;
     }
 
     @Override
