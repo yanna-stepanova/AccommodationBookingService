@@ -8,7 +8,7 @@ import java.util.List;
 public interface AccommodationService {
     AccommodationDto save(CreateAccommodationRequestDto requestDto);
 
-    AccommodationDto getAccommodationById();
+    AccommodationDto getAccommodationById(Long id);
 
     List<AccommodationDto> getAll();
 

@@ -1,7 +1,6 @@
 package stepanova.yana.repository.accommodation;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
 import stepanova.yana.model.Amenity;
 import java.util.Optional;
 

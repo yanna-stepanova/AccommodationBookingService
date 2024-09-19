@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
+import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -38,7 +39,6 @@ public class AccommodationServiceImpl implements AccommodationService {
                 accommodation.getLocation().getRegion(),
                 accommodation.getLocation().getAddress())
                 .orElseGet(() -> locationRepo.save(accommodation.getLocation()));
-
         accommodation.setLocation(locationFromDB);
 
         Set<Amenity> amenitySet = new HashSet<>();
@@ -49,13 +49,16 @@ public class AccommodationServiceImpl implements AccommodationService {
         }
         accommodation.setAmenities(amenitySet);
 
-        Accommodation savedAcc = accommodationRepo.save(accommodation);
-        return accommodationMapper.toDto(savedAcc);
+        return accommodationMapper.toDto(accommodationRepo.save(accommodation));
     }
 
     @Override
-    public AccommodationDto getAccommodationById() {
-        return null;
+    @Transactional
+    public AccommodationDto getAccommodationById(Long id) {
+        return accommodationRepo.findById(id)
+                .map(accommodationMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Accommodation with id: %s not found", id)));
     }
 
     @Override
@@ -73,6 +76,6 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     public void deleteById(Long id) {
-
+        accommodationRepo.deleteById(id);
     }
 }

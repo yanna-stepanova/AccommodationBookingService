@@ -15,6 +15,7 @@ public class LocationDto implements Serializable {
     private Long id;
     private String country;
     private String city;
+    private String region;
     private String zipCode;
     private String address;
     private String description;
