@@ -32,8 +32,14 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDto save(CreateAccommodationRequestDto requestDto) {
         Accommodation accommodation = accommodationMapper.toModel(requestDto);
 
-        Location savedLocation = locationRepo.save(accommodation.getLocation());
-        accommodation.setLocation(savedLocation);
+        Location locationFromDB = locationRepo.findByCountryContainsIgnoreCaseAndCityContainsIgnoreCaseAndRegionContainsIgnoreCaseAndAddressContainsIgnoreCase(
+                accommodation.getLocation().getCountry(),
+                accommodation.getLocation().getCity(),
+                accommodation.getLocation().getRegion(),
+                accommodation.getLocation().getAddress())
+                .orElseGet(() -> locationRepo.save(accommodation.getLocation()));
+
+        accommodation.setLocation(locationFromDB);
 
         Set<Amenity> amenitySet = new HashSet<>();
         for (Amenity amenity: accommodation.getAmenities()) {
