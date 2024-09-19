@@ -7,6 +7,5 @@ import stepanova.yana.model.Amenity;
 import java.util.Optional;
 
 public interface AmenityRepository extends JpaRepository<Amenity, Long> {
-    @Query(value = "SELECT * FROM amenities a WHERE a.title = :title", nativeQuery = true) //???  or using @EntityGraph
     Optional<Amenity> findByTitleContainsIgnoreCase(@Param("title") String title);
 }
