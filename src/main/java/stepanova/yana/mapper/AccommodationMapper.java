@@ -6,6 +6,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import stepanova.yana.config.MapperConfig;
 import stepanova.yana.dto.accommodation.AccommodationDto;
+import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
@@ -40,4 +41,6 @@ public interface AccommodationMapper {
     }
 
     AccommodationDto toDto(Accommodation accommodation);
+
+    AccommodationDtoWithoutLocationAndAmenities toDtoWithoutLocationAndAmenities(Accommodation accommodation);
 }

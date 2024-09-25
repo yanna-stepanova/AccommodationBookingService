@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import stepanova.yana.dto.accommodation.AccommodationDto;
+import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.service.AccommodationService;
 
@@ -37,7 +38,7 @@ public class AccommodationController {
     @GetMapping
     @Operation(summary = "Get all accommodations in parts",
             description = "Get all the accommodations in parts + using sorting")
-    public List<AccommodationDto> getAll() {
+    public List<AccommodationDtoWithoutLocationAndAmenities> getAll() {
         return accommodationService.getAll();
     }
 

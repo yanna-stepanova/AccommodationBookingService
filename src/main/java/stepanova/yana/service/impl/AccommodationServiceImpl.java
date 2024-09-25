@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
+import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.model.Accommodation;
@@ -63,9 +64,9 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public List<AccommodationDto> getAll() {
+    public List<AccommodationDtoWithoutLocationAndAmenities> getAll() {
         return accommodationRepo.findAll().stream()
-                .map(accommodationMapper::toDto)
+                .map(accommodationMapper::toDtoWithoutLocationAndAmenities)
                 .toList();
     }
 
