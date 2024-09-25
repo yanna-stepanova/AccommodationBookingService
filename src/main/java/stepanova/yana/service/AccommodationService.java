@@ -3,6 +3,7 @@ package stepanova.yana.service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
+import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 
 import java.util.List;
 
@@ -13,7 +14,7 @@ public interface AccommodationService {
 
     List<AccommodationDtoWithoutLocationAndAmenities> getAll();
 
-    AccommodationDto updateAccommodation(Long id, CreateAccommodationRequestDto requestDto);
+    AccommodationDto updateAccommodationById(Long id, UpdateAccommodationRequestDto requestDto);
 
     void deleteById(Long id);
 }

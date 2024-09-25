@@ -7,6 +7,7 @@ import org.mapstruct.MappingTarget;
 import stepanova.yana.config.MapperConfig;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
+import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
@@ -43,4 +44,16 @@ public interface AccommodationMapper {
     AccommodationDto toDto(Accommodation accommodation);
 
     AccommodationDtoWithoutLocationAndAmenities toDtoWithoutLocationAndAmenities(Accommodation accommodation);
+
+    /*@Mapping(target = "amenities", ignore = true)*/
+    @Mapping(target = "type", ignore = true)
+    Accommodation updateAccommodationFromDto(@MappingTarget Accommodation accommodation,
+                                             UpdateAccommodationRequestDto requestDto);
+
+    @AfterMapping
+    default void setTypeUpdate(@MappingTarget Accommodation accommodation, UpdateAccommodationRequestDto requestDto) {
+        if (requestDto.typeName() != null) {
+            accommodation.setType(Type.getByType(requestDto.typeName()));
+        }
+    }
 }

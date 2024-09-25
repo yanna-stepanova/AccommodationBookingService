@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
+import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
@@ -71,8 +72,12 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
-    public AccommodationDto updateAccommodation(Long id, CreateAccommodationRequestDto requestDto) {
-        return null;
+    @Transactional
+    public AccommodationDto updateAccommodationById(Long id, UpdateAccommodationRequestDto requestDto) {
+        Accommodation oldAccommodation = accommodationRepo.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Can't get accommodation by id = " + id));
+        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(oldAccommodation, requestDto);
+        return accommodationMapper.toDto(updatedAccommodation);
     }
 
     @Override
