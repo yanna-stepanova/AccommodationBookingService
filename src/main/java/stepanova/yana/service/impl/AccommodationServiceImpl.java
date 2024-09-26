@@ -2,7 +2,6 @@ package stepanova.yana.service.impl;
 
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 import jakarta.persistence.EntityNotFoundException;
@@ -12,8 +11,13 @@ import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
+import stepanova.yana.dto.accommodation.UpdateAccommodationAndAmenitiesRequestDto;
+import stepanova.yana.dto.accommodation.UpdateAccommodationAndLocationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
+import stepanova.yana.dto.amenity.CreateAmenityRequestDto;
 import stepanova.yana.mapper.AccommodationMapper;
+import stepanova.yana.mapper.AmenityMapper;
+import stepanova.yana.mapper.LocationMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
 import stepanova.yana.model.Location;
@@ -28,7 +32,9 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepo;
     private final AccommodationMapper accommodationMapper;
     private final LocationRepository locationRepo;
+    private final LocationMapper locationMapper;
     private final AmenityRepository amenityRepo;
+    private final AmenityMapper amenityMapper;
 
     @Override
     @Transactional
@@ -45,8 +51,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         Set<Amenity> amenitySet = new HashSet<>();
         for (Amenity amenity: accommodation.getAmenities()) {
-            Amenity amenityFromDB = amenityRepo.findByTitleContainsIgnoreCase(amenity.getTitle())
-                    .orElseGet(() -> amenityRepo.save(amenity));
+            Amenity amenityFromDB = getSavedAmenityByTitle(amenity);
             amenitySet.add(amenityFromDB);
         }
         accommodation.setAmenities(amenitySet);
@@ -74,14 +79,64 @@ public class AccommodationServiceImpl implements AccommodationService {
     @Override
     @Transactional
     public AccommodationDto updateAccommodationById(Long id, UpdateAccommodationRequestDto requestDto) {
-        Accommodation oldAccommodation = accommodationRepo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Can't get accommodation by id = " + id));
+        Accommodation oldAccommodation = getAccommodationByIdFromDB(id);
         Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(oldAccommodation, requestDto);
-        return accommodationMapper.toDto(updatedAccommodation);
+        return accommodationMapper.toDto(accommodationRepo.save(updatedAccommodation));
+    }
+
+    @Override
+    @Transactional
+    public AccommodationDto updateAccommodationById(Long id, UpdateAccommodationAndLocationRequestDto requestDto) {
+        Accommodation oldAccommodation = getAccommodationByIdFromDB(id);
+        Location currentLocation = oldAccommodation.getLocation();
+        if (currentLocation != null) {
+            currentLocation = locationMapper.updateLocationFromDto(currentLocation, requestDto.location());
+        } else {
+            currentLocation = locationMapper.toModel(requestDto.location());
+        }
+        currentLocation = locationRepo.save(currentLocation);
+
+        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(oldAccommodation, requestDto);
+        updatedAccommodation.setLocation(currentLocation);
+        return accommodationMapper.toDto(accommodationRepo.save(updatedAccommodation));
+    }
+
+    @Override
+    @Transactional
+    public AccommodationDto updateAccommodationById(Long id, UpdateAccommodationAndAmenitiesRequestDto requestDto) {
+        Set<Amenity> amenitiesFromDB = getAmenities(requestDto.amenities());
+        Accommodation accommodationFromDB = getAccommodationByIdFromDB(id);
+        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(accommodationFromDB, requestDto);
+        updatedAccommodation.setAmenities(amenitiesFromDB);
+        return accommodationMapper.toDto(accommodationRepo.save(updatedAccommodation));
     }
 
     @Override
     public void deleteById(Long id) {
         accommodationRepo.deleteById(id);
+    }
+
+    private Accommodation getAccommodationByIdFromDB(Long id) {
+        return accommodationRepo.findById(id).orElseThrow(() ->
+                new EntityNotFoundException("Can't get accommodation by id = " + id));
+    }
+
+    @Transactional
+    private Set<Amenity> getAmenities(Set<CreateAmenityRequestDto> amenityRequestDtos) {
+        Set<Amenity> amenitySet = new HashSet<>();
+        for (CreateAmenityRequestDto amenityRequestDto: amenityRequestDtos) {
+            Amenity amenity = amenityMapper.toModel(amenityRequestDto);
+            Amenity amenityFromDB = getSavedAmenityByTitle(amenity);
+            if (amenity.getDescription() != null) {
+                amenityFromDB.setDescription(amenity.getDescription());
+            }
+            amenitySet.add(amenityRepo.save(amenityFromDB));
+        }
+        return amenitySet;
+    }
+
+    private Amenity getSavedAmenityByTitle(Amenity amenity) {
+        return amenityRepo.findByTitleContainsIgnoreCase(amenity.getTitle())
+                .orElseGet(() -> amenityRepo.save(amenity));
     }
 }

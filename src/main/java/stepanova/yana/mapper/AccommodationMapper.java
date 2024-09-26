@@ -7,6 +7,8 @@ import org.mapstruct.MappingTarget;
 import stepanova.yana.config.MapperConfig;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
+import stepanova.yana.dto.accommodation.UpdateAccommodationAndAmenitiesRequestDto;
+import stepanova.yana.dto.accommodation.UpdateAccommodationAndLocationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.model.Accommodation;
@@ -16,7 +18,7 @@ import stepanova.yana.model.Type;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Mapper(config = MapperConfig.class, uses = AmenityMapper.class)
+@Mapper(config = MapperConfig.class, uses = {AmenityMapper.class, LocationMapper.class})
 public interface AccommodationMapper {
     @Mapping(target = "amenities", ignore = true)
     @Mapping(target = "type", ignore = true)
@@ -45,13 +47,37 @@ public interface AccommodationMapper {
 
     AccommodationDtoWithoutLocationAndAmenities toDtoWithoutLocationAndAmenities(Accommodation accommodation);
 
-    /*@Mapping(target = "amenities", ignore = true)*/
+
     @Mapping(target = "type", ignore = true)
     Accommodation updateAccommodationFromDto(@MappingTarget Accommodation accommodation,
                                              UpdateAccommodationRequestDto requestDto);
 
     @AfterMapping
     default void setTypeUpdate(@MappingTarget Accommodation accommodation, UpdateAccommodationRequestDto requestDto) {
+        if (requestDto.typeName() != null) {
+            accommodation.setType(Type.getByType(requestDto.typeName()));
+        }
+    }
+
+    @Mapping(target = "location", ignore = true)
+    @Mapping(target = "type", ignore = true)
+    Accommodation updateAccommodationFromDto(@MappingTarget Accommodation accommodation,
+                                             UpdateAccommodationAndLocationRequestDto requestDto);
+
+    @AfterMapping
+    default void setTypeUpdate(@MappingTarget Accommodation accommodation, UpdateAccommodationAndLocationRequestDto requestDto) {
+        if (requestDto.typeName() != null) {
+            accommodation.setType(Type.getByType(requestDto.typeName()));
+        }
+    }
+
+    @Mapping(target = "amenities", ignore = true)
+    @Mapping(target = "type", ignore = true)
+    Accommodation updateAccommodationFromDto(@MappingTarget Accommodation accommodation,
+                                             UpdateAccommodationAndAmenitiesRequestDto requestDto);
+
+    @AfterMapping
+    default void setTypeUpdate(@MappingTarget Accommodation accommodation, UpdateAccommodationAndAmenitiesRequestDto requestDto) {
         if (requestDto.typeName() != null) {
             accommodation.setType(Type.getByType(requestDto.typeName()));
         }
