@@ -10,5 +10,6 @@ import stepanova.yana.model.Location;
 public interface LocationMapper {
     Location toModel(CreateLocationRequestDto requestDto);
 
-    Location updateLocationFromDto(@MappingTarget Location location, CreateLocationRequestDto requestDto);
+    Location updateLocationFromDto(@MappingTarget Location location,
+                                   CreateLocationRequestDto requestDto);
 }

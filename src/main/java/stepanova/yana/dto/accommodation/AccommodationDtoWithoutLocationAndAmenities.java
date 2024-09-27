@@ -1,17 +1,12 @@
 package stepanova.yana.dto.accommodation;
 
+import java.io.Serializable;
+import java.math.BigDecimal;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import stepanova.yana.dto.amenity.AmenityDto;
-import stepanova.yana.dto.location.LocationDto;
 import stepanova.yana.model.Type;
-
-import java.io.Serializable;
-import java.math.BigDecimal;
-import java.util.HashSet;
-import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor

@@ -1,13 +1,10 @@
 package stepanova.yana.dto.user;
 
+import java.io.Serializable;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import stepanova.yana.model.Role;
-import stepanova.yana.model.RoleName;
-
-import java.io.Serializable;
 
 @AllArgsConstructor
 @NoArgsConstructor

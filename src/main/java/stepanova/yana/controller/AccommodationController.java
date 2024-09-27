@@ -3,9 +3,8 @@ package stepanova.yana.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
-import java.util.List;
-
 import jakarta.validation.constraints.Positive;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -34,7 +33,8 @@ public class AccommodationController {
     @PostMapping
     @Operation(summary = "Create a new accommodation",
             description = "Create a new accommodation entity in the database")
-    public AccommodationDto createAccommodation(@RequestBody @Valid CreateAccommodationRequestDto requestDto) {
+    public AccommodationDto createAccommodation(
+            @RequestBody @Valid CreateAccommodationRequestDto requestDto) {
         return accommodationService.save(requestDto);
     }
 
@@ -55,16 +55,18 @@ public class AccommodationController {
     @PutMapping("/{id}")
     @Operation(summary = "Update an accommodation by id",
             description = "Update just accommodation details")
-    public AccommodationDto updateAccommodation(@PathVariable @Positive Long id,
-                                                    @RequestBody @Valid UpdateAccommodationRequestDto newRequestDto) {
+    public AccommodationDto updateAccommodation(
+            @PathVariable @Positive Long id,
+            @RequestBody @Valid UpdateAccommodationRequestDto newRequestDto) {
         return accommodationService.updateAccommodationById(id, newRequestDto);
     }
 
     @PutMapping("/{id}/all")
     @Operation(summary = "Update an accommodation by id with attached information",
             description = "Update all information of accommodation (location + amenities)")
-    public AccommodationDto updateAccommodation(@PathVariable @Positive Long id,
-                                                @RequestBody @Valid UpdateAllAccommodationRequestDto newRequestDto) {
+    public AccommodationDto updateAccommodation(
+            @PathVariable @Positive Long id,
+            @RequestBody @Valid UpdateAllAccommodationRequestDto newRequestDto) {
         return accommodationService.updateAccommodationById(id, newRequestDto);
     }
 

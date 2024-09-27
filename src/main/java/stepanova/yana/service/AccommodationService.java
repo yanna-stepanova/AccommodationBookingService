@@ -1,12 +1,11 @@
 package stepanova.yana.service;
 
+import java.util.List;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
-
-import java.util.List;
 
 public interface AccommodationService {
     AccommodationDto save(CreateAccommodationRequestDto requestDto);

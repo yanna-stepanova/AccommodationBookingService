@@ -1,11 +1,10 @@
 package stepanova.yana.service.impl;
 
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
@@ -41,7 +40,8 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDto save(CreateAccommodationRequestDto requestDto) {
         Accommodation accommodation = accommodationMapper.toModel(requestDto);
 
-        Location locationFromDB = locationRepo.findByCountryContainsIgnoreCaseAndCityContainsIgnoreCaseAndRegionContainsIgnoreCaseAndAddressContainsIgnoreCase(
+        Location locationFromDB = locationRepo
+                .findByCountryContainsIgnoreCaseAndCityContainsIgnoreCaseAndRegionContainsIgnoreCaseAndAddressContainsIgnoreCase(
                 accommodation.getLocation().getCountry(),
                 accommodation.getLocation().getCity(),
                 accommodation.getLocation().getRegion(),
@@ -77,15 +77,18 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public AccommodationDto updateAccommodationById(Long id, UpdateAccommodationRequestDto requestDto) {
+    public AccommodationDto updateAccommodationById(Long id,
+                                                    UpdateAccommodationRequestDto requestDto) {
         Accommodation accommodationFromDB = getAccommodationByIdFromDB(id);
-        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(accommodationFromDB, requestDto);
+        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(
+                accommodationFromDB, requestDto);
         return accommodationMapper.toDto(accommodationRepo.save(updatedAccommodation));
     }
 
     @Override
     @Transactional
-    public AccommodationDto updateAccommodationById(Long id, UpdateAllAccommodationRequestDto requestDto) {
+    public AccommodationDto updateAccommodationById(Long id,
+                                                    UpdateAllAccommodationRequestDto requestDto) {
         Accommodation accommodationFromDB = getAccommodationByIdFromDB(id);
         Location updatedLocation = getSavedLocation(accommodationFromDB, requestDto.location());
         Set<Amenity> updatedAmenities = getSavedAmenities(requestDto.amenities());
@@ -93,7 +96,8 @@ public class AccommodationServiceImpl implements AccommodationService {
         accommodationFromDB.setLocation(updatedLocation);
         accommodationFromDB.setAmenities(updatedAmenities);
 
-        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(accommodationFromDB, requestDto);
+        Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(
+                accommodationFromDB, requestDto);
         return accommodationMapper.toDto(accommodationRepo.save(updatedAccommodation));
     }
 
@@ -103,14 +107,15 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Transactional
-    private Location getSavedLocation(Accommodation accommodation, CreateLocationRequestDto locationRequestDto) {
+    private Location getSavedLocation(Accommodation accommodation,
+                                      CreateLocationRequestDto locationRequestDto) {
         Location location = accommodation.getLocation();
         if (location != null) {
             location = locationMapper.updateLocationFromDto(location, locationRequestDto);
         } else {
             location = locationMapper.toModel(locationRequestDto);
         }
-       return locationRepo.save(location);
+        return locationRepo.save(location);
     }
 
     private Accommodation getAccommodationByIdFromDB(Long id) {

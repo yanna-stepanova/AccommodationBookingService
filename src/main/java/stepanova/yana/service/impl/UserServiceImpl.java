@@ -24,7 +24,8 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
-    public UserResponseDto register(UserRegistrationRequestDto requestDto) throws RegistrationException {
+    public UserResponseDto register(UserRegistrationRequestDto requestDto)
+            throws RegistrationException {
         if (userRepo.existsByEmail(requestDto.email())) {
             throw new RegistrationException("This user can't be registered");
         }
