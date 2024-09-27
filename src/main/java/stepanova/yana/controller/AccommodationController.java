@@ -19,9 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
-import stepanova.yana.dto.accommodation.UpdateAccommodationAndAmenitiesRequestDto;
-import stepanova.yana.dto.accommodation.UpdateAccommodationAndLocationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
+import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
 import stepanova.yana.service.AccommodationService;
 
 @Tag(name = "Accomodation manager", description = "Endpoints for managing accommodations")
@@ -55,25 +54,17 @@ public class AccommodationController {
 
     @PutMapping("/{id}")
     @Operation(summary = "Update an accommodation by id",
-            description = "Allows updates to accommodation details, including inventory management")
+            description = "Update just accommodation details")
     public AccommodationDto updateAccommodation(@PathVariable @Positive Long id,
                                                     @RequestBody @Valid UpdateAccommodationRequestDto newRequestDto) {
         return accommodationService.updateAccommodationById(id, newRequestDto);
     }
 
-    @PutMapping("/{id}/location")
-    @Operation(summary = "Update an accommodation by id and location",
-            description = "Allows updates to accommodation details, including location")
+    @PutMapping("/{id}/all")
+    @Operation(summary = "Update an accommodation by id with attached information",
+            description = "Update all information of accommodation (location + amenities)")
     public AccommodationDto updateAccommodation(@PathVariable @Positive Long id,
-                                                @RequestBody @Valid UpdateAccommodationAndLocationRequestDto newRequestDto) {
-        return accommodationService.updateAccommodationById(id, newRequestDto);
-    }
-
-    @PutMapping("/{id}/amenities")
-    @Operation(summary = "Update an accommodation by id and amenities",
-            description = "Allows updates to accommodation details, including amenities")
-    public AccommodationDto updateAccommodation(@PathVariable @Positive Long id,
-                                                @RequestBody @Valid UpdateAccommodationAndAmenitiesRequestDto newRequestDto) {
+                                                @RequestBody @Valid UpdateAllAccommodationRequestDto newRequestDto) {
         return accommodationService.updateAccommodationById(id, newRequestDto);
     }
 
