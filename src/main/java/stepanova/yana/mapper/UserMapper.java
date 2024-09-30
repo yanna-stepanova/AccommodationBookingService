@@ -21,11 +21,11 @@ public interface UserMapper {
         Role role = new Role();
         if (requestDto.roleName() == null) {
             role.setId(1L);
-            role.setName(RoleName.ROLE_USER);
+            role.setName(RoleName.CUSTOMER);
         } else {
             RoleName roleNameByType = RoleName.getByType(requestDto.roleName());
             role.setName(roleNameByType);
-            role.setId((long) roleNameByType.ordinal());
+            role.setId((long) roleNameByType.ordinal()+1);
         }
         user.setRole(role);
     }
