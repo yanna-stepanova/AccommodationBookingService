@@ -3,9 +3,8 @@ package stepanova.yana.model;
 import java.util.Objects;
 
 public enum RoleName {
-    ROLE_USER("CUSTOMER"),
-    ROLE_MANAGER("MANAGER"),
-    ROLE_ADMIN("ADMIN");
+    CUSTOMER("CUSTOMER"),
+    ADMIN("ADMIN");
 
     private final String roleName;
 
@@ -19,7 +18,7 @@ public enum RoleName {
 
     public static RoleName getByType(String type) {
         for (RoleName item : RoleName.values()) {
-            if (Objects.equals(item.getRoleName(), type)) {
+            if (Objects.equals(item.getRoleName(), type.toUpperCase())) {
                 return item;
             }
         }

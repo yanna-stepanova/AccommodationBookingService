@@ -6,29 +6,6 @@ databaseChangeLog:
       changes:
           - sql:
              sql: INSERT INTO users (email, first_name, last_name, password, role_id) VALUES ('user@example.com', 'Someone', 'Person', 'user1234', 1);
-
-  - changeSet:
-      id: insert-manager-into-users
-      author: yana_stepanova
-      changes:
-        - insert:
-            tableName: users
-            columns:
-              - column:
-                  name: email
-                  value: 'manager@example.com'
-              - column:
-                  name: first_name
-                  value: 'Current manager'
-              - column:
-                  name: last_name
-                  value: 'Default employee'
-              - column:
-                  name: password
-                  value: 'manager123'
-              - column:
-                  name: role_id
-                  value: 2
   - changeSet:
       id: insert-admin-into-users
       author: yana_stepanova
@@ -50,4 +27,4 @@ databaseChangeLog:
                   value: 'current_admin'
               - column:
                   name: role_id
-                  valueNumeric: 3
+                  valueNumeric: 2

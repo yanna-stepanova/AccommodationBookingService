@@ -23,7 +23,7 @@ public enum Type {
 
     public static Type getByType(String type) {
         for (Type item : Type.values()) {
-            if (Objects.equals(item.getTypeName(), type)) {
+            if (Objects.equals(item.getTypeName(), type.toUpperCase())) {
                 return item;
             }
         }

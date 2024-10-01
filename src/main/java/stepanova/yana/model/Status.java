@@ -21,7 +21,7 @@ public enum Status {
 
     public static Status getByType(String type) {
         for (Status item : Status.values()) {
-            if (Objects.equals(item.getStatusName(), type)) {
+            if (Objects.equals(item.getStatusName(), type.toUpperCase())) {
                 return item;
             }
         }

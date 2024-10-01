@@ -30,7 +30,7 @@ public class User extends AbstractEntity implements UserDetails {
     private String lastName;
     @Column(nullable = false)
     private String password;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.EAGER, optional = false)
     @JoinColumn(name = "role_id", nullable = false)
     private Role role;
 
