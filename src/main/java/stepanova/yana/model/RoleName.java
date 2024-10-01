@@ -4,7 +4,6 @@ import java.util.Objects;
 
 public enum RoleName {
     CUSTOMER("CUSTOMER"),
-    MANAGER("MANAGER"),
     ADMIN("ADMIN");
 
     private final String roleName;

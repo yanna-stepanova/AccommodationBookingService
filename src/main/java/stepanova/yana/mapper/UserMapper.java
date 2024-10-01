@@ -25,7 +25,7 @@ public interface UserMapper {
         } else {
             RoleName roleNameByType = RoleName.getByType(requestDto.roleName());
             role.setName(roleNameByType);
-            role.setId((long) roleNameByType.ordinal()+1);
+            role.setId((long) roleNameByType.ordinal() + 1);
         }
         user.setRole(role);
     }
