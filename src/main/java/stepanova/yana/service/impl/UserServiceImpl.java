@@ -2,9 +2,9 @@ package stepanova.yana.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import stepanova.yana.dto.user.UserProfileRequestDto;
 import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.dto.user.UserRoleRequestDto;
@@ -39,28 +39,25 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow(() -> new EntityNotFoundException(
                     String.format("Can't find %s in table roles: ", DEFAULT_ROLE))));
         }
-        User savedUser = userRepo.save(user);
-        return userMapper.toResponseDto(savedUser);
+        return userMapper.toResponseDto(userRepo.save(user));
     }
 
     @Override
-    public UserResponseDto getUserDetail(String email) {
-        User userFromDB = (User) getUserByEmail(email);
-        return userMapper.toResponseDto(userFromDB);
+    public UserResponseDto getUserDetail(Long id) {
+        return userMapper.toResponseDto(getUserById(id));
     }
 
     @Override
     public UserResponseDto updateUserRole(Long id, UserRoleRequestDto requestDto) {
         User userFromDB = getUserById(id);
-        RoleName roleNameByType = RoleName.getByType(requestDto.roleName());
-        Role roleFromDB = getRoleByName(roleNameByType);
-        userFromDB.setRole(roleFromDB);
+        userFromDB.setRole(getRoleByName(requestDto.roleName()));
         return userMapper.toResponseDto(userRepo.save(userFromDB));
     }
 
-    private UserDetails getUserByEmail(String email) {
-        return userRepo.findByEmail(email).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Can't find %s in table users", email)));
+    @Override
+    public UserResponseDto updateUserProfile(Long id, UserProfileRequestDto requestDto) {
+        return userMapper.toResponseDto(userRepo.save(
+                userMapper.updateUserProfileFromDto(getUserById(id), requestDto)));
     }
 
     private User getUserById(Long id) {
@@ -68,8 +65,9 @@ public class UserServiceImpl implements UserService {
                 String.format("Can't find user by id = %s in table users", id)));
     }
 
-    private Role getRoleByName(RoleName roleName) {
-        return roleRepo.findByName(roleName).orElseThrow(() -> new EntityNotFoundException(
-                String.format("Can't find %s in table roles", roleName)));
+    private Role getRoleByName(String roleName) {
+        return roleRepo.findByName(RoleName.getByType(roleName))
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Can't find %s in table roles", roleName)));
     }
 }
