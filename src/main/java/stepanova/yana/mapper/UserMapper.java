@@ -5,6 +5,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import stepanova.yana.config.MapperConfig;
+import stepanova.yana.dto.user.UserProfileRequestDto;
 import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.model.Role;
@@ -16,22 +17,24 @@ public interface UserMapper {
     @Mapping(target = "role", ignore = true)
     User toModel(UserRegistrationRequestDto requestDto);
 
+    @Mapping(target = "roleName", ignore = true)
+    UserResponseDto toResponseDto(User user);
+
+    User updateUserProfileFromDto(@MappingTarget User user,
+                                  UserProfileRequestDto requestDto);
+
     @AfterMapping
     default void setRole(@MappingTarget User user, UserRegistrationRequestDto requestDto) {
         Role role = new Role();
-        if (requestDto.roleName() == null) {
-            role.setId(1L);
-            role.setName(RoleName.CUSTOMER);
-        } else {
-            RoleName roleNameByType = RoleName.getByType(requestDto.roleName());
-            role.setName(roleNameByType);
-            role.setId((long) roleNameByType.ordinal() + 1);
+        RoleName roleName = RoleName.CUSTOMER;
+        if (requestDto.roleName() != null) {
+            roleName = RoleName.getByType(requestDto.roleName());
         }
+        role.setId((long) roleName.ordinal() + 1);
+        role.setName(roleName);
+
         user.setRole(role);
     }
-
-    @Mapping(target = "roleName", ignore = true)
-    UserResponseDto toResponseDto(User user);
 
     @AfterMapping
     default void setRoleName(@MappingTarget UserResponseDto userDto, User user) {

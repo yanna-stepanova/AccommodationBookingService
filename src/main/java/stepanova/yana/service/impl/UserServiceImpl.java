@@ -4,10 +4,13 @@ import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import stepanova.yana.dto.user.UserProfileRequestDto;
 import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
+import stepanova.yana.dto.user.UserRoleRequestDto;
 import stepanova.yana.exception.RegistrationException;
 import stepanova.yana.mapper.UserMapper;
+import stepanova.yana.model.Role;
 import stepanova.yana.model.RoleName;
 import stepanova.yana.model.User;
 import stepanova.yana.repository.user.RoleRepository;
@@ -36,7 +39,35 @@ public class UserServiceImpl implements UserService {
                     .orElseThrow(() -> new EntityNotFoundException(
                     String.format("Can't find %s in table roles: ", DEFAULT_ROLE))));
         }
-        User savedUser = userRepo.save(user);
-        return userMapper.toResponseDto(savedUser);
+        return userMapper.toResponseDto(userRepo.save(user));
+    }
+
+    @Override
+    public UserResponseDto getUserDetail(Long id) {
+        return userMapper.toResponseDto(getUserById(id));
+    }
+
+    @Override
+    public UserResponseDto updateUserRole(Long id, UserRoleRequestDto requestDto) {
+        User userFromDB = getUserById(id);
+        userFromDB.setRole(getRoleByName(requestDto.roleName()));
+        return userMapper.toResponseDto(userRepo.save(userFromDB));
+    }
+
+    @Override
+    public UserResponseDto updateUserProfile(Long id, UserProfileRequestDto requestDto) {
+        return userMapper.toResponseDto(userRepo.save(
+                userMapper.updateUserProfileFromDto(getUserById(id), requestDto)));
+    }
+
+    private User getUserById(Long id) {
+        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundException(
+                String.format("Can't find user by id = %s in table users", id)));
+    }
+
+    private Role getRoleByName(String roleName) {
+        return roleRepo.findByName(RoleName.getByType(roleName))
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Can't find %s in table roles", roleName)));
     }
 }
