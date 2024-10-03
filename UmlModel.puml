@@ -72,7 +72,6 @@ enum Type {
 
 enum RoleName {
     CUSTOMER,
-    MANAGER,
     ADMIN
 }
 
