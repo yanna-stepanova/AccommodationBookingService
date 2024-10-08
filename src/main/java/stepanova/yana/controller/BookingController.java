@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
-import stepanova.yana.exception.BookingException;
 import stepanova.yana.model.User;
 import stepanova.yana.service.BookingService;
 
@@ -28,7 +27,7 @@ public class BookingController {
     @Operation(summary = "Create a new booking of some accommodation",
             description = "Permits the creation of new accommodation booking")
     public BookingDto createBooking(@AuthenticationPrincipal User user,
-                                    @RequestBody @Valid CreateBookingRequestDto requestDto) throws BookingException {
+                                    @RequestBody @Valid CreateBookingRequestDto requestDto) {
         return bookingService.save(user, requestDto);
     }
 

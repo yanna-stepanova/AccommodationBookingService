@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
-import stepanova.yana.exception.BookingException;
 import stepanova.yana.mapper.BookingMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Booking;
@@ -27,19 +26,20 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     @Transactional
-    public BookingDto save(User user, CreateBookingRequestDto requestDto) throws BookingException {
+    public BookingDto save(User user, CreateBookingRequestDto requestDto) {
         Booking booking = bookingMapper.toModel(requestDto);
         Accommodation accommodationFromDB = getAccommodationById(booking.getAccommodation().getId());
         booking.setAccommodation(accommodationFromDB);
         booking.setUser(user);
         booking.setStatus(Status.PENDING);
         List<Booking> othersBooking = bookingRepo
-                .findAllByAccommodationIdAndFromDateAndToDate(
+                .findAllByAccommodationIdAndStatusAndFromDateAndToDate(
                         booking.getAccommodation().getId(),
+                        Status.CANCELED.getStatusName(),
                         booking.getCheckInDate(),
                         booking.getCheckOutDate());
         if (othersBooking.size() >= accommodationFromDB.getAvailability()) {
-            throw new BookingException("There is no available accommodation for these dates");
+           return bookingMapper.toDto(null);
         }
         return bookingMapper.toDto(bookingRepo.save(booking));
     }
