@@ -2,9 +2,8 @@ package stepanova.yana.validation;
 
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
-import org.springframework.beans.BeanWrapperImpl;
-
 import java.time.LocalDate;
+import org.springframework.beans.BeanWrapperImpl;
 
 public class ValidationBookingDateValidator
         implements ConstraintValidator<ValidationBookingDate, Object> {
@@ -32,7 +31,8 @@ public class ValidationBookingDateValidator
                     "Illegal method signature, expected two parameters of type LocalDate.");
         }
 
-        return (((LocalDate) beginDate).isEqual(LocalDate.now()) || ((LocalDate) beginDate).isAfter(LocalDate.now()))
+        return (((LocalDate) beginDate).isEqual(LocalDate.now())
+                || ((LocalDate) beginDate).isAfter(LocalDate.now()))
                 && ((LocalDate) endDate).isAfter((LocalDate) beginDate);
     }
 }

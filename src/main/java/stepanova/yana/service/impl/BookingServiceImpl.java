@@ -2,6 +2,7 @@ package stepanova.yana.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.booking.BookingDto;
@@ -15,8 +16,6 @@ import stepanova.yana.repository.accommodation.AccommodationRepository;
 import stepanova.yana.repository.booking.BookingRepository;
 import stepanova.yana.service.BookingService;
 
-import java.util.List;
-
 @RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
@@ -28,7 +27,8 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDto save(User user, CreateBookingRequestDto requestDto) {
         Booking booking = bookingMapper.toModel(requestDto);
-        Accommodation accommodationFromDB = getAccommodationById(booking.getAccommodation().getId());
+        Accommodation accommodationFromDB = getAccommodationById(
+                booking.getAccommodation().getId());
         booking.setAccommodation(accommodationFromDB);
         booking.setUser(user);
         booking.setStatus(Status.PENDING);
@@ -39,7 +39,7 @@ public class BookingServiceImpl implements BookingService {
                         booking.getCheckInDate(),
                         booking.getCheckOutDate());
         if (othersBooking.size() >= accommodationFromDB.getAvailability()) {
-           return bookingMapper.toDto(null);
+            return bookingMapper.toDto(null);
         }
         return bookingMapper.toDto(bookingRepo.save(booking));
     }

@@ -9,7 +9,8 @@ import stepanova.yana.model.Booking;
 
 @Mapper(config = MapperConfig.class, uses = {AccommodationMapper.class, UserMapper.class})
 public interface BookingMapper {
-    @Mapping(target = "accommodation", source = "accommodationId", qualifiedByName = "accommodationFromId")
+    @Mapping(target = "accommodation", source = "accommodationId",
+            qualifiedByName = "accommodationFromId")
     Booking toModel(CreateBookingRequestDto requestDto);
 
     BookingDto toDto(Booking booking);
