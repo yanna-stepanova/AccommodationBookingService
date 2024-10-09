@@ -6,8 +6,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@NoArgsConstructor
 @Getter
 @Setter
 @MappedSuperclass
@@ -17,4 +19,8 @@ public abstract class AbstractEntity {
     private Long id;
     @Column(name = "is_deleted", nullable = false)
     private boolean isDeleted;
+
+    public AbstractEntity(Long id) {
+        this.id = id;
+    }
 }
