@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import stepanova.yana.model.Booking;
+import stepanova.yana.model.Status;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "SELECT * FROM bookings b WHERE b.accommodation_id = :accommodationId "
@@ -17,4 +18,9 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
             @Param("statusName") String statusName,
             @Param("fromDate") LocalDate checkInDate,
             @Param("toDate") LocalDate checkOutDate);
+
+    List<Booking> findAllByUserIdAndStatus(Long userId, Status status);
+
+    List<Booking> findAllByUserId(Long userId);
+
 }
