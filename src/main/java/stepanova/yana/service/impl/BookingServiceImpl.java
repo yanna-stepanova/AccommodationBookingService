@@ -3,12 +3,12 @@ package stepanova.yana.service.impl;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.List;
-
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
+import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
 import stepanova.yana.mapper.BookingMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Booking;
@@ -55,8 +55,12 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto getBookingById(Long userId, Long bookingId) {
-        return null;
+    @Transactional
+    public BookingDto getBookingByIdAndUserId(Long userId, Long bookingId) {
+        return bookingRepo.findByIdAndUserId(bookingId, userId)
+                .map(bookingMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Booking with id = %s not found for this user", bookingId)));
     }
 
     @Override
@@ -64,6 +68,35 @@ public class BookingServiceImpl implements BookingService {
         return bookingRepo.findAllByUserId(userId).stream()
                 .map(bookingMapper::toDtoWithoutDetails)
                 .toList();
+    }
+
+    @Override
+    @Transactional
+    public BookingDto getBookingById(Long bookingId) {
+        return bookingRepo.findById(bookingId)
+                .map(bookingMapper::toDto)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Booking with id = %s not found", bookingId)));
+    }
+
+    @Override
+    @Transactional
+    public BookingDto updateBookingById(Long bookingId, UpdateBookingStatusRequestDto requestDto) {
+        Booking bookingFromDB = bookingRepo.findById(bookingId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Booking with id = %s not found", bookingId)));
+        return bookingMapper.toDto(bookingRepo.save(
+                bookingMapper.updateBookingFromDto(bookingFromDB, requestDto)));
+    }
+
+    @Override
+    @Transactional
+    public BookingDto cancelBookingById(Long userId, Long bookingId) {
+        Booking bookingFromDB = bookingRepo.findByIdAndUserId(bookingId, userId)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        String.format("Booking with id = %s not found for this user", bookingId)));
+        bookingFromDB.setStatus(Status.CANCELED);
+        return bookingMapper.toDto(bookingRepo.save(bookingFromDB));
     }
 
     private Accommodation getAccommodationById(Long id) {
