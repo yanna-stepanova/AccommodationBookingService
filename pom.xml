@@ -33,6 +33,7 @@
 		<jjwt.version>0.12.6</jjwt.version>
 		<testcontainers.version>1.19.7</testcontainers.version>
 		<swagger.version>2.6.0</swagger.version>
+		<stripe.version>27.1.0</stripe.version>
 	</properties>
 
 	<dependencies>
@@ -122,6 +123,11 @@
 			<artifactId>jjwt-jackson</artifactId>
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>${stripe.version}</version>
 		</dependency>
 	</dependencies>
 
