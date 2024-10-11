@@ -1,11 +1,13 @@
 package stepanova.yana.mapper;
 
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
+import org.mapstruct.Named;
 import stepanova.yana.config.MapperConfig;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
@@ -72,5 +74,12 @@ public interface AccommodationMapper {
                 .map(Amenity::new)
                 .collect(Collectors.toSet())
         );
+    }
+
+    @Named("accommodationFromId")
+    default Accommodation accommodationFromId(Long accommodationId) {
+        return Optional.ofNullable(accommodationId)
+                .map(Accommodation::new)
+                .orElse(null);
     }
 }
