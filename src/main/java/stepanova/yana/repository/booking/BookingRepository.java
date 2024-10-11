@@ -13,7 +13,7 @@ public interface BookingRepository extends JpaRepository<Booking, Long> {
     @Query(value = "SELECT * FROM bookings b WHERE b.accommodation_id = :accommodationId "
             + "AND b.status <> :statusName "
             + "AND (:fromDate BETWEEN b.check_in_date AND (b.check_out_date - 1) "
-            + "or :toDate BETWEEN (b.check_in_date + 1) and b.check_out_date)", nativeQuery = true)
+            + "OR :toDate BETWEEN (b.check_in_date + 1) AND b.check_out_date)", nativeQuery = true)
     List<Booking> findAllByAccommodationIdAndStatusAndFromDateAndToDate(
             @Param("accommodationId") Long accommodationId,
             @Param("statusName") String statusName,
