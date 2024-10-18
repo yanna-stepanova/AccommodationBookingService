@@ -79,7 +79,7 @@ public class BookingController {
     @Operation(summary = "Update a booking by id",
             description = "Updates status of booking by id (only for admin)")
     public BookingDto updateBooking(@PathVariable @Positive Long id,
-                                    @RequestBody UpdateBookingStatusRequestDto requestDto) {
+                                    @RequestBody @Valid UpdateBookingStatusRequestDto requestDto) {
         return bookingService.updateBookingById(id, requestDto);
     }
 
