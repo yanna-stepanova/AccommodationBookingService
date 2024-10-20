@@ -9,6 +9,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.util.List;
 
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -81,6 +82,14 @@ public class PaymentServiceImpl implements PaymentService {
         }
         return String.format("Payment for sessionId = %s can be made later"
                 + " (but the session is available for only 24 hours)", sessionId);
+    }
+
+    @Override
+    @Transactional
+    public List<PaymentDto> getAllByUser(Long userId) {
+        return paymentRepo.findAllByUserId(userId).stream()
+                .map(paymentMapper::toDto)
+                .toList();
     }
 
     private Payment getPaymentByBookingId(Long bookingId) {

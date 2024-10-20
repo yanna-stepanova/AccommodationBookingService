@@ -5,6 +5,7 @@ import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
 
 import java.net.MalformedURLException;
+import java.util.List;
 
 public interface PaymentService {
     PaymentDto save(Long userId, CreatePaymentRequestDto requestDto) throws MalformedURLException, StripeException;
@@ -13,4 +14,5 @@ public interface PaymentService {
 
     String getCancel(Long userId, String sessionId);
 
+    List<PaymentDto> getAllByUser(Long userId);
 }
