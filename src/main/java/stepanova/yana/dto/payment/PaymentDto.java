@@ -22,5 +22,5 @@ public class PaymentDto {
     private AccommodationDtoWithoutAvailability accommodation;
     private BigDecimal amountToPay;
     private String sessionUrl;
-    private String sessionId;
+    private String sessionID;
 }

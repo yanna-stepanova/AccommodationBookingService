@@ -8,7 +8,7 @@ databaseChangeLog:
             columns:
               - column:
                   name: status
-                  value: 'CONFIRMED'
+                  value: 'PAID'
               - column:
                   name: date_time_created
                   valueDate: 2024-07-14 11:30:00
