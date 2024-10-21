@@ -36,6 +36,7 @@
 		<stripe.version>27.1.0</stripe.version>
 		<checkstyle.version>10.18.2</checkstyle.version>
 		<maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
+		<java-dotenv.version>5.2.2</java-dotenv.version>
 	</properties>
 
 	<dependencies>
@@ -131,6 +132,12 @@
 			<artifactId>stripe-java</artifactId>
 			<version>${stripe.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>io.github.cdimascio</groupId>
+			<artifactId>java-dotenv</artifactId>
+			<version>${java-dotenv.version}</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

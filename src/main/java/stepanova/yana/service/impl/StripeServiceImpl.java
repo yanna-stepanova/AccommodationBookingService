@@ -6,15 +6,14 @@ import com.stripe.model.Customer;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
+import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 import stepanova.yana.model.Booking;
-import stepanova.yana.model.Status;
 import stepanova.yana.service.StripeService;
 
 @RequiredArgsConstructor
@@ -25,12 +24,9 @@ public class StripeServiceImpl implements StripeService {
     private static final String HOST = "localhost:8080";
     private static final String PATH = "/api/payments/";
 
-    @Value("${stripe.test.key}")
-    private String stripeTestKey;
-
     @PostConstruct
     public void init() {
-        Stripe.apiKey = stripeTestKey;
+        Stripe.apiKey = Dotenv.load().get("STRIPE_SECRET_KEY");
     }
 
     @Override
@@ -73,9 +69,7 @@ public class StripeServiceImpl implements StripeService {
 
     @Override
     public Session getSession(String sessionId) throws StripeException {
-        Session session = Session.retrieve(sessionId);
-        session.setPaymentStatus(Status.PAID.getStatusName());
-        return session;
+        return Session.retrieve(sessionId);
     }
 
     private String generateUrl(String resultUrl) {

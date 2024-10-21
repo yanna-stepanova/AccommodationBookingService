@@ -41,7 +41,6 @@ public class PaymentServiceImpl implements PaymentService {
                                 requestDto.bookingId())));
         Payment payment = getPaymentByBookingId(bookingFromDB.getId());
         if (!Status.PAID.equals(payment.getStatus())) {
-            //payment = new Payment();
             if (payment.getId() == null) {
                 Period daysOfBooking = Period.between(
                         bookingFromDB.getCheckInDate(),

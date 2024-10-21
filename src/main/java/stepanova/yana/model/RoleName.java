@@ -3,8 +3,8 @@ package stepanova.yana.model;
 import java.util.Objects;
 
 public enum RoleName {
-    CUSTOMER("CUSTOMER"),
-    ADMIN("ADMIN");
+    ADMIN("ADMIN"),
+    CUSTOMER("CUSTOMER");
 
     private final String roleName;
 
