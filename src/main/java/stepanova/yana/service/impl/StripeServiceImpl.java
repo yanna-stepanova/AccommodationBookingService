@@ -6,8 +6,8 @@ import com.stripe.model.Customer;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
-import com.stripe.param.checkout.SessionUpdateParams;
 import jakarta.annotation.PostConstruct;
+import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -16,8 +16,6 @@ import org.springframework.web.util.UriComponentsBuilder;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Status;
 import stepanova.yana.service.StripeService;
-
-import java.math.BigDecimal;
 
 @RequiredArgsConstructor
 @Service
@@ -36,7 +34,8 @@ public class StripeServiceImpl implements StripeService {
     }
 
     @Override
-    public Customer createCustomer(String customerEmail, String customerName) throws StripeException {
+    public Customer createCustomer(String customerEmail, String customerName)
+            throws StripeException {
         CustomerCreateParams params = CustomerCreateParams.builder()
                 .setEmail(customerEmail)
                 .setName(customerName)
@@ -45,7 +44,8 @@ public class StripeServiceImpl implements StripeService {
     }
 
     @Override
-    public Session createPaymentSession(Booking booking, BigDecimal amountToPay) throws StripeException {
+    public Session createPaymentSession(Booking booking, BigDecimal amountToPay)
+            throws StripeException {
         SessionCreateParams params = SessionCreateParams.builder()
                 .setMode(SessionCreateParams.Mode.PAYMENT)
                 .addPaymentMethodType(SessionCreateParams.PaymentMethodType.CARD)
@@ -61,7 +61,8 @@ public class StripeServiceImpl implements StripeService {
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
                                 .setCurrency(CURRENCY)
                                 .setUnitAmountDecimal(amountToPay)
-                                .setProductData(SessionCreateParams.LineItem.PriceData.ProductData.builder()
+                                .setProductData(
+                                        SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                         .setName("Booking of accommodation")
                                         .build())
                                 .build())

@@ -3,15 +3,13 @@ package stepanova.yana.service.impl;
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
 import jakarta.persistence.EntityNotFoundException;
-
+import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.time.Period;
 import java.util.List;
-
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
@@ -42,7 +40,7 @@ public class PaymentServiceImpl implements PaymentService {
                         String.format("Booking with id = %s not found for this user",
                                 requestDto.bookingId())));
         Payment payment = getPaymentByBookingId(bookingFromDB.getId());
-        if (!Status.PAID.equals(payment.getStatus())){
+        if (!Status.PAID.equals(payment.getStatus())) {
             //payment = new Payment();
             if (payment.getId() == null) {
                 Period daysOfBooking = Period.between(
@@ -50,7 +48,8 @@ public class PaymentServiceImpl implements PaymentService {
                         bookingFromDB.getCheckOutDate());
                 BigDecimal amountToPay = bookingFromDB.getAccommodation().getDailyRate().multiply(
                         BigDecimal.valueOf(daysOfBooking.getDays()));
-                Session paymentSession = stripeService.createPaymentSession(bookingFromDB, amountToPay);
+                Session paymentSession = stripeService.createPaymentSession(bookingFromDB,
+                        amountToPay);
                 payment.setDateTimeCreated(LocalDateTime.now());
                 payment.setBooking(bookingFromDB);
                 payment.setAmountToPay(amountToPay);
@@ -67,9 +66,11 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentDto getSuccess(Long userId, String sessionId) throws StripeException {
         Payment paymentFromDB = getBySessionAndUser(sessionId, userId);
-        Status statusFromSession = Status.getByType(stripeService.getSession(sessionId).getPaymentStatus());
+        Status statusFromSession = Status.getByType(stripeService.getSession(sessionId)
+                .getPaymentStatus());
         paymentFromDB.setStatus(statusFromSession);
-        Booking bookingFromDB = bookingRepo.findById(paymentFromDB.getBooking().getId()).get();
+        Booking bookingFromDB = bookingRepo.findById(paymentFromDB.getBooking().getId())
+                .get();
         bookingFromDB.setStatus(statusFromSession);
         bookingRepo.save(bookingFromDB);
         return paymentMapper.toDto(paymentRepo.save(paymentFromDB));
@@ -98,9 +99,9 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private Payment getBySessionAndUser(String sessionId, Long userId) {
-        return paymentRepo.findBySessionIDAndUserId(sessionId, userId)
+        return paymentRepo.findBySessionIdAndUserId(sessionId, userId)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        String.format("There isn't such payment session by id = %s for user_id = %s",
+                        String.format("There isn't such payment session by id = %s for userId = %s",
                                 sessionId, userId)));
     }
 }
