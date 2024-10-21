@@ -8,7 +8,7 @@ import stepanova.yana.model.Payment;
 
 @Mapper(config = MapperConfig.class, uses = BookingMapper.class)
 public interface PaymentMapper {
-        @Mapping(source = "booking.id", target = "bookingId")
-        @Mapping(source = "booking.accommodation", target = "accommodation")
-        PaymentDto toDto(Payment payment);
+    @Mapping(source = "booking.id", target = "bookingId")
+    @Mapping(source = "booking.accommodation", target = "accommodation")
+    PaymentDto toDto(Payment payment);
 }

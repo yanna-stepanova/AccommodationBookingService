@@ -5,6 +5,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
+import java.net.MalformedURLException;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -17,13 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
-import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.model.User;
 import stepanova.yana.service.PaymentService;
-import stepanova.yana.validation.FieldsValueMatch;
-
-import java.net.MalformedURLException;
-import java.util.List;
 
 @Tag(name = "Payment manager", description = "Endpoints for managing payments")
 @RequiredArgsConstructor
@@ -37,7 +34,8 @@ public class PaymentController {
     @Operation(summary = "Create payment session",
             description = "Initiates payment sessions for booking transactions(unpaid)")
     public PaymentDto createPayment(@AuthenticationPrincipal User user,
-                                    @RequestBody @Valid CreatePaymentRequestDto requestDto) throws MalformedURLException, StripeException {
+                                    @RequestBody @Valid CreatePaymentRequestDto requestDto)
+            throws MalformedURLException, StripeException {
         return paymentService.save(user.getId(), requestDto);
     }
 
