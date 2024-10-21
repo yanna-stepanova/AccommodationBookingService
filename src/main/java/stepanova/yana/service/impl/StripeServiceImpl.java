@@ -27,7 +27,7 @@ public class StripeServiceImpl implements StripeService {
     private static final String HOST = "localhost:8080";
     private static final String PATH = "/api/payments/";
 
-    @Value("${STRIPE_SECRET_KEY}")
+    @Value("${stripe.test.key}")
     private String stripeSecretKey;
 
     @PostConstruct
