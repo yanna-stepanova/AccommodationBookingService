@@ -23,6 +23,7 @@ public class StripeServiceImpl implements StripeService {
     private static final String HTTP = "http";
     private static final String HOST = "localhost:8080";
     private static final String PATH = "/api/payments/";
+    private static final String STATUS_PAID = "paid";
 
     @PostConstruct
     public void init() {
@@ -69,7 +70,9 @@ public class StripeServiceImpl implements StripeService {
 
     @Override
     public Session getSession(String sessionId) throws StripeException {
-        return Session.retrieve(sessionId);
+        Session session = Session.retrieve(sessionId);
+        session.setPaymentStatus(STATUS_PAID);
+        return session;
     }
 
     private String generateUrl(String resultUrl) {
