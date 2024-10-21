@@ -37,6 +37,8 @@
 		<checkstyle.version>10.18.2</checkstyle.version>
 		<maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
 		<java-dotenv.version>5.2.2</java-dotenv.version>
+		<telegrambots-spring-boot-starter.version>6.9.7.1</telegrambots-spring-boot-starter.version>
+		<telegrambots-abilities.version>7.10.0</telegrambots-abilities.version>
 	</properties>
 
 	<dependencies>
@@ -136,6 +138,16 @@
 			<groupId>io.github.cdimascio</groupId>
 			<artifactId>java-dotenv</artifactId>
 			<version>${java-dotenv.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots-spring-boot-starter</artifactId>
+			<version>${telegrambots-spring-boot-starter.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.telegram</groupId>
+			<artifactId>telegrambots-abilities</artifactId>
+			<version>${telegrambots-abilities.version}</version>
 		</dependency>
 
 	</dependencies>
