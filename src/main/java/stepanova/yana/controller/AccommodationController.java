@@ -23,7 +23,7 @@ import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
 import stepanova.yana.service.AccommodationService;
 
-@Tag(name = "Accomodation manager", description = "Endpoints for managing accommodations")
+@Tag(name = "Accommodation manager", description = "Endpoints for managing accommodations")
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/accommodations")

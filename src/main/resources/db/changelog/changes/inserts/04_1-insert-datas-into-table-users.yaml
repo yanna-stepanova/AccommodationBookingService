@@ -1,12 +1,5 @@
 databaseChangeLog:
   - changeSet:
-      id: insert-customer-into-users
-      author: yana_stepanova
-      dbms: postgresql
-      changes:
-          - sql:
-             sql: INSERT INTO users (email, first_name, last_name, password, role_id) VALUES ('user@example.com', 'Someone', 'Person', 'user1234', 1);
-  - changeSet:
       id: insert-admin-into-users
       author: yana_stepanova
       changes:
@@ -27,4 +20,11 @@ databaseChangeLog:
                   value: 'current_admin'
               - column:
                   name: role_id
-                  valueNumeric: 2
+                  valueNumeric: 1
+  - changeSet:
+      id: insert-customer-into-users
+      author: yana_stepanova
+      dbms: postgresql
+      changes:
+        - sql:
+            sql: INSERT INTO users (email, first_name, last_name, password, role_id) VALUES ('user@example.com', 'Someone', 'Person', 'user1234', 2);

@@ -33,6 +33,9 @@
 		<jjwt.version>0.12.6</jjwt.version>
 		<testcontainers.version>1.19.7</testcontainers.version>
 		<swagger.version>2.6.0</swagger.version>
+		<stripe.version>27.1.0</stripe.version>
+		<checkstyle.version>10.18.2</checkstyle.version>
+		<maven-checkstyle-plugin.version>3.5.0</maven-checkstyle-plugin.version>
 	</properties>
 
 	<dependencies>
@@ -57,7 +60,7 @@
 		<dependency>
 			<groupId>com.puppycrawl.tools</groupId>
 			<artifactId>checkstyle</artifactId>
-			<version>10.17.0</version>
+			<version>${checkstyle.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.postgresql</groupId>
@@ -123,6 +126,11 @@
 			<version>${jjwt.version}</version>
 			<scope>runtime</scope>
 		</dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>${stripe.version}</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -159,7 +167,7 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
-				<version>3.3.1</version>
+				<version>${maven-checkstyle-plugin.version}</version>
 				<executions>
 					<execution>
 						<phase>compile</phase>

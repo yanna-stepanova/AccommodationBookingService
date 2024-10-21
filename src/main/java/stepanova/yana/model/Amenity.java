@@ -20,8 +20,6 @@ public class Amenity extends AbstractEntity {
     @Column(nullable = false, unique = true)
     private String title;
     private String description;
-    @Column(name = "is_deleted", nullable = false)
-    private boolean isDeleted;
 
     public Amenity(String title) {
         this.title = title;
