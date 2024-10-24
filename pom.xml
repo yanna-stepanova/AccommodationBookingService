@@ -137,7 +137,10 @@
 			<artifactId>java-dotenv</artifactId>
 			<version>${java-dotenv.version}</version>
 		</dependency>
-
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-docker-compose</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
