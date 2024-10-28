@@ -149,7 +149,6 @@
 			<artifactId>telegrambots-abilities</artifactId>
 			<version>${telegrambots-abilities.version}</version>
 		</dependency>
-
 	</dependencies>
 
 	<build>

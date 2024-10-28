@@ -21,7 +21,7 @@ import stepanova.yana.service.StripeService;
 public class StripeServiceImpl implements StripeService {
     private static final String CURRENCY = "UAH";
     private static final String HTTP = "http";
-    private static final String HOST = "localhost:8080";
+    private static final String HOST = "localhost:8080"; // need to change on variables from properties or .env; "localhost:%s"
     private static final String PATH = "/api/payments/";
     private static final String STATUS_PAID = "paid";
 
