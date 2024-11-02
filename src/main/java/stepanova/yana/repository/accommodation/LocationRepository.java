@@ -5,8 +5,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import stepanova.yana.model.Location;
 
 public interface LocationRepository extends JpaRepository<Location, Long> {
-    //AllIgnoreCase doesn't work
-    Optional<Location> findByCountryContainsIgnoreCaseAndCityContainsIgnoreCaseAndRegionContainsIgnoreCaseAndAddressContainsIgnoreCase(
+
+    Optional<Location> findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
             String country,
             String city,
             String region,
