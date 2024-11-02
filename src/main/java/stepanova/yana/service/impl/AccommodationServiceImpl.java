@@ -41,7 +41,7 @@ public class AccommodationServiceImpl implements AccommodationService {
         Accommodation accommodation = accommodationMapper.toModel(requestDto);
 
         Location locationFromDB = locationRepo
-                .findByCountryContainsIgnoreCaseAndCityContainsIgnoreCaseAndRegionContainsIgnoreCaseAndAddressContainsIgnoreCase(
+                .findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
                 accommodation.getLocation().getCountry(),
                 accommodation.getLocation().getCity(),
                 accommodation.getLocation().getRegion(),
