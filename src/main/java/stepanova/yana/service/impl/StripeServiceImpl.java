@@ -6,10 +6,10 @@ import com.stripe.model.Customer;
 import com.stripe.model.checkout.Session;
 import com.stripe.param.CustomerCreateParams;
 import com.stripe.param.checkout.SessionCreateParams;
-import io.github.cdimascio.dotenv.Dotenv;
 import jakarta.annotation.PostConstruct;
 import java.math.BigDecimal;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -24,10 +24,12 @@ public class StripeServiceImpl implements StripeService {
     private static final String HOST = "localhost:8080";
     private static final String PATH = "/api/payments/";
     private static final String STATUS_PAID = "paid";
+    @Value("${stripe.secret.key}")
+    private String stripeApiKey;
 
     @PostConstruct
     public void init() {
-        Stripe.apiKey = Dotenv.load().get("STRIPE_SECRET_KEY");
+        Stripe.apiKey = stripeApiKey;
     }
 
     @Override
