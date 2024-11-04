@@ -96,7 +96,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDto updateAccommodationById(Long id,
                                                     UpdateAllAccommodationRequestDto requestDto) {
         Accommodation accommodationFromDB = getAccommodationByIdFromDB(id);
-        Location updatedLocation = getSavedLocation(accommodationFromDB, requestDto.location());
+        Location updatedLocation = getSavedLocation(requestDto.location());
         Set<Amenity> updatedAmenities = getSavedAmenities(requestDto.amenities());
 
         accommodationFromDB.setLocation(updatedLocation);
@@ -114,14 +114,16 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Transactional
-    private Location getSavedLocation(Accommodation accommodation,
-                                      CreateLocationRequestDto locationRequestDto) {
-        Location location = accommodation.getLocation();
-        if (location != null) {
-            location = locationMapper.updateLocationFromDto(location, locationRequestDto);
-        } else {
-            location = locationMapper.toModel(locationRequestDto);
+    private Location getSavedLocation(CreateLocationRequestDto locationRequestDto) {
+        Location locationFromDB = locationRepo.findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
+                locationRequestDto.country(),
+                locationRequestDto.city(),
+                locationRequestDto.region(),
+                locationRequestDto.address()).orElse(null);
+        if (locationFromDB != null) {
+            return locationFromDB;
         }
+        Location location = locationMapper.toModel(locationRequestDto);
         return locationRepo.save(location);
     }
 
