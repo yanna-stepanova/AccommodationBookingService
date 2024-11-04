@@ -17,7 +17,7 @@ databaseChangeLog:
                   value: '1 Bedroom'
               - column:
                   name: daily_rate
-                  valueNumeric: 4500
+                  valueNumeric: 100
               - column:
                   name: availability
                   valueNumeric: 2
@@ -39,7 +39,7 @@ databaseChangeLog:
                   value: 'apartment-room'
               - column:
                   name: daily_rate
-                  valueNumeric: 4300
+                  valueNumeric: 98
               - column:
                   name: availability
                   valueNumeric: 5
@@ -61,7 +61,7 @@ databaseChangeLog:
                   value: 'mansard-room'
               - column:
                   name: daily_rate
-                  valueNumeric: 3200
+                  valueNumeric: 80
               - column:
                   name: availability
                   valueNumeric: 8

@@ -22,6 +22,7 @@ import stepanova.yana.repository.booking.BookingRepository;
 import stepanova.yana.repository.payment.PaymentRepository;
 import stepanova.yana.service.PaymentService;
 import stepanova.yana.service.StripeService;
+import stepanova.yana.telegram.TelegramNotificationService;
 
 @RequiredArgsConstructor
 @Service
@@ -30,6 +31,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final BookingRepository bookingRepo;
     private final PaymentMapper paymentMapper;
     private final StripeService stripeService;
+    private final TelegramNotificationService telegramNote;
 
     @Override
     @Transactional
@@ -72,7 +74,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .get();
         bookingFromDB.setStatus(statusFromSession);
         bookingRepo.save(bookingFromDB);
-        return paymentMapper.toDto(paymentRepo.save(paymentFromDB));
+        Payment savedPayment = paymentRepo.save(paymentFromDB);
+        publishEvent(savedPayment, "Successful");
+        return paymentMapper.toDto(savedPayment);
     }
 
     @Override
@@ -102,5 +106,27 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("There isn't such payment session by id = %s for userId = %s",
                                 sessionId, userId)));
+    }
+
+    private void publishEvent(Payment payment, String option) {
+        String message = String.format("%s payment!!!", option)
+                + System.lineSeparator()
+                + " id: " + payment.getId()
+                + System.lineSeparator()
+                + " status: " + payment.getStatus()
+                + System.lineSeparator()
+                + " created date: " + payment.getDateTimeCreated()
+                + System.lineSeparator()
+                + " booking id: " + payment.getBooking().getId()
+                + System.lineSeparator()
+                + " accommodation id: " + payment.getBooking().getAccommodation().getId()
+                + System.lineSeparator()
+                + " amount: " + payment.getAmountToPay() + " USD"
+                + System.lineSeparator()
+                + " session id: " + payment.getSessionID()
+                + System.lineSeparator()
+                + " session url: " + payment.getSessionUrl();
+
+        telegramNote.sendMessage(message);
     }
 }

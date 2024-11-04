@@ -32,6 +32,3 @@ databaseChangeLog:
       file: db/changelog/changes/inserts/06_1-insert-datas-into-table-accommodations_amenities.yaml
   - include:
       file: /db/changelog/changes/inserts/07_1-insert-datas-into-table-bookings.yaml
-#  - include:
-#      file: /db/changelog/changes/inserts/08_1-insert-datas-into-table-payments.yaml
-

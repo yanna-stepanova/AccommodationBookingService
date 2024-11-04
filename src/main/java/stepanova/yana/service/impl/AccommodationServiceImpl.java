@@ -160,7 +160,7 @@ public class AccommodationServiceImpl implements AccommodationService {
                 + System.lineSeparator()
                 + " size: " + accommodation.getSize()
                 + System.lineSeparator()
-                + " daily rate: " + accommodation.getDailyRate() + " UAH"
+                + " daily rate: " + accommodation.getDailyRate() + " USD"
                 + System.lineSeparator()
                 + " quantity: " + accommodation.getAvailability()
                 + System.lineSeparator()

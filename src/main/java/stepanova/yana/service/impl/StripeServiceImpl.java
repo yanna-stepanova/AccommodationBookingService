@@ -19,7 +19,7 @@ import stepanova.yana.service.StripeService;
 @RequiredArgsConstructor
 @Service
 public class StripeServiceImpl implements StripeService {
-    private static final String CURRENCY = "UAH";
+    private static final String CURRENCY = "USD";
     private static final String HTTP = "http";
     private static final String HOST = "localhost:8080";
     private static final String PATH = "/api/payments/";
@@ -59,7 +59,8 @@ public class StripeServiceImpl implements StripeService {
                         .setQuantity(1L)
                         .setPriceData(SessionCreateParams.LineItem.PriceData.builder()
                                 .setCurrency(CURRENCY)
-                                .setUnitAmountDecimal(amountToPay)
+                                .setUnitAmountDecimal(
+                                        amountToPay.multiply(BigDecimal.valueOf(100L)))
                                 .setProductData(
                                         SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                         .setName("Booking of accommodation")
