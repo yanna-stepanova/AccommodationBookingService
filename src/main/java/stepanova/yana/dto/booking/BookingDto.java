@@ -21,5 +21,4 @@ public class BookingDto implements Serializable {
     private AccommodationDtoWithoutAvailability accommodation;
     private UserResponseDto user;
     private Status status;
-
 }

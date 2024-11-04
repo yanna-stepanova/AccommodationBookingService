@@ -17,6 +17,7 @@ import stepanova.yana.model.User;
 import stepanova.yana.repository.accommodation.AccommodationRepository;
 import stepanova.yana.repository.booking.BookingRepository;
 import stepanova.yana.service.BookingService;
+import stepanova.yana.telegram.TelegramNotificationService;
 
 @RequiredArgsConstructor
 @Service
@@ -24,6 +25,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepo;
     private final BookingMapper bookingMapper;
     private final AccommodationRepository accommodationRepo;
+    private final TelegramNotificationService telegramNote;
 
     @Override
     @Transactional
@@ -43,7 +45,9 @@ public class BookingServiceImpl implements BookingService {
         if (othersBooking.size() >= accommodationFromDB.getAvailability()) {
             return bookingMapper.toDto(null);
         }
-        return bookingMapper.toDto(bookingRepo.save(booking));
+        Booking savedBooking = bookingRepo.save(booking);
+        publishEvent(savedBooking, "New");
+        return bookingMapper.toDto(savedBooking);
     }
 
     @Override
@@ -85,8 +89,10 @@ public class BookingServiceImpl implements BookingService {
         Booking bookingFromDB = bookingRepo.findById(bookingId)
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Booking with id = %s not found", bookingId)));
-        return bookingMapper.toDto(bookingRepo.save(
-                bookingMapper.updateBookingFromDto(bookingFromDB, requestDto)));
+        Booking savedBooking = bookingRepo.save(bookingMapper.updateBookingFromDto(
+                bookingFromDB, requestDto));
+        publishEvent(savedBooking, "Updated");
+        return bookingMapper.toDto(savedBooking);
     }
 
     @Override
@@ -96,11 +102,32 @@ public class BookingServiceImpl implements BookingService {
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Booking with id = %s not found for this user", bookingId)));
         bookingFromDB.setStatus(Status.CANCELED);
-        return bookingMapper.toDto(bookingRepo.save(bookingFromDB));
+        Booking savedBooking = bookingRepo.save(bookingFromDB);
+        publishEvent(savedBooking, "Canceled");
+        return bookingMapper.toDto(savedBooking);
     }
 
     private Accommodation getAccommodationById(Long id) {
         return accommodationRepo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Can't get accommodation by id = " + id));
     }
+
+    private void publishEvent(Booking booking, String option) {
+        String message = String.format("%s booking!!!", option)
+                + System.lineSeparator()
+                + " id: " + booking.getId()
+                + System.lineSeparator()
+                + " status: " + booking.getStatus()
+                + System.lineSeparator()
+                + " check in: " + booking.getCheckInDate()
+                + System.lineSeparator()
+                + " check out: " + booking.getCheckOutDate()
+                + System.lineSeparator()
+                + " accommodation id: " + booking.getAccommodation().getId()
+                + System.lineSeparator()
+                + " user id: " + booking.getUser().getId();
+
+        telegramNote.sendMessage(message);
+    }
+
 }
