@@ -10,6 +10,13 @@ import stepanova.yana.model.Booking;
 import stepanova.yana.model.Status;
 
 public interface BookingRepository extends JpaRepository<Booking, Long> {
+    @Query("select b from Booking b where b.status not in (:status1, :status2) "
+            + "and b.checkOutDate = :checkOutDate")
+    List<Booking> findAllByStatusNotInAndCheckOutDateIs(
+            @Param("status1") Status status1,
+            @Param("status2") Status status2,
+            @Param("checkOutDate") LocalDate checkOutDate);
+
     @Query(value = "SELECT * FROM bookings b WHERE b.accommodation_id = :accommodationId "
             + "AND b.status <> :statusName "
             + "AND (:fromDate BETWEEN b.check_in_date AND (b.check_out_date - 1) "
