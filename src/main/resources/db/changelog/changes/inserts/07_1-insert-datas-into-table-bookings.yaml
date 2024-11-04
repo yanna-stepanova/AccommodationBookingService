@@ -20,7 +20,7 @@ databaseChangeLog:
                   valueNumeric: 2
               - column:
                   name: status
-                  value: 'EXPIRED'
+                  value: 'CANCELED'
 
   - changeSet:
       id: insert-LUBO-KRAY(apartments)-into-bookings

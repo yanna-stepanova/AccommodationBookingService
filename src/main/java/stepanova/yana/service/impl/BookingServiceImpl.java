@@ -2,8 +2,10 @@ package stepanova.yana.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
@@ -107,6 +109,20 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toDto(savedBooking);
     }
 
+    @Transactional
+    @Scheduled(cron = "0 0 13 * * *", zone = "Europe/Kiev")
+    protected void sendExpiredBookingsNotification() {
+        List<Booking> bookingList = bookingRepo.findAllByStatusNotInAndCheckOutDateIs(
+                Status.CANCELED, Status.PAID, LocalDate.now().plusDays(1L));
+        if (!bookingList.isEmpty()) {
+            bookingList.forEach(booking -> booking.setStatus(Status.EXPIRED));
+            bookingList = bookingRepo.saveAll(bookingList);
+            bookingList.forEach(i -> publishEvent(i, "Expired"));
+        } else {
+            telegramNote.sendMessage("No expired bookings today!");
+        }
+    }
+
     private Accommodation getAccommodationById(Long id) {
         return accommodationRepo.findById(id).orElseThrow(() ->
                 new EntityNotFoundException("Can't get accommodation by id = " + id));
@@ -129,5 +145,4 @@ public class BookingServiceImpl implements BookingService {
 
         telegramNote.sendMessage(message);
     }
-
 }
