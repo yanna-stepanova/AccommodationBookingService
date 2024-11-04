@@ -14,10 +14,12 @@ import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
 import stepanova.yana.mapper.BookingMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Booking;
+import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
 import stepanova.yana.repository.accommodation.AccommodationRepository;
 import stepanova.yana.repository.booking.BookingRepository;
+import stepanova.yana.repository.payment.PaymentRepository;
 import stepanova.yana.service.BookingService;
 import stepanova.yana.telegram.TelegramNotificationService;
 
@@ -28,10 +30,17 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final AccommodationRepository accommodationRepo;
     private final TelegramNotificationService telegramNote;
+    private final PaymentRepository paymentRepo;
 
     @Override
     @Transactional
     public BookingDto save(User user, CreateBookingRequestDto requestDto) {
+        List<Payment> paymentsByUser = paymentRepo.findAllByUserId(user.getId());
+        if (!paymentsByUser.stream()
+                .filter(payment -> payment.getStatus().equals(Status.PENDING))
+                .toList().isEmpty()) {
+            return bookingMapper.toDto(new Booking());
+        }
         Booking booking = bookingMapper.toModel(requestDto);
         Accommodation accommodationFromDB = getAccommodationById(
                 booking.getAccommodation().getId());
@@ -117,7 +126,7 @@ public class BookingServiceImpl implements BookingService {
         if (!bookingList.isEmpty()) {
             bookingList.forEach(booking -> booking.setStatus(Status.EXPIRED));
             bookingList = bookingRepo.saveAll(bookingList);
-            bookingList.forEach(i -> publishEvent(i, "Expired"));
+            bookingList.forEach(booking -> publishEvent(booking, "Expired"));
         } else {
             telegramNote.sendMessage("No expired bookings today!");
         }

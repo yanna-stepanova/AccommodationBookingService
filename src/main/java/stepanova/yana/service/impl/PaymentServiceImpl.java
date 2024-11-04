@@ -7,10 +7,14 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
@@ -94,6 +98,21 @@ public class PaymentServiceImpl implements PaymentService {
         return paymentRepo.findAllByUserId(userId).stream()
                 .map(paymentMapper::toDto)
                 .toList();
+    }
+
+    @Transactional
+    @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Kiev")
+    protected void checkExpiredSession() {
+        LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0, 0));
+        LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59, 59));
+        List<Payment> paymentList = paymentRepo.findAllByStatusNotInAndDateBetween(
+                Set.of(Status.CANCELED.getStatusName(), Status.PAID.getStatusName()),
+                startDate, endDate);
+        if (!paymentList.isEmpty()) {
+            paymentList.forEach(payment -> payment.setStatus(Status.EXPIRED));
+            paymentRepo.saveAll(paymentList)
+                    .forEach(payment -> publishEvent(payment, "Expired"));
+        }
     }
 
     private Payment getPaymentByBookingId(Long bookingId) {
