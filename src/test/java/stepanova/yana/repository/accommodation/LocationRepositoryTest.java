@@ -1,4 +1,4 @@
-package stepanova.yana.repository.accommodation.location;
+package stepanova.yana.repository.accommodation;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -16,7 +16,6 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
 import stepanova.yana.model.Location;
-import stepanova.yana.repository.accommodation.LocationRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
@@ -49,7 +48,7 @@ class LocationRepositoryTest {
     }
 
     @Test
-    @DisplayName("Find location by existing country/city/region/address ")
+    @DisplayName("Find location by existing country/city/region/address")
     void findByCountryAndCityAndRegionAndAddressAllIgnoreCase_ExistingLocation_Ok() {
         Optional<Location> actual = locationRepo
                 .findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
@@ -58,7 +57,7 @@ class LocationRepositoryTest {
     }
 
     @Test
-    @DisplayName("Find location by non-existing country/city/region/address ")
+    @DisplayName("Find location by non-existing country/city/region/address")
     void findByCountryAndCityAndRegionAndAddressAllIgnoreCase_NonExistingLocation_NotOk() {
         Optional<Location> actual = locationRepo
                 .findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
