@@ -44,7 +44,7 @@ class RoleRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/role/clear-all-dependent-tables.sql"));
+                    "database/role/clear-all-dependent-tables-for-roles.sql"));
         }
     }
 

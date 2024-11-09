@@ -43,7 +43,7 @@ class UserRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/user/clear-all-dependent-tables.sql"));
+                    "database/user/clear-tables-bookings-users-roles.sql"));
         }
     }
 
