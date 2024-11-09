@@ -1,10 +1,7 @@
 package stepanova.yana.service;
 
-import java.util.Objects;
-import java.util.Optional;
-
 import jakarta.persistence.EntityNotFoundException;
-import net.sf.saxon.expr.Component;
+import java.util.Optional;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
@@ -226,7 +223,8 @@ class UserServiceTest {
                 user.getFirstName(),
                 user.getLastName(),
                 user.getRole().getName().getRoleName());
-        Mockito.when(roleRepo.findByName(updatedRole.getName())).thenReturn(Optional.of(updatedRole));
+        Mockito.when(roleRepo.findByName(updatedRole.getName()))
+                .thenReturn(Optional.of(updatedRole));
         Mockito.when(userRepo.findById(userId)).thenReturn(Optional.of(user));
         Mockito.when(userRepo.save(user)).thenReturn(user);
         Mockito.when(userMapper.toResponseDto(user)).thenReturn(expected);

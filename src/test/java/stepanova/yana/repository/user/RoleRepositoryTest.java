@@ -15,13 +15,14 @@ import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabas
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.jdbc.datasource.init.ScriptUtils;
-import org.springframework.security.core.userdetails.UserDetails;
+import stepanova.yana.model.Role;
+import stepanova.yana.model.RoleName;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class UserRepositoryTest {
+class RoleRepositoryTest {
     @Autowired
-    private UserRepository userRepo;
+    private RoleRepository roleRepo;
 
     @BeforeAll
     public static void beforeAll(@Autowired DataSource dataSource) throws SQLException {
@@ -29,7 +30,7 @@ class UserRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/user/add-roles-and-users.sql"));
+                    "database/role/add-roles.sql"));
         }
     }
 
@@ -43,37 +44,14 @@ class UserRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/user/clear-all-dependent-tables.sql"));
+                    "database/role/clear-all-dependent-tables.sql"));
         }
     }
 
     @Test
-    @DisplayName("Check the registered email exists in DB")
-    void existsByEmail_RegisteredEmail_Ok() {
-        String email = "user@gmail.com";
-        boolean actual = userRepo.existsByEmail(email);
-        Assertions.assertTrue(actual);
-    }
-
-    @Test
-    @DisplayName("Check the email doesn't exist in DB")
-    void existsByEmail_NonRegisteredEmail_NotOk() {
-        String email = "user24@example.com";
-        boolean actual = userRepo.existsByEmail(email);
-        Assertions.assertFalse(actual);
-    }
-
-    @Test
-    @DisplayName("Find user by existing email")
-    void findByEmail_ValidEmail_Ok() {
-        Optional<UserDetails> actual = userRepo.findByEmail("user@gmail.com");
+    @DisplayName("Find role by existing name")
+    void findByName_ExistingName_Ok() {
+        Optional<Role> actual = roleRepo.findByName(RoleName.ADMIN);
         Assertions.assertTrue(actual.isPresent());
-    }
-
-    @Test
-    @DisplayName("Find user by non-existing email")
-    void findByEmail_NonExistingEmail_NotOk() {
-        Optional<UserDetails> actual = userRepo.findByEmail("customer@gmail.com");
-        Assertions.assertFalse(actual.isPresent());
     }
 }
