@@ -158,7 +158,7 @@ class AccommodationServiceTest {
 
     @Test
     @DisplayName("Get a list of all AccommodationDtoWithoutLocationAndAmenities")
-    void getAll_Ok() {
+    void getAll_ReturnTwo() {
         //Given
         Accommodation accommodationOne = new Accommodation();
         accommodationOne.setId(1L);
@@ -204,6 +204,7 @@ class AccommodationServiceTest {
         List<AccommodationDtoWithoutLocationAndAmenities> actual = accommodationService.getAll();
 
         //Then
+        Assertions.assertEquals(expected.size(), actual.size());
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertTrue(
                     EqualsBuilder.reflectionEquals(expected.get(i), actual.get(i)));
