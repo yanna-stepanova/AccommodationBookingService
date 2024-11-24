@@ -46,23 +46,21 @@ public class PaymentServiceImpl implements PaymentService {
                         String.format("Booking with id = %s not found for this user",
                                 requestDto.bookingId())));
         Payment payment = getPaymentByBookingId(bookingFromDB.getId());
-        if (!Status.PAID.equals(payment.getStatus())) {
-            if (payment.getId() == null) {
-                Period daysOfBooking = Period.between(
-                        bookingFromDB.getCheckInDate(),
-                        bookingFromDB.getCheckOutDate());
-                BigDecimal amountToPay = bookingFromDB.getAccommodation().getDailyRate().multiply(
-                        BigDecimal.valueOf(daysOfBooking.getDays()));
-                Session paymentSession = stripeService.createPaymentSession(bookingFromDB,
-                        amountToPay);
-                payment.setDateTimeCreated(LocalDateTime.now());
-                payment.setBooking(bookingFromDB);
-                payment.setAmountToPay(amountToPay);
-                payment.setStatus(Status.PENDING);
-                payment.setSessionID(paymentSession.getId());
-                payment.setSessionUrl(new URL(paymentSession.getUrl()));
-                payment = paymentRepo.save(payment);
-            }
+        if (!Status.PAID.equals(payment.getStatus()) && (payment.getId() == null)) {
+            Period daysOfBooking = Period.between(
+                    bookingFromDB.getCheckInDate(),
+                    bookingFromDB.getCheckOutDate());
+            BigDecimal amountToPay = bookingFromDB.getAccommodation().getDailyRate().multiply(
+                    BigDecimal.valueOf(daysOfBooking.getDays()));
+            Session paymentSession = stripeService.createPaymentSession(bookingFromDB,
+                    amountToPay);
+            payment.setDateTimeCreated(LocalDateTime.now());
+            payment.setBooking(bookingFromDB);
+            payment.setAmountToPay(amountToPay);
+            payment.setStatus(Status.PENDING);
+            payment.setSessionID(paymentSession.getId());
+            payment.setSessionUrl(new URL(paymentSession.getUrl()));
+            payment = paymentRepo.save(payment);
         }
         return paymentMapper.toDto(payment);
     }
@@ -103,8 +101,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Kiev")
     protected void checkExpiredSession() {
-        LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0,0, 0));
-        LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(23,59, 59));
+        LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+        LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
         List<Payment> paymentList = paymentRepo.findAllByStatusNotInAndDateBetween(
                 Set.of(Status.CANCELED.getStatusName(), Status.PAID.getStatusName()),
                 startDate, endDate);
