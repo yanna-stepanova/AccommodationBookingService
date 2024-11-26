@@ -13,6 +13,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
 import org.testcontainers.shaded.org.apache.commons.lang3.builder.EqualsBuilder;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
@@ -192,16 +195,19 @@ class AccommodationServiceTest {
                 accommodationTwo.getDailyRate(),
                 accommodationTwo.getAvailability());
         List<Accommodation> accommodationList = List.of(accommodationOne, accommodationTwo);
-
+        PageRequest pageable = PageRequest.of(0, 10);
+        Page<Accommodation> accommodationPage = new PageImpl<>(accommodationList, pageable,
+                accommodationList.size());
         Mockito.when(accommodationMapper.toDtoWithoutLocationAndAmenities(accommodationOne))
                 .thenReturn(dtoOne);
         Mockito.when(accommodationMapper.toDtoWithoutLocationAndAmenities(accommodationTwo))
                 .thenReturn(dtoTwo);
-        Mockito.when(accommodationRepo.findAll()).thenReturn(accommodationList);
+        Mockito.when(accommodationRepo.findAll(pageable)).thenReturn(accommodationPage);
 
         //When
         List<AccommodationDtoWithoutLocationAndAmenities> expected = List.of(dtoOne, dtoTwo);
-        List<AccommodationDtoWithoutLocationAndAmenities> actual = accommodationService.getAll();
+        List<AccommodationDtoWithoutLocationAndAmenities> actual = accommodationService.getAll(
+                pageable);
 
         //Then
         Assertions.assertEquals(expected.size(), actual.size());

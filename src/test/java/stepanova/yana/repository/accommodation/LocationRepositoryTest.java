@@ -29,7 +29,7 @@ class LocationRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/accommodation/add-locations.sql"));
+                    "database/accommodation/repository/add-locations.sql"));
         }
     }
 
@@ -43,7 +43,7 @@ class LocationRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/accommodation/clear-all-dependent-tables.sql"));
+                    "database/accommodation/repository/clear-all-dependent-tables.sql"));
         }
     }
 

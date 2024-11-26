@@ -29,7 +29,7 @@ class AmenityRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/accommodation/add-amenities.sql"));
+                    "database/accommodation/repository/add-amenities.sql"));
         }
     }
 
@@ -43,7 +43,7 @@ class AmenityRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/accommodation/clear-all-dependent-tables.sql"));
+                    "database/accommodation/repository/clear-all-dependent-tables.sql"));
         }
     }
 
