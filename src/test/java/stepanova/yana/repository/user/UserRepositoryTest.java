@@ -29,7 +29,7 @@ class UserRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/user/add-roles-and-users.sql"));
+                    "database/user/repository/add-roles-and-users.sql"));
         }
     }
 
@@ -43,7 +43,7 @@ class UserRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/user/clear-tables-bookings-users-roles.sql"));
+                    "database/user/repository/clear-tables-bookings-users-roles.sql"));
         }
     }
 
