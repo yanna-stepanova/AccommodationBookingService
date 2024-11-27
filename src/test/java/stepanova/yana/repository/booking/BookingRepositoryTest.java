@@ -33,7 +33,7 @@ class BookingRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/booking/add-all-tables-for-booking.sql"));
+                    "database/booking/repository/add-all-tables-for-booking.sql"));
         }
     }
 
@@ -70,9 +70,10 @@ class BookingRepositoryTest {
     @Test
     @DisplayName("""
             Find four accommodations that are booked between 13.12.2024 - 15.12.2024""")
-    @Sql(scripts = "classpath:database/booking/add-six-bookings-for-one-accommodation.sql",
+    @Sql(scripts = "classpath:database/booking/repository/"
+            + "add-six-bookings-for-one-accommodation.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/booking/remove-six-bookings.sql",
+    @Sql(scripts = "classpath:database/booking/repository/remove-six-bookings.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllByAccommodationIdAndStatusAndFromDateAndToDate_FourBookings_Ok() {
         List<Booking> actual = bookingRepo.findAllByAccommodationIdAndStatusAndFromDateAndToDate(
@@ -104,9 +105,10 @@ class BookingRepositoryTest {
     @Test
     @DisplayName("""
             Find five booking for userId = 2""")
-    @Sql(scripts = "classpath:database/booking/add-six-bookings-for-one-accommodation.sql",
+    @Sql(scripts = "classpath:database/booking/repository/"
+            + "add-six-bookings-for-one-accommodation.sql",
             executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-    @Sql(scripts = "classpath:database/booking/remove-six-bookings.sql",
+    @Sql(scripts = "classpath:database/booking/repository/remove-six-bookings.sql",
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void findAllByUserId_ExistingUserId_ReturnFiveBooking() {
         List<Booking> actual = bookingRepo.findAllByUserId(2L);

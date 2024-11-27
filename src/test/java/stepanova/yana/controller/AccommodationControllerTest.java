@@ -167,8 +167,7 @@ class AccommodationControllerTest {
                         "82391", "Boryslavska Street, 81",
                         "cell: +38(097)7715102, https://www.lubo-kray.com.ua"),
                 "apartment-room",
-                Set.of(
-                        new AmenityDto(1L, "WiFi", "WiFi is free"),
+                Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
                         new AmenityDto(3L, "Hairdryer", null),
                         new AmenityDto(4L, "Swimming pool",
                                 "Indoor pool with sauna and Finnish bath"),
