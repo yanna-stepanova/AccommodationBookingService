@@ -35,7 +35,7 @@ class PaymentRepositoryTest {
         try (Connection connection = dataSource.getConnection()) {
             connection.setAutoCommit(true);
             ScriptUtils.executeSqlScript(connection, new ClassPathResource(
-                    "database/payment/add-all-tables-for-payments.sql"));
+                    "database/payment/repository/add-all-tables-for-payments.sql"));
         }
     }
 
