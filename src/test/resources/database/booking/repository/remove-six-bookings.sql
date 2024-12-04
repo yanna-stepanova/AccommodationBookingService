@@ -1,0 +1,1 @@
+DELETE FROM bookings WHERE id BETWEEN 3 AND 8;

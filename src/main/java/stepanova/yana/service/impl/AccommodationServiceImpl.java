@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
@@ -74,8 +75,8 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     @Override
     @Transactional
-    public List<AccommodationDtoWithoutLocationAndAmenities> getAll() {
-        return accommodationRepo.findAll().stream()
+    public List<AccommodationDtoWithoutLocationAndAmenities> getAll(Pageable pageable) {
+        return accommodationRepo.findAll(pageable).stream()
                 .map(accommodationMapper::toDtoWithoutLocationAndAmenities)
                 .toList();
     }

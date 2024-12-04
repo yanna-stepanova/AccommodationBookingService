@@ -1,6 +1,7 @@
 package stepanova.yana.service;
 
 import java.util.List;
+import org.springframework.data.domain.Pageable;
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
@@ -12,7 +13,7 @@ public interface AccommodationService {
 
     AccommodationDto getAccommodationById(Long id);
 
-    List<AccommodationDtoWithoutLocationAndAmenities> getAll();
+    List<AccommodationDtoWithoutLocationAndAmenities> getAll(Pageable pageable);
 
     AccommodationDto updateAccommodationById(Long id, UpdateAccommodationRequestDto requestDto);
 

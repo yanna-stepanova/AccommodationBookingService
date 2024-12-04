@@ -1,0 +1,3 @@
+INSERT INTO payments VALUES
+(10, 'PENDING', '2024-11-14 01:26:59.789666', 1, 100.05, 'https://checkout.stripe.com/c/pay/cs_test_a11G0LTvDQ5zGNTskpvipghM01gQGLrS7B5B9RVchXD6PlmH5sBfuq4Kou#fidkdWxOYHwnPyd1blpxYHZxWjA0VDxEQnZXcndCbGMzUXNsRE1PNVxdVDczc39sZFQwZ3JnY0NHfENhamlfQEZWNVY9bVdrdjM9QWFdU0F9NkF1fHx2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYHgl', 'cs_test_a11G0LTvDQ5zGNTskpvipghM01gQGLrS7B5B9RVchXD6PlmH5sBfuq4Kou');
+

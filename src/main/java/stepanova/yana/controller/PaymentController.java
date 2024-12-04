@@ -8,6 +8,7 @@ import jakarta.validation.constraints.Positive;
 import java.net.MalformedURLException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -47,7 +48,7 @@ public class PaymentController {
         return paymentService.getSuccess(user.getId(), sessionId);
     }
 
-    @GetMapping(value = "/cancel", params = {"sessionId"})
+    @GetMapping(value = "/cancel", params = {"sessionId"}, produces = MediaType.TEXT_PLAIN_VALUE)
     @Operation(summary = "Cancel payment by sessionId",
             description = "Informs about cancellation of payment session")
     public String getCancel(@AuthenticationPrincipal User user,
