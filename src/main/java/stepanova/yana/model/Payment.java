@@ -38,4 +38,3 @@ public class Payment extends AbstractEntity {
     @Column(name = "session_id", nullable = false)
     private String sessionID;
 }
-
