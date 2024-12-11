@@ -2,66 +2,23 @@
 <p>This project is an online accommodation booking system. Users can browse and book different types of accommodations such as apartments, guest houses, and more. The system is built using the Spring Boot framework and follows the MVC architecture. The backend is supported by a PostgreSQL database and uses Liquibase for schema management. All operations are accessible via RESTful API with integrated Swagger documentation, providing a seamless user experience.</p>
 
 <h3 style="color: #2e6c80;">Technologies and Tools Used:</h3>
-<table>
-  <tbody>
-    <tr>
-      <td>Spring Boot</td>
-      <td>The core framework for building the application, providing support for RESTful services and web infrastructure.</td>
-    </tr>
-    <tr>
-      <td>Spring MVC</td>
-      <td>A core part of the Spring framework, used to implement the Model-View-Controller design pattern. It separates the application into three interconnected components: Model (data), View (UI), and Controller (business logic), improving scalability and maintainability.</td>
-    </tr>
-    <tr>
-      <td>Spring Security</td>
-      <td>Used to secure the API, handling user authentication and authorization.</td>
-    </tr>
-    <tr>
-      <td>Spring Data JPA</td>
-      <td>Provides an abstraction layer for database operations with PostgreSQL, simplifying data access and manipulation.</td>
-    </tr>
-    <tr>
-      <td>Spring Data REST</td>
-      <td>Builds on Spring Data repositories to automatically expose REST endpoints based on the domain model. It simplifies development by reducing the need to write controllers for CRUD operations on entities.</td>
-    </tr>
-    <tr>
-      <td>Spring Boot Testing</td>
-      <td>Includes tools for testing the application's components, such as JUnit and Mockito. This ensures the reliability of the codebase by validating business logic, APIs, and database interactions in an automated way.</td>
-    </tr>
-    <tr>
-      <td>Liquibase</td>
-      <td>A tool to manage database schema changes and versioning in a consistent manner.</td>
-    </tr>
-    <tr>
-      <td>JWT</td>
-      <td>Used for user authentication and session management through JSON Web Tokens.</td>
-    </tr>
-    <tr>
-      <td>Swagger/OpenAPI</td>
-      <td>Generates interactive API documentation, making it easier to understand and consume the services.</td>
-    </tr>
-    <tr>
-      <td>MapStruct</td>
-      <td>A Java annotation processor that generates type-safe and performant mappers for Java bean classes. It simplifies the process of mapping data between DTOs (Data Transfer Objects) and entities, ensuring type safety and performance optimization.</td>
-    </tr>
-    <tr>
-      <td>Stripe</td>
-      <td>Integrates a secure payment gateway for processing accommodation booking payments.</td>
-    </tr>
-    <tr>
-      <td>Telegram Bot</td>
-      <td>Notifies users about the status of their bookings through Telegram messages.</td>
-    </tr>
-    <tr>
-      <td>Postman</td>
-      <td>Used to test API requests and visualize the responses for ease of development and debugging.</td>
-    </tr>
-    <tr>
-      <td>Docker</td>
-      <td>Containerization tool to run the project in isolated environments, ensuring consistency across different systems.</td>
-    </tr>
-  </tbody>
-</table>
+<ul>
+<li>Spring Boot</li>  
+<li>Spring MVC</li>
+<li>Spring Security</li>
+<li>Spring Data JPA</li>
+<li>Spring Data REST</li>
+<li>Spring Boot Testing</li>
+<li>Liquibase</li>
+<li>JWT</li>  
+<li>Swagger/OpenAPI</li>
+<li>MapStruct</li>
+<li>Stripe</li>
+<li>Telegram Bot</li>
+<li>Postman</li>
+<li>Docker</li>
+</ul>
+
 
 <p>Components of the application:</p>
 <ol>
@@ -178,8 +135,10 @@
 </ul>
 
 <p>API Documentation is accessible via Swagger UI. To view it after successful authentication, navigate to: http://localhost:8080/api/swagger-ui/index.html</p>
-<img src="/img/swagger_1.png" alt="All endpoints - part 1" style="width:704px;height:1834px;">  
-<img src="/img/swagger_2.png" alt="All endpoints - part 2" style="width:903px;height:756px;">
+<ul>
+  <li><a href="https://github.com/yanna-stepanova/AccommodationBookingService/blob/master/img/swagger_1.png" target="_blank">Screenshot of swagger - part 1</a></li>
+  <li><a href="https://github.com/yanna-stepanova/AccommodationBookingService/blob/master/img/swagger_2.png" target="_blank">Screenshot of swagger - part 2</a></li>
+</ul>
 
 <p>To run the project with Docker, use the following commands:</p>
 <pre><code>
@@ -189,7 +148,7 @@ docker-compose up
 
 <p>For running with updated images:</p>
 <pre><code>
-docker compose up --build
+docker compose up --build -d
 </code></pre>
 
 <p>To stop and remove the containers when done:</p>
