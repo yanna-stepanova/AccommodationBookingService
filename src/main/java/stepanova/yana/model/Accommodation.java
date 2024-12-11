@@ -35,7 +35,7 @@ public class Accommodation extends AbstractEntity {
     private Location location;
     @Column(nullable = false)
     private String size;
-    @ManyToMany(fetch = FetchType.LAZY)
+    @ManyToMany
     @JoinTable(name = "accommodations_amenities",
             joinColumns = @JoinColumn(name = "accommodation_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "amenity_id", referencedColumnName = "id"))
