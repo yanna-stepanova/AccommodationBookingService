@@ -74,7 +74,6 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
-    @Transactional
     public List<AccommodationDtoWithoutLocationAndAmenities> getAll(Pageable pageable) {
         return accommodationRepo.findAll(pageable).stream()
                 .map(accommodationMapper::toDtoWithoutLocationAndAmenities)
@@ -110,11 +109,11 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         accommodationRepo.deleteById(id);
     }
 
-    @Transactional
     private Location getSavedLocation(CreateLocationRequestDto locationRequestDto) {
         Location locationFromDB = locationRepo.findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
                 locationRequestDto.country(),
@@ -133,7 +132,6 @@ public class AccommodationServiceImpl implements AccommodationService {
                 new EntityNotFoundException("Can't get accommodation by id = " + id));
     }
 
-    @Transactional
     private Set<Amenity> getSavedAmenities(Set<CreateAmenityRequestDto> amenityRequestDtos) {
         Set<Amenity> amenitySet = new HashSet<>();
         for (CreateAmenityRequestDto amenityRequestDto : amenityRequestDtos) {
