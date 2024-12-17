@@ -1,6 +1,7 @@
 package stepanova.yana.service.impl;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class UserServiceImpl implements UserService {
     private final UserMapper userMapper;
 
     @Override
+    @Transactional
     public UserResponseDto register(UserRegistrationRequestDto requestDto)
             throws RegistrationException {
         if (userRepo.existsByEmail(requestDto.email())) {
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDto updateUserRole(Long id, UserRoleRequestDto requestDto) {
         User userFromDB = getUserById(id);
         userFromDB.setRole(getRoleByName(requestDto.roleName()));
@@ -55,6 +58,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public UserResponseDto updateUserProfile(Long id, UserProfileRequestDto requestDto) {
         return userMapper.toResponseDto(userRepo.save(
                 userMapper.updateUserProfileFromDto(getUserById(id), requestDto)));
