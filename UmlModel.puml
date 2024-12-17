@@ -1,13 +1,11 @@
 @startuml
 
-abstract class AbstractEntity {
-- id: Long
-- isDeleted : boolean
-}
 interface UserDetails
 interface GrantedAuthority
 
 class Accommodation {
+- id: Long
+- isDeleted : boolean
 - type : Type
 - location : Location
 - size : String
@@ -17,6 +15,8 @@ class Accommodation {
 }
 
 class Location {
+- id: Long
+- isDeleted : boolean
 - country : String
 - city : String
 - region : String
@@ -26,6 +26,8 @@ class Location {
 }
 
 class Amenity {
+- id: Long
+- isDeleted : boolean
 - title : String
 - description : String
 }
@@ -36,6 +38,8 @@ class Role {
 
 
 class User {
+- id: Long
+- isDeleted : boolean
 - email : String
 - password : String
 - firstName : String
@@ -44,6 +48,8 @@ class User {
 }
 
 class Booking {
+- id: Long
+- isDeleted : boolean
 - checkInDate : LocalDate
 - checkOutDate : LocalDate
 - accommodation : Accommodation
@@ -52,6 +58,8 @@ class Booking {
 }
 
 class Payment {
+- id: Long
+- isDeleted : boolean
 - status : Status
 - dateTimeCreated : LocalDateTime
 - booking : Booking
@@ -90,24 +98,17 @@ MyNote .. GrantedAuthority
 UserDetails <|.. User
 GrantedAuthority <|.. Role
 
-Booking --|> AbstractEntity
-User -|> AbstractEntity
-Role -|> AbstractEntity
-Accommodation --|> AbstractEntity
-Location --|> AbstractEntity
-AbstractEntity <|- Payment
-Amenity --|> AbstractEntity
-
-User "n" o-- "1" Role
-Booking "n" --o "1" User
+Role "1" o- "n" User
+User "1" o- "n" Booking
 Location "1" o- "1" Accommodation
-Accommodation "n" --o "n" Amenity
+Accommodation "n" -o "n" Amenity
 Booking "n" --o "1" Accommodation
-Booking "1" *-- "1" Payment
+Payment "1" --* "1" Booking
 
-RoleName .> Role
-Accommodation <. Type
-Booking <. Status
-Status ..> Payment
+Role <.. RoleName
+Accommodation <.. Type
+Payment <. Status
+Status ..> Booking
+
 
 @enduml
