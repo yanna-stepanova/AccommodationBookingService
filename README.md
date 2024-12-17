@@ -29,8 +29,7 @@
 
 <h3 style="color: #2e6c80;">UML Diagram of the system's models</h3>
 <p>The UML diagram provides a visual representation of the relationships between the entities (models) in the system. It shows how entities like User, Accommodation, Booking, and Payment are related to each other and how they interact in the system. This helps in understanding the overall structure and flow of the system.</p>
-<img src="/img/diagram-uml.png" alt="UML diagram" style="width:1165px;height:789px;">  
-
+<img src="/img/diagram-uml.png" alt="UML diagram" style="width:1069px;height:1398px;">  
 
 <p>Key entities (models) in this application:</p>
 <ul>
@@ -46,7 +45,6 @@
     <li><u>Booking</u>: Represents a booking made by a user for accommodation.</li>
     <li><u>Payment</u>: Handles the payment details for a booking.</li>
 </ul>
-
 
 <p>Example response from an API endpoint:</p>
 <pre><code class="language-json">
