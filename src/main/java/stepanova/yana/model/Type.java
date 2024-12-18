@@ -1,7 +1,5 @@
 package stepanova.yana.model;
 
-import java.util.Objects;
-
 public enum Type {
     APARTMENT("APARTMENT"),
     GUEST_HOUSE("GUEST_HOUSE"),
@@ -19,14 +17,5 @@ public enum Type {
 
     public String getTypeName() {
         return typeName;
-    }
-
-    public static Type getByType(String type) {
-        for (Type item : Type.values()) {
-            if (Objects.equals(item.getTypeName(), type.toUpperCase())) {
-                return item;
-            }
-        }
-        return null;
     }
 }

@@ -63,7 +63,7 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDtoWithoutDetails> getAllByUserAndStatus(Long userId, String statusName) {
-        return bookingRepo.findAllByUserIdAndStatus(userId, Status.getByType(statusName)).stream()
+        return bookingRepo.findAllByUserIdAndStatus(userId, Status.valueOf(statusName.toUpperCase())).stream()
                 .map(bookingMapper::toDtoWithoutDetails)
                 .toList();
     }

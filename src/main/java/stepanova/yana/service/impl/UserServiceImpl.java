@@ -21,7 +21,6 @@ import stepanova.yana.service.UserService;
 @RequiredArgsConstructor
 @Service
 public class UserServiceImpl implements UserService {
-    private static final String DEFAULT_ROLE = "CUSTOMER";
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepo;
     private final RoleRepository roleRepo;
@@ -37,9 +36,9 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toModel(requestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRole() == null) {
-            user.setRole(roleRepo.findByName(RoleName.getByType(DEFAULT_ROLE))
+            user.setRole(roleRepo.findByName(RoleName.CUSTOMER)
                     .orElseThrow(() -> new EntityNotFoundException(
-                    String.format("Can't find %s in table roles: ", DEFAULT_ROLE))));
+                    String.format("Can't find %s in table roles: ", RoleName.CUSTOMER))));
         }
         return userMapper.toResponseDto(userRepo.save(user));
     }
@@ -70,7 +69,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private Role getRoleByName(String roleName) {
-        return roleRepo.findByName(RoleName.getByType(roleName))
+        return roleRepo.findByName(RoleName.valueOf(roleName.toUpperCase()))
                 .orElseThrow(() -> new EntityNotFoundException(
                         String.format("Can't find %s in table roles", roleName)));
     }

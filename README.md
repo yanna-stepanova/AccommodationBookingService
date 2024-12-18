@@ -33,7 +33,6 @@
 
 <p>Key entities (models) in this application:</p>
 <ul>
-    <li><u>AbstractEntity</u>: A base class for all entities in the application, providing common fields such as `id` (primary key) and `isDeleted` (soft delete marker: not removed but marked as inactive using the `@SQLDelete` and `@SQLRestriction` annotations). Entities like `Accommodation`, `Amenity`, `User`, and others extend this class to ensure consistency and reduce redundant code. The `@MappedSuperclass` annotation ensures that its fields are inherited by subclasses and mapped to their respective database tables.</li>
     <li><u>User</u>: Stores information about the registered user, including their authentication details.</li>
     <li><u>Role</u>: Represents the roles assigned to users for managing their access and permissions within the system. Each role is uniquely identified by its name (e.g., ADMIN, CUSTOMER).</li>
     <li><u>RoleName</u>: An enumeration defining the possible roles in the system. Each role (e.g., ADMIN, CUSTOMER) is associated with a string representation and can be retrieved programmatically.</li>
@@ -140,13 +139,13 @@
 
 <p>To run the project with Docker, use the following commands:</p>
 <pre><code>
-docker-compose build
-docker-compose up
+docker-compose build 
+docker-compose up -d
 </code></pre>
 
 <p>For running with updated images:</p>
 <pre><code>
-docker compose up --build -d
+docker-compose up --build -d
 </code></pre>
 
 <p>To stop and remove the containers when done:</p>

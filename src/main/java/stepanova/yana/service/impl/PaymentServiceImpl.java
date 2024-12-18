@@ -69,8 +69,8 @@ public class PaymentServiceImpl implements PaymentService {
     @Transactional
     public PaymentDto getSuccess(Long userId, String sessionId) throws StripeException {
         Payment paymentFromDB = getBySessionAndUser(sessionId, userId);
-        Status statusFromSession = Status.getByType(stripeService.getSession(sessionId)
-                .getPaymentStatus());
+        Status statusFromSession = Status.valueOf(stripeService.getSession(sessionId)
+                .getPaymentStatus().toUpperCase());
         paymentFromDB.setStatus(statusFromSession);
         Booking bookingFromDB = bookingRepo.findById(paymentFromDB.getBooking().getId())
                 .get();

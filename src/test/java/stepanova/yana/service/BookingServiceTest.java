@@ -113,7 +113,7 @@ class BookingServiceTest {
         user.setId(userId);
 
         String statusName = "paid";
-        Status status = Status.getByType(statusName);
+        Status status = Status.valueOf(statusName.toUpperCase());
 
         Booking booking = new Booking();
         booking.setId(10L);
@@ -277,7 +277,7 @@ class BookingServiceTest {
                 booking.getCheckInDate(),
                 booking.getCheckOutDate(),
                 new AccommodationDtoWithoutAvailability(),
-                new UserResponseDto(), Status.getByType(requestDto.statusName()));
+                new UserResponseDto(), Status.valueOf(requestDto.statusName().toUpperCase()));
         Mockito.when(bookingRepo.findById(bookingId)).thenReturn(Optional.of(booking));
         Mockito.when(bookingMapper.updateBookingFromDto(booking, requestDto)).thenReturn(booking);
         Mockito.when(bookingRepo.save(booking)).thenReturn(booking);
