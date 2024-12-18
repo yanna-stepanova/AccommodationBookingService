@@ -1,7 +1,5 @@
 package stepanova.yana.model;
 
-import java.util.Objects;
-
 public enum Status {
     PENDING("PENDING"),
     CONFIRMED("CONFIRMED"),
@@ -17,14 +15,5 @@ public enum Status {
 
     public String getStatusName() {
         return statusName;
-    }
-
-    public static Status getByType(String type) {
-        for (Status item : Status.values()) {
-            if (Objects.equals(item.getStatusName(), type.toUpperCase())) {
-                return item;
-            }
-        }
-        return null;
     }
 }

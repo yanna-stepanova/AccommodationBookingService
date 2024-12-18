@@ -32,7 +32,7 @@ public interface BookingMapper {
     default void setUpdatedStatus(@MappingTarget Booking booking,
                                   UpdateBookingStatusRequestDto requestDto) {
         if (requestDto.statusName() != null) {
-            booking.setStatus(Status.getByType(requestDto.statusName()));
+            booking.setStatus(Status.valueOf(requestDto.statusName().toUpperCase()));
         }
     }
 }

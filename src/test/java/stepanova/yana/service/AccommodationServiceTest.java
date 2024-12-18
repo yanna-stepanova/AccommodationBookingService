@@ -3,6 +3,7 @@ package stepanova.yana.service;
 import jakarta.persistence.EntityNotFoundException;
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import org.junit.jupiter.api.Assertions;
@@ -76,7 +77,7 @@ class AccommodationServiceTest {
         location.setDescription(requestDto.location().description());
 
         Accommodation accommodation = new Accommodation();
-        accommodation.setType(Type.getByType(requestDto.typeName()));
+        accommodation.setType(Type.valueOf(requestDto.typeName().toUpperCase()));
         accommodation.setLocation(location);
         accommodation.setAmenities(Set.of());
         accommodation.setSize(requestDto.size());
@@ -236,7 +237,7 @@ class AccommodationServiceTest {
 
         Accommodation updatedAccommodation = new Accommodation();
         updatedAccommodation.setId(accommodationId);
-        updatedAccommodation.setType(Type.getByType(requestDto.typeName()));
+        updatedAccommodation.setType(Type.valueOf(requestDto.typeName().toUpperCase(Locale.ROOT)));
         updatedAccommodation.setLocation(oldAccommodation.getLocation());
         updatedAccommodation.setAmenities(oldAccommodation.getAmenities());
         updatedAccommodation.setSize(requestDto.size());
@@ -310,7 +311,7 @@ class AccommodationServiceTest {
         Accommodation updatedAccommodation = new Accommodation();
         updatedAccommodation.setId(oldAccommodation.getId());
         updatedAccommodation.setId(accommodationId);
-        updatedAccommodation.setType(Type.getByType(requestDto.typeName()));
+        updatedAccommodation.setType(Type.valueOf(requestDto.typeName().toUpperCase()));
         updatedAccommodation.setLocation(location);
         updatedAccommodation.setAmenities(Set.of(amenity));
         updatedAccommodation.setSize(requestDto.size());

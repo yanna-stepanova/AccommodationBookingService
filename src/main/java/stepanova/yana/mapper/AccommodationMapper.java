@@ -43,7 +43,7 @@ public interface AccommodationMapper {
     default void setType(@MappingTarget Accommodation accommodation,
                          CreateAccommodationRequestDto requestDto) {
         if (requestDto.typeName() != null) {
-            accommodation.setType(Type.getByType(requestDto.typeName()));
+            accommodation.setType(Type.valueOf(requestDto.typeName().toUpperCase()));
         }
     }
 
@@ -51,7 +51,7 @@ public interface AccommodationMapper {
     default void setUpdatedType(@MappingTarget Accommodation accommodation,
                                 UpdateAllAccommodationRequestDto requestDto) {
         if (requestDto.typeName() != null) {
-            accommodation.setType(Type.getByType(requestDto.typeName()));
+            accommodation.setType(Type.valueOf(requestDto.typeName().toUpperCase()));
         }
     }
 
@@ -59,7 +59,7 @@ public interface AccommodationMapper {
     default void setUpdatedType(@MappingTarget Accommodation accommodation,
                                 UpdateAccommodationRequestDto requestDto) {
         if (requestDto.typeName() != null) {
-            accommodation.setType(Type.getByType(requestDto.typeName()));
+            accommodation.setType(Type.valueOf(requestDto.typeName().toUpperCase()));
         }
     }
 

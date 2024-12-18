@@ -100,7 +100,7 @@ class AccommodationControllerTest {
         locationDto.setAddress(requestDto.location().address());
 
         AccommodationDto expected = new AccommodationDto();
-        expected.setType(Type.getByType(requestDto.typeName()));
+        expected.setType(Type.valueOf(requestDto.typeName().toUpperCase()));
         expected.setLocation(locationDto);
         expected.setSize(requestDto.size());
         expected.setAmenities(Set.of());
@@ -203,7 +203,7 @@ class AccommodationControllerTest {
         UpdateAccommodationRequestDto requestDto = new UpdateAccommodationRequestDto("hostel",
                 "6th capsul bedroom", BigDecimal.valueOf(9.35), 6);
         AccommodationDto expected = new AccommodationDto(accommodationId,
-                Type.getByType(requestDto.typeName()),
+                Type.valueOf(requestDto.typeName().toUpperCase()),
                 new LocationDto(2L, "Ukraine", "Skhidnytsia", "Lviv region",
                         "82391", "Boryslavska Street, 81",
                         "cell: +38(097)7715102, https://www.lubo-kray.com.ua"),

@@ -28,7 +28,7 @@ public interface UserMapper {
         Role role = new Role();
         RoleName roleName = RoleName.CUSTOMER;
         if (requestDto.roleName() != null) {
-            roleName = RoleName.getByType(requestDto.roleName());
+            roleName = RoleName.valueOf(requestDto.roleName().toUpperCase());
         }
         role.setId((long) roleName.ordinal() + 1);
         role.setName(roleName);
