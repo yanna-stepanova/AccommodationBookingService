@@ -22,10 +22,10 @@ public class StripeClient {
     private static final String PATH = "/api/payments/";
     private static final String STATUS_PAID = "paid";
     @Value("${stripe.secret.key}")
-    private static String stripeApiKey;
+    private String stripeApiKey;
 
     @PostConstruct
-    public static void init() {
+    public void init() {
         Stripe.apiKey = stripeApiKey;
     }
 
