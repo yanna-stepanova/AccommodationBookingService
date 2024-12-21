@@ -27,6 +27,7 @@ import stepanova.yana.repository.payment.PaymentRepository;
 import stepanova.yana.service.PaymentService;
 import stepanova.yana.service.StripeService;
 import stepanova.yana.telegram.TelegramNotificationService;
+import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
 @Service
@@ -126,24 +127,7 @@ public class PaymentServiceImpl implements PaymentService {
     }
 
     private void publishEvent(Payment payment, String option) {
-        String message = String.format("%s payment!!!", option)
-                + System.lineSeparator()
-                + " id: " + payment.getId()
-                + System.lineSeparator()
-                + " status: " + payment.getStatus()
-                + System.lineSeparator()
-                + " created date: " + payment.getDateTimeCreated()
-                + System.lineSeparator()
-                + " booking id: " + payment.getBooking().getId()
-                + System.lineSeparator()
-                + " accommodation id: " + payment.getBooking().getAccommodation().getId()
-                + System.lineSeparator()
-                + " amount: " + payment.getAmountToPay() + " USD"
-                + System.lineSeparator()
-                + " session id: " + payment.getSessionID()
-                + System.lineSeparator()
-                + " session url: " + payment.getSessionUrl();
-
+        String message = MessageFormatter.formatPaymentMessage(payment, option);
         telegramNote.sendMessage(message);
     }
 }

@@ -5,7 +5,6 @@ import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -27,6 +26,7 @@ import stepanova.yana.repository.accommodation.AmenityRepository;
 import stepanova.yana.repository.accommodation.LocationRepository;
 import stepanova.yana.service.AccommodationService;
 import stepanova.yana.telegram.TelegramNotificationService;
+import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
 @Service
@@ -151,37 +151,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     private void publishEvent(Accommodation accommodation, String option) {
-        String message = String.format("%s accommodation!!!", option)
-                + System.lineSeparator()
-                + " id: " + accommodation.getId()
-                + System.lineSeparator()
-                + " type: " + accommodation.getType()
-                + System.lineSeparator()
-                + " size: " + accommodation.getSize()
-                + System.lineSeparator()
-                + " daily rate: " + accommodation.getDailyRate() + " USD"
-                + System.lineSeparator()
-                + " quantity: " + accommodation.getAvailability()
-                + System.lineSeparator()
-                + " amenities: "
-                + accommodation.getAmenities().stream()
-                .map(Amenity::getTitle)
-                .collect(Collectors.joining(", "))
-                + System.lineSeparator()
-                + " Location id: " + accommodation.getLocation().getId()
-                + System.lineSeparator()
-                + "     country: " + accommodation.getLocation().getCountry()
-                + System.lineSeparator()
-                + "     city: " + accommodation.getLocation().getCity()
-                + System.lineSeparator()
-                + "     region: " + accommodation.getLocation().getRegion()
-                + System.lineSeparator()
-                + "     zipCode: " + accommodation.getLocation().getZipCode()
-                + System.lineSeparator()
-                + "     address: " + accommodation.getLocation().getAddress()
-                + System.lineSeparator()
-                + "     description: " + accommodation.getLocation().getDescription();
-
-        telegramNote.sendMessage(message);
+        telegramNote.sendMessage(
+                MessageFormatter.formatAccommodationMessage(accommodation, option));
     }
 }

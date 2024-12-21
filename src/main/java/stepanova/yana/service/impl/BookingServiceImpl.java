@@ -22,6 +22,7 @@ import stepanova.yana.repository.booking.BookingRepository;
 import stepanova.yana.repository.payment.PaymentRepository;
 import stepanova.yana.service.BookingService;
 import stepanova.yana.telegram.TelegramNotificationService;
+import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
 @Service
@@ -63,7 +64,8 @@ public class BookingServiceImpl implements BookingService {
 
     @Override
     public List<BookingDtoWithoutDetails> getAllByUserAndStatus(Long userId, String statusName) {
-        return bookingRepo.findAllByUserIdAndStatus(userId, Status.valueOf(statusName.toUpperCase())).stream()
+        return bookingRepo.findAllByUserIdAndStatus(userId,
+                        Status.valueOf(statusName.toUpperCase())).stream()
                 .map(bookingMapper::toDtoWithoutDetails)
                 .toList();
     }
@@ -137,20 +139,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     private void publishEvent(Booking booking, String option) {
-        String message = String.format("%s booking!!!", option)
-                + System.lineSeparator()
-                + " id: " + booking.getId()
-                + System.lineSeparator()
-                + " status: " + booking.getStatus()
-                + System.lineSeparator()
-                + " check in: " + booking.getCheckInDate()
-                + System.lineSeparator()
-                + " check out: " + booking.getCheckOutDate()
-                + System.lineSeparator()
-                + " accommodation id: " + booking.getAccommodation().getId()
-                + System.lineSeparator()
-                + " user id: " + booking.getUser().getId();
-
+        String message = MessageFormatter.formatBookingMessage(booking, option);
         telegramNote.sendMessage(message);
     }
 }
