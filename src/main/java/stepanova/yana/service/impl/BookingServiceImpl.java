@@ -55,7 +55,7 @@ public class BookingServiceImpl implements BookingService {
                         booking.getCheckInDate(),
                         booking.getCheckOutDate());
         if (othersBooking.size() >= accommodationFromDB.getAvailability()) {
-            return bookingMapper.toDto(null);
+            return bookingMapper.toDto(new Booking());
         }
         Booking savedBooking = bookingRepo.save(booking);
         publishEvent(savedBooking, "New");

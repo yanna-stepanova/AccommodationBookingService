@@ -115,16 +115,11 @@ public class AccommodationServiceImpl implements AccommodationService {
     }
 
     private Location getSavedLocation(CreateLocationRequestDto locationRequestDto) {
-        Location locationFromDB = locationRepo.findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
+        return locationRepo.findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
                 locationRequestDto.country(),
                 locationRequestDto.city(),
                 locationRequestDto.region(),
-                locationRequestDto.address()).orElse(null);
-        if (locationFromDB != null) {
-            return locationFromDB;
-        }
-        Location location = locationMapper.toModel(locationRequestDto);
-        return locationRepo.save(location);
+                locationRequestDto.address()).orElse(new Location());
     }
 
     private Accommodation getAccommodationByIdFromDB(Long id) {
