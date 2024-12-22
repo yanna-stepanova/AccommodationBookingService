@@ -40,7 +40,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Get correct UserResponseDto for valid requestDto")
-    public void register_WithValidRequestDto_ShouldReturnValidResponseDto() {
+    void register_WithValidRequestDto_ShouldReturnValidResponseDto() {
         //Given
         UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto(
                 "user@email.com",
@@ -86,7 +86,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Exception: if try register existing email")
-    public void register_WithExistingEmail_ShouldReturnException() {
+    void register_WithExistingEmail_ShouldReturnException() {
         //Given
         UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto(
                 "user@email.com",
@@ -111,7 +111,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Exception: if try register when roles are existing")
-    public void register_WithNonExistingRole_ShouldReturnException() {
+    void register_WithNonExistingRole_ShouldReturnException() {
         //Given
         UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto(
                 "user@email.com",
@@ -136,14 +136,14 @@ class UserServiceTest {
                 () -> userService.register(requestDto));
 
         //Then
-        String expected = String.format("Can't find %s in table roles: ", RoleName.CUSTOMER);
+        String expected = String.format("Can't find %s in table roles", RoleName.CUSTOMER);
         String actual = exception.getMessage();
         Assertions.assertEquals(expected, actual);
     }
 
     @Test
     @DisplayName("Get correct UserResponseDto for existing user")
-    public void getUserDetail_WithValidUserId_ShouldReturnValidDetail() {
+    void getUserDetail_WithValidUserId_ShouldReturnValidDetail() {
         //Given
         Long userId = 10L;
         User user = new User();
@@ -177,7 +177,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Exception: if get UserResponseDto for non-existing user")
-    public void getUserDetail_WithNonExistingUserId_ShouldThrowException() {
+    void getUserDetail_WithNonExistingUserId_ShouldThrowException() {
         //Given
         Long userId = 900L;
 
@@ -198,7 +198,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Get updated UserResponseDto for valid user id and valid roleName")
-    public void updateUserRole_WithValidUserIdAndRequestDto_ReturnValidResponseDto() {
+    void updateUserRole_WithValidUserIdAndRequestDto_ReturnValidResponseDto() {
         //Given
         Long userId = 1L;
         User user = new User();
@@ -244,7 +244,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Get updated UserResponseDto for valid user id and valid requestDto")
-    public void updateUserProfile_WithValidUserIdAndRequestDto_ShouldReturnValidResponseDto() {
+    void updateUserProfile_WithValidUserIdAndRequestDto_ShouldReturnValidResponseDto() {
         //Given
         Long userId = 10L;
         User oldUser = new User();
