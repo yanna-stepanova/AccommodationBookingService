@@ -2,7 +2,6 @@ package stepanova.yana.service.impl;
 
 import com.stripe.exception.StripeException;
 import com.stripe.model.checkout.Session;
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
@@ -18,6 +17,8 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
+import stepanova.yana.exception.BookingNotFoundException;
+import stepanova.yana.exception.PaymentNotFoundException;
 import stepanova.yana.mapper.PaymentMapper;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
@@ -43,7 +44,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentDto save(Long userId, CreatePaymentRequestDto requestDto)
             throws StripeException, MalformedURLException {
         Booking bookingFromDB = bookingRepo.findByIdAndUserId(requestDto.bookingId(), userId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking with id = %s not found for this user",
                                 requestDto.bookingId())));
         Payment payment = getPaymentByBookingId(bookingFromDB.getId());
@@ -121,7 +122,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private Payment getBySessionAndUser(String sessionId, Long userId) {
         return paymentRepo.findBySessionIdAndUserId(sessionId, userId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new PaymentNotFoundException(
                         String.format("There isn't such payment session by id = %s for userId = %s",
                                 sessionId, userId)));
     }

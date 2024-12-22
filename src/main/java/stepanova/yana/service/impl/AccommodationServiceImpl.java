@@ -1,6 +1,5 @@
 package stepanova.yana.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
@@ -15,6 +14,7 @@ import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
 import stepanova.yana.dto.amenity.CreateAmenityRequestDto;
 import stepanova.yana.dto.location.CreateLocationRequestDto;
+import stepanova.yana.exception.AccommodationNotFoundException;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.mapper.AmenityMapper;
 import stepanova.yana.mapper.LocationMapper;
@@ -69,7 +69,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDto getAccommodationById(Long id) {
         return accommodationRepo.findById(id)
                 .map(accommodationMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new AccommodationNotFoundException(
                         String.format("Accommodation with id: %s not found", id)));
     }
 
@@ -129,7 +129,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     private Accommodation getAccommodationByIdFromDB(Long id) {
         return accommodationRepo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Can't get accommodation by id = " + id));
+                new AccommodationNotFoundException("Can't get accommodation by id = " + id));
     }
 
     private Set<Amenity> getSavedAmenities(Set<CreateAmenityRequestDto> amenityRequestDtos) {

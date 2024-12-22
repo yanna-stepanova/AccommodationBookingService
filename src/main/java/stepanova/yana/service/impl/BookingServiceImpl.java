@@ -1,6 +1,5 @@
 package stepanova.yana.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
@@ -11,6 +10,8 @@ import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
 import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
+import stepanova.yana.exception.AccommodationNotFoundException;
+import stepanova.yana.exception.BookingNotFoundException;
 import stepanova.yana.mapper.BookingMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Booking;
@@ -75,7 +76,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getBookingByIdAndUserId(Long userId, Long bookingId) {
         return bookingRepo.findByIdAndUserId(bookingId, userId)
                 .map(bookingMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking with id = %s not found for this user", bookingId)));
     }
 
@@ -91,7 +92,7 @@ public class BookingServiceImpl implements BookingService {
     public BookingDto getBookingById(Long bookingId) {
         return bookingRepo.findById(bookingId)
                 .map(bookingMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking with id = %s not found", bookingId)));
     }
 
@@ -99,7 +100,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDto updateBookingById(Long bookingId, UpdateBookingStatusRequestDto requestDto) {
         Booking bookingFromDB = bookingRepo.findById(bookingId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking with id = %s not found", bookingId)));
         Booking savedBooking = bookingRepo.save(bookingMapper.updateBookingFromDto(
                 bookingFromDB, requestDto));
@@ -111,7 +112,7 @@ public class BookingServiceImpl implements BookingService {
     @Transactional
     public BookingDto cancelBookingById(Long userId, Long bookingId) {
         Booking bookingFromDB = bookingRepo.findByIdAndUserId(bookingId, userId)
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new BookingNotFoundException(
                         String.format("Booking with id = %s not found for this user", bookingId)));
         bookingFromDB.setStatus(Status.CANCELED);
         Booking savedBooking = bookingRepo.save(bookingFromDB);
@@ -135,7 +136,7 @@ public class BookingServiceImpl implements BookingService {
 
     private Accommodation getAccommodationById(Long id) {
         return accommodationRepo.findById(id).orElseThrow(() ->
-                new EntityNotFoundException("Can't get accommodation by id = " + id));
+                new AccommodationNotFoundException("Can't get accommodation by id = " + id));
     }
 
     private void publishEvent(Booking booking, String option) {

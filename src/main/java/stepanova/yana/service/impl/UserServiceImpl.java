@@ -1,6 +1,5 @@
 package stepanova.yana.service.impl;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -10,6 +9,8 @@ import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.dto.user.UserRoleRequestDto;
 import stepanova.yana.exception.RegistrationException;
+import stepanova.yana.exception.RoleNotFoundException;
+import stepanova.yana.exception.UserNotFoundException;
 import stepanova.yana.mapper.UserMapper;
 import stepanova.yana.model.Role;
 import stepanova.yana.model.RoleName;
@@ -36,9 +37,7 @@ public class UserServiceImpl implements UserService {
         User user = userMapper.toModel(requestDto);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         if (user.getRole() == null) {
-            user.setRole(roleRepo.findByName(RoleName.CUSTOMER)
-                    .orElseThrow(() -> new EntityNotFoundException(
-                    String.format("Can't find %s in table roles: ", RoleName.CUSTOMER))));
+            user.setRole(getRoleByName(RoleName.CUSTOMER.getRoleName()));
         }
         return userMapper.toResponseDto(userRepo.save(user));
     }
@@ -64,13 +63,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundException(
+        return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(
                 String.format("Can't find user by id = %s in table users", id)));
     }
 
     private Role getRoleByName(String roleName) {
         return roleRepo.findByName(RoleName.valueOf(roleName.toUpperCase()))
-                .orElseThrow(() -> new EntityNotFoundException(
+                .orElseThrow(() -> new RoleNotFoundException(
                         String.format("Can't find %s in table roles", roleName)));
     }
 }

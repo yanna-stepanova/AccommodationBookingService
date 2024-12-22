@@ -1,7 +1,6 @@
 package stepanova.yana.mapper;
-
+import java.util.Collections;
 import java.util.Optional;
-import java.util.Set;
 import java.util.stream.Collectors;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
@@ -66,14 +65,11 @@ public interface AccommodationMapper {
     @AfterMapping
     default void setAmenitySet(@MappingTarget Accommodation accommodation,
                                CreateAccommodationRequestDto requestDto) {
-        if (requestDto.amenities() == null) {
-            accommodation.setAmenities(Set.of());
-            return;
-        }
-        accommodation.setAmenities(requestDto.amenities().stream()
-                .map(Amenity::new)
-                .collect(Collectors.toSet())
-        );
+        accommodation.setAmenities(Optional.ofNullable(requestDto.amenities())
+                .map(amenities -> amenities.stream()
+                        .map(Amenity::new)
+                        .collect(Collectors.toSet()))
+                .orElse(Collections.emptySet()));
     }
 
     @Named("accommodationFromId")
