@@ -4,7 +4,6 @@ import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
@@ -120,9 +119,9 @@ public class BookingServiceImpl implements BookingService {
         return bookingMapper.toDto(savedBooking);
     }
 
+    @Override
     @Transactional
-    @Scheduled(cron = "0 0 13 * * *", zone = "Europe/Kiev")
-    protected void sendExpiredBookingsNotification() {
+    public void expiredBookings() {
         List<Booking> bookingList = bookingRepo.findAllByStatusNotInAndCheckOutDateIs(
                 Status.CANCELED, Status.PAID, LocalDate.now().plusDays(1L));
         if (!bookingList.isEmpty()) {

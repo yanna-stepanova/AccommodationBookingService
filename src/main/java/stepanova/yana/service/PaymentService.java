@@ -15,4 +15,6 @@ public interface PaymentService {
     String getCancel(Long userId, String sessionId);
 
     List<PaymentDto> getAllByUser(Long userId);
+
+    void expiredPayments();
 }

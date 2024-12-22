@@ -13,7 +13,6 @@ import java.time.Period;
 import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
@@ -100,9 +99,9 @@ public class PaymentServiceImpl implements PaymentService {
                 .toList();
     }
 
+    @Override
     @Transactional
-    @Scheduled(cron = "0 */1 * * * *", zone = "Europe/Kiev")
-    protected void checkExpiredSession() {
+    public void expiredPayments() {
         LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
         List<Payment> paymentList = paymentRepo.findAllByStatusNotInAndDateBetween(
