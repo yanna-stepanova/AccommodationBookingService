@@ -20,6 +20,7 @@ import org.springframework.jdbc.datasource.init.ScriptUtils;
 import org.springframework.test.context.jdbc.Sql;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Status;
+import stepanova.yana.repository.BookingRepository;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)

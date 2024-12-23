@@ -1,4 +1,4 @@
-package stepanova.yana.repository.booking;
+package stepanova.yana.repository;
 
 import java.time.LocalDate;
 import java.util.List;

@@ -14,7 +14,7 @@ import stepanova.yana.model.User;
 
 @Mapper(config = MapperConfig.class)
 public interface UserMapper {
-    @Mapping(target = "role", ignore = true)
+    //@Mapping(target = "role", ignore = true)
     User toModel(UserRegistrationRequestDto requestDto);
 
     @Mapping(target = "roleName", ignore = true)
@@ -27,12 +27,8 @@ public interface UserMapper {
     default void setRole(@MappingTarget User user, UserRegistrationRequestDto requestDto) {
         Role role = new Role();
         RoleName roleName = RoleName.CUSTOMER;
-        if (requestDto.roleName() != null) {
-            roleName = RoleName.valueOf(requestDto.roleName().toUpperCase());
-        }
         role.setId((long) roleName.ordinal() + 1);
         role.setName(roleName);
-
         user.setRole(role);
     }
 

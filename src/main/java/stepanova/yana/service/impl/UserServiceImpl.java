@@ -8,15 +8,14 @@ import stepanova.yana.dto.user.UserProfileRequestDto;
 import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.dto.user.UserRoleRequestDto;
+import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.exception.RegistrationException;
-import stepanova.yana.exception.RoleNotFoundException;
-import stepanova.yana.exception.UserNotFoundException;
 import stepanova.yana.mapper.UserMapper;
 import stepanova.yana.model.Role;
 import stepanova.yana.model.RoleName;
 import stepanova.yana.model.User;
-import stepanova.yana.repository.user.RoleRepository;
-import stepanova.yana.repository.user.UserRepository;
+import stepanova.yana.repository.RoleRepository;
+import stepanova.yana.repository.UserRepository;
 import stepanova.yana.service.UserService;
 
 @RequiredArgsConstructor
@@ -63,13 +62,13 @@ public class UserServiceImpl implements UserService {
     }
 
     private User getUserById(Long id) {
-        return userRepo.findById(id).orElseThrow(() -> new UserNotFoundException(
+        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundCustomException(
                 String.format("Can't find user by id = %s in table users", id)));
     }
 
     private Role getRoleByName(String roleName) {
         return roleRepo.findByName(RoleName.valueOf(roleName.toUpperCase()))
-                .orElseThrow(() -> new RoleNotFoundException(
+                .orElseThrow(() -> new EntityNotFoundCustomException(
                         String.format("Can't find %s in table roles", roleName)));
     }
 }

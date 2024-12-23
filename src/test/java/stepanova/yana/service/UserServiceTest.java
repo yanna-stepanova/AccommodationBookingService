@@ -21,8 +21,8 @@ import stepanova.yana.mapper.UserMapper;
 import stepanova.yana.model.Role;
 import stepanova.yana.model.RoleName;
 import stepanova.yana.model.User;
-import stepanova.yana.repository.user.RoleRepository;
-import stepanova.yana.repository.user.UserRepository;
+import stepanova.yana.repository.RoleRepository;
+import stepanova.yana.repository.UserRepository;
 import stepanova.yana.service.impl.UserServiceImpl;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,8 +47,7 @@ class UserServiceTest {
                 "UserName",
                 "UserSurname",
                 "password",
-                "password",
-                "customer");
+                "password");
 
         User user = new User();
         user.setEmail(requestDto.email());
@@ -93,8 +92,7 @@ class UserServiceTest {
                 "UserName",
                 "UserSurname",
                 "password",
-                "password",
-                "customer");
+                "password");
 
         Mockito.when(userRepo.existsByEmail(requestDto.email())).thenReturn(true);
 
@@ -118,8 +116,7 @@ class UserServiceTest {
                 "UserName",
                 "UserSurname",
                 "password",
-                "password",
-                null);
+                "password");
 
         User user = new User();
         user.setEmail(requestDto.email());
