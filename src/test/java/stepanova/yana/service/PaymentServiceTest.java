@@ -29,8 +29,8 @@ import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
-import stepanova.yana.repository.booking.BookingRepository;
-import stepanova.yana.repository.payment.PaymentRepository;
+import stepanova.yana.repository.BookingRepository;
+import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.PaymentServiceImpl;
 import stepanova.yana.telegram.TelegramNotificationService;
 

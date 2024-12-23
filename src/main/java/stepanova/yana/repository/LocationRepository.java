@@ -1,4 +1,4 @@
-package stepanova.yana.repository.accommodation;
+package stepanova.yana.repository;
 
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;

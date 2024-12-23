@@ -28,9 +28,9 @@ import stepanova.yana.model.Role;
 import stepanova.yana.model.RoleName;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
-import stepanova.yana.repository.accommodation.AccommodationRepository;
-import stepanova.yana.repository.booking.BookingRepository;
-import stepanova.yana.repository.payment.PaymentRepository;
+import stepanova.yana.repository.AccommodationRepository;
+import stepanova.yana.repository.BookingRepository;
+import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.BookingServiceImpl;
 import stepanova.yana.telegram.TelegramNotificationService;
 

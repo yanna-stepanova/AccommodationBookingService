@@ -1,4 +1,4 @@
-package stepanova.yana.repository.payment;
+package stepanova.yana.repository;
 
 import java.time.LocalDateTime;
 import java.util.Collection;

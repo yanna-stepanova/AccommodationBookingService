@@ -68,7 +68,7 @@ class AuthenticationControllerTest {
     void register_WithValidRequestDto_Success() throws Exception {
         //Given
         UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto("nobode@example.com",
-                "Person", "Nobody", "person1234", "person1234", null);
+                "Person", "Nobody", "person1234", "person1234");
         UserResponseDto expected = new UserResponseDto(3L,requestDto.email(),
                 requestDto.firstName(), requestDto.lastName(), RoleName.CUSTOMER.getRoleName());
 

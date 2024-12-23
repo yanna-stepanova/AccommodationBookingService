@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import stepanova.yana.repository.user.UserRepository;
+import stepanova.yana.repository.UserRepository;
 
 @Service
 @RequiredArgsConstructor

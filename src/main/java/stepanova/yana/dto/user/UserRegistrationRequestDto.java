@@ -13,5 +13,4 @@ public record UserRegistrationRequestDto(
         @NotBlank String firstName,
         @NotBlank String lastName,
         @NotBlank @Length(min = 8, max = 25) String password,
-        @NotBlank @Length(min = 8, max = 25) String repeatPassword,
-        String roleName) {}
+        @NotBlank @Length(min = 8, max = 25) String repeatPassword) {}

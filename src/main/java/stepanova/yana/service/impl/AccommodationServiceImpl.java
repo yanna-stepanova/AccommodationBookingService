@@ -14,16 +14,15 @@ import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
 import stepanova.yana.dto.amenity.CreateAmenityRequestDto;
 import stepanova.yana.dto.location.CreateLocationRequestDto;
-import stepanova.yana.exception.AccommodationNotFoundException;
+import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.mapper.AmenityMapper;
-import stepanova.yana.mapper.LocationMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
 import stepanova.yana.model.Location;
-import stepanova.yana.repository.accommodation.AccommodationRepository;
-import stepanova.yana.repository.accommodation.AmenityRepository;
-import stepanova.yana.repository.accommodation.LocationRepository;
+import stepanova.yana.repository.AccommodationRepository;
+import stepanova.yana.repository.AmenityRepository;
+import stepanova.yana.repository.LocationRepository;
 import stepanova.yana.service.AccommodationService;
 import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.MessageFormatter;
@@ -34,7 +33,6 @@ public class AccommodationServiceImpl implements AccommodationService {
     private final AccommodationRepository accommodationRepo;
     private final AccommodationMapper accommodationMapper;
     private final LocationRepository locationRepo;
-    private final LocationMapper locationMapper;
     private final AmenityRepository amenityRepo;
     private final AmenityMapper amenityMapper;
     private final TelegramNotificationService telegramNote;
@@ -69,7 +67,7 @@ public class AccommodationServiceImpl implements AccommodationService {
     public AccommodationDto getAccommodationById(Long id) {
         return accommodationRepo.findById(id)
                 .map(accommodationMapper::toDto)
-                .orElseThrow(() -> new AccommodationNotFoundException(
+                .orElseThrow(() -> new EntityNotFoundCustomException(
                         String.format("Accommodation with id: %s not found", id)));
     }
 
@@ -124,7 +122,7 @@ public class AccommodationServiceImpl implements AccommodationService {
 
     private Accommodation getAccommodationByIdFromDB(Long id) {
         return accommodationRepo.findById(id).orElseThrow(() ->
-                new AccommodationNotFoundException("Can't get accommodation by id = " + id));
+                new EntityNotFoundCustomException("Can't get accommodation by id = " + id));
     }
 
     private Set<Amenity> getSavedAmenities(Set<CreateAmenityRequestDto> amenityRequestDtos) {
