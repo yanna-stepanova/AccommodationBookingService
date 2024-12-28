@@ -55,6 +55,11 @@ public class CustomGlobalExceptionHandler extends ResponseEntityExceptionHandler
         return generateErrorResponse(HttpStatus.UNPROCESSABLE_ENTITY, ex.getLocalizedMessage());
     }
 
+    @ExceptionHandler(CustomTelegramApiException.class)
+    protected ResponseEntity<Object> handleTelegramApiException(CustomTelegramApiException ex) {
+        return generateErrorResponse(HttpStatus.CONFLICT, ex.getLocalizedMessage());
+    }
+
     private ResponseEntity<Object> generateErrorResponse(HttpStatus status, String errorText) {
         Map<String,Object> bodyErrors = new LinkedHashMap<>();
         bodyErrors.put("timestamp", LocalDateTime.now());
