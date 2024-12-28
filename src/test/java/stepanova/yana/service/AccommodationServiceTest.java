@@ -33,9 +33,9 @@ import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
 import stepanova.yana.model.Location;
 import stepanova.yana.model.Type;
-import stepanova.yana.repository.accommodation.AccommodationRepository;
-import stepanova.yana.repository.accommodation.AmenityRepository;
-import stepanova.yana.repository.accommodation.LocationRepository;
+import stepanova.yana.repository.AccommodationRepository;
+import stepanova.yana.repository.AmenityRepository;
+import stepanova.yana.repository.LocationRepository;
 import stepanova.yana.service.impl.AccommodationServiceImpl;
 import stepanova.yana.telegram.TelegramNotificationService;
 

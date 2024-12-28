@@ -16,14 +16,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
-import stepanova.yana.exception.BookingNotFoundException;
-import stepanova.yana.exception.PaymentNotFoundException;
+import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.mapper.PaymentMapper;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
-import stepanova.yana.repository.booking.BookingRepository;
-import stepanova.yana.repository.payment.PaymentRepository;
+import stepanova.yana.repository.BookingRepository;
+import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.PaymentService;
 import stepanova.yana.service.StripeService;
 import stepanova.yana.telegram.TelegramNotificationService;
@@ -43,7 +42,7 @@ public class PaymentServiceImpl implements PaymentService {
     public PaymentDto save(Long userId, CreatePaymentRequestDto requestDto)
             throws StripeException, MalformedURLException {
         Booking bookingFromDB = bookingRepo.findByIdAndUserId(requestDto.bookingId(), userId)
-                .orElseThrow(() -> new BookingNotFoundException(
+                .orElseThrow(() -> new EntityNotFoundCustomException(
                         String.format("Booking with id = %s not found for this user",
                                 requestDto.bookingId())));
         Payment payment = getPaymentByBookingId(bookingFromDB.getId());
@@ -121,7 +120,7 @@ public class PaymentServiceImpl implements PaymentService {
 
     private Payment getBySessionAndUser(String sessionId, Long userId) {
         return paymentRepo.findBySessionIdAndUserId(sessionId, userId)
-                .orElseThrow(() -> new PaymentNotFoundException(
+                .orElseThrow(() -> new EntityNotFoundCustomException(
                         String.format("There isn't such payment session by id = %s for userId = %s",
                                 sessionId, userId)));
     }
