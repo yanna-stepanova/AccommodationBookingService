@@ -12,10 +12,14 @@ import java.time.LocalTime;
 import java.time.Period;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
+import stepanova.yana.exception.CustomTelegramApiException;
 import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.mapper.PaymentMapper;
 import stepanova.yana.model.Booking;
@@ -31,6 +35,7 @@ import stepanova.yana.util.MessageFormatter;
 @RequiredArgsConstructor
 @Service
 public class PaymentServiceImpl implements PaymentService {
+    private static final Logger log = LogManager.getLogger(PaymentServiceImpl.class);
     private final PaymentRepository paymentRepo;
     private final BookingRepository bookingRepo;
     private final PaymentMapper paymentMapper;
@@ -77,7 +82,7 @@ public class PaymentServiceImpl implements PaymentService {
         bookingFromDB.setStatus(statusFromSession);
         bookingRepo.save(bookingFromDB);
         Payment savedPayment = paymentRepo.save(paymentFromDB);
-        publishEvent(savedPayment, "Successful");
+        notifyTelegramAsync(savedPayment, "Successful");
         return paymentMapper.toDto(savedPayment);
     }
 
@@ -127,6 +132,15 @@ public class PaymentServiceImpl implements PaymentService {
 
     private void publishEvent(Payment payment, String option) {
         String message = MessageFormatter.formatPaymentMessage(payment, option);
-        telegramNote.sendMessage(message);
+        try {
+            telegramNote.sendMessage(message);
+        } catch (CustomTelegramApiException ex) {
+            log.warn("Failed to notify Telegram for payment ID {}: {}",
+                    payment.getId(), ex.getMessage());
+        }
+    }
+
+    private void notifyTelegramAsync(Payment payment, String action) {
+        CompletableFuture.runAsync(() -> publishEvent(payment, action));
     }
 }
