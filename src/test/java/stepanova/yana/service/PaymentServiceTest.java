@@ -33,6 +33,7 @@ import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.PaymentServiceImpl;
 import stepanova.yana.telegram.TelegramNotificationService;
+import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
 class PaymentServiceTest {
@@ -67,9 +68,7 @@ class PaymentServiceTest {
         booking.setCheckOutDate(LocalDate.now().plusDays(1L));
         booking.setUser(user);
         booking.setAccommodation(accommodation);
-        Session session = new Session();
-        session.setId("1111");
-        session.setUrl("https://checkout.stripe.com/c/pay/cs_test_a11E");
+        Session session = DataFactoryForServices.createValidSession();
         Payment payment = new Payment();
         payment.setSessionID(session.getId());
         payment.setSessionUrl(new URL(session.getUrl()));
@@ -97,8 +96,7 @@ class PaymentServiceTest {
 
     @Test
     @DisplayName("Exception: if get PaymentDto for non-valid user id and requestDto")
-    void save_WithNonValidUserAndRequestDto_ReturnException()
-            throws StripeException, MalformedURLException {
+    void save_WithNonValidUserAndRequestDto_ReturnException() {
         //Given
         Long userId = 2L;
         CreatePaymentRequestDto requestDto = new CreatePaymentRequestDto(100L);

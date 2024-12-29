@@ -24,6 +24,7 @@ import stepanova.yana.model.User;
 import stepanova.yana.repository.RoleRepository;
 import stepanova.yana.repository.UserRepository;
 import stepanova.yana.service.impl.UserServiceImpl;
+import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -42,21 +43,15 @@ class UserServiceTest {
     @DisplayName("Get correct UserResponseDto for valid requestDto")
     void register_WithValidRequestDto_ShouldReturnValidResponseDto() {
         //Given
-        UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto(
-                "user@email.com",
-                "UserName",
-                "UserSurname",
-                "password",
-                "password");
+        UserRegistrationRequestDto requestDto = DataFactoryForServices
+                .createUserRegistrationRequestDto();
 
         User user = new User();
         user.setEmail(requestDto.email());
         user.setFirstName(requestDto.firstName());
         user.setLastName(requestDto.lastName());
         user.setPassword(requestDto.password());
-        Role roleUser = new Role();
-        roleUser.setId(2L);
-        roleUser.setName(RoleName.CUSTOMER);
+        Role roleUser = DataFactoryForServices.createValidCustomerRole(2L);
         user.setRole(roleUser);
 
         UserResponseDto expected = new UserResponseDto(
@@ -87,12 +82,8 @@ class UserServiceTest {
     @DisplayName("Exception: if try register existing email")
     void register_WithExistingEmail_ShouldReturnException() {
         //Given
-        UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto(
-                "user@email.com",
-                "UserName",
-                "UserSurname",
-                "password",
-                "password");
+        UserRegistrationRequestDto requestDto = DataFactoryForServices
+                .createUserRegistrationRequestDto();
 
         Mockito.when(userRepo.existsByEmail(requestDto.email())).thenReturn(true);
 
@@ -111,12 +102,8 @@ class UserServiceTest {
     @DisplayName("Exception: if try register when roles are existing")
     void register_WithNonExistingRole_ShouldReturnException() {
         //Given
-        UserRegistrationRequestDto requestDto = new UserRegistrationRequestDto(
-                "user@email.com",
-                "UserName",
-                "UserSurname",
-                "password",
-                "password");
+        UserRegistrationRequestDto requestDto = DataFactoryForServices
+                .createUserRegistrationRequestDto();
 
         User user = new User();
         user.setEmail(requestDto.email());
@@ -143,16 +130,8 @@ class UserServiceTest {
     void getUserDetail_WithValidUserId_ShouldReturnValidDetail() {
         //Given
         Long userId = 10L;
-        User user = new User();
-        user.setId(userId);
-        user.setEmail("default@gmail.com");
-        user.setFirstName("Name");
-        user.setLastName("Surname");
-        user.setPassword("password");
-        Role roleUser = new Role();
-        roleUser.setId(2L);
-        roleUser.setName(RoleName.CUSTOMER);
-        user.setRole(roleUser);
+        Role roleUser = DataFactoryForServices.createValidCustomerRole(2L);
+        User user = DataFactoryForServices.createValidUserWithIdAndRole(userId, roleUser);
 
         UserResponseDto expected = new UserResponseDto(
                 user.getId(),
@@ -198,20 +177,10 @@ class UserServiceTest {
     void updateUserRole_WithValidUserIdAndRequestDto_ReturnValidResponseDto() {
         //Given
         Long userId = 1L;
-        User user = new User();
-        user.setId(userId);
-        user.setEmail("default@gmail.com");
-        user.setFirstName("Name");
-        user.setLastName("Surname");
-        user.setPassword("password");
-        Role roleUser = new Role();
-        roleUser.setId(2L);
-        roleUser.setName(RoleName.CUSTOMER);
-        user.setRole(roleUser);
+        Role roleUser = DataFactoryForServices.createValidCustomerRole(2L);
+        User user = DataFactoryForServices.createValidUserWithIdAndRole(userId, roleUser);
 
-        Role updatedRole = new Role();
-        updatedRole.setId(1L);
-        updatedRole.setName(RoleName.ADMIN);
+        Role updatedRole = DataFactoryForServices.createValidAdminRole(1L);
         user.setRole(updatedRole);
 
         UserResponseDto expected = new UserResponseDto(
@@ -244,19 +213,10 @@ class UserServiceTest {
     void updateUserProfile_WithValidUserIdAndRequestDto_ShouldReturnValidResponseDto() {
         //Given
         Long userId = 10L;
-        User oldUser = new User();
-        oldUser.setId(userId);
-        oldUser.setEmail("default@example.com");
-        oldUser.setFirstName("Name");
-        oldUser.setLastName("Surname");
-        oldUser.setPassword("password");
-        Role roleUser = new Role();
-        roleUser.setId(2L);
-        roleUser.setName(RoleName.CUSTOMER);
-        oldUser.setRole(roleUser);
+        Role roleUser = DataFactoryForServices.createValidCustomerRole(2L);
+        User oldUser = DataFactoryForServices.createValidUserWithIdAndRole(userId, roleUser);
 
-        UserProfileRequestDto requestDto = new UserProfileRequestDto(
-                "Taras", "Schevchenko");
+        UserProfileRequestDto requestDto = DataFactoryForServices.createUserProfileRequestDto();
         User updatedUser = new User();
         updatedUser.setId(oldUser.getId());
         updatedUser.setFirstName(requestDto.firstName());

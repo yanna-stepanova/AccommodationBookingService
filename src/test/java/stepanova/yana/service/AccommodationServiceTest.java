@@ -1,7 +1,6 @@
 package stepanova.yana.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -25,7 +24,6 @@ import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
 import stepanova.yana.dto.amenity.AmenityDto;
 import stepanova.yana.dto.amenity.CreateAmenityRequestDto;
-import stepanova.yana.dto.location.CreateLocationRequestDto;
 import stepanova.yana.dto.location.LocationDto;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.mapper.AmenityMapper;
@@ -38,6 +36,7 @@ import stepanova.yana.repository.AmenityRepository;
 import stepanova.yana.repository.LocationRepository;
 import stepanova.yana.service.impl.AccommodationServiceImpl;
 import stepanova.yana.telegram.TelegramNotificationService;
+import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
 class AccommodationServiceTest {
@@ -60,12 +59,8 @@ class AccommodationServiceTest {
     @DisplayName("Get correct AccommodationDto for valid requestDto")
     void save_WithValidRequestDto_ReturnAccommodationDto() {
         //Given
-        CreateAccommodationRequestDto requestDto = new CreateAccommodationRequestDto(
-                "Hostel",
-                new CreateLocationRequestDto("Ukraine", "Rivne", "Rivne region",
-                        null,"Kyivska street, 10", null),
-                "cupsule room (6 places)",
-                Set.of(), BigDecimal.valueOf(7), 6);
+        CreateAccommodationRequestDto requestDto = DataFactoryForServices
+                .createValidAccommodationRequestDto();
 
         Location location = new Location();
         location.setId(7L);
@@ -84,13 +79,8 @@ class AccommodationServiceTest {
         accommodation.setDailyRate(requestDto.dailyRate());
         accommodation.setAvailability(requestDto.availability());
 
-        AccommodationDto expected = new AccommodationDto(5L,
-                accommodation.getType(),
-                new LocationDto(7L, location.getCountry(), location.getCity(), location.getRegion(),
-                        location.getZipCode(), location.getAddress(), location.getDescription()),
-                accommodation.getSize(), Set.of(),
-                accommodation.getDailyRate(),
-                accommodation.getAvailability());
+        AccommodationDto expected = DataFactoryForServices.createExpectedAccommodationDtoForSaving(
+                accommodation, location);
 
         Mockito.when(accommodationMapper.toModel(requestDto)).thenReturn(accommodation);
         Mockito.when(locationRepo.findByCountryAndCityAndRegionAndAddressAllIgnoreCase(
@@ -114,14 +104,8 @@ class AccommodationServiceTest {
     void getAccommodationById_WithExistingAccommodationId_ReturnAccommodationDto() {
         //Given
         Long accommodationId = 4L;
-        Accommodation accommodation = new Accommodation();
-        accommodation.setId(accommodationId);
-        accommodation.setType(Type.HOSTEL);
-        accommodation.setLocation(new Location());
-        accommodation.setAmenities(Set.of());
-        accommodation.setSize("cupsule room (6 places)");
-        accommodation.setDailyRate(BigDecimal.valueOf(7));
-        accommodation.setAvailability(6);
+        Accommodation accommodation = DataFactoryForServices
+                .createValidAccommodation(accommodationId);
         Mockito.when(accommodationRepo.findById(accommodationId))
                 .thenReturn(Optional.of(accommodation));
 
@@ -164,23 +148,8 @@ class AccommodationServiceTest {
     @DisplayName("Get a list of all AccommodationDtoWithoutLocationAndAmenities")
     void getAll_ReturnTwo() {
         //Given
-        Accommodation accommodationOne = new Accommodation();
-        accommodationOne.setId(1L);
-        accommodationOne.setType(Type.HOSTEL);
-        accommodationOne.setLocation(new Location());
-        accommodationOne.setAmenities(Set.of());
-        accommodationOne.setSize("cupsule room (6 places)");
-        accommodationOne.setDailyRate(BigDecimal.valueOf(7));
-        accommodationOne.setAvailability(6);
-
-        Accommodation accommodationTwo = new Accommodation();
-        accommodationTwo.setId(2L);
-        accommodationTwo.setType(Type.HOTEL);
-        accommodationTwo.setLocation(new Location());
-        accommodationTwo.setAmenities(Set.of());
-        accommodationTwo.setSize("1 bedroom");
-        accommodationTwo.setDailyRate(BigDecimal.valueOf(35));
-        accommodationTwo.setAvailability(10);
+        Accommodation accommodationOne = DataFactoryForServices.createFirstAccommodation();
+        Accommodation accommodationTwo = DataFactoryForServices.createSecondAccommodation();
 
         AccommodationDtoWithoutLocationAndAmenities dtoOne = new
                 AccommodationDtoWithoutLocationAndAmenities(accommodationOne.getId(),
@@ -223,17 +192,10 @@ class AccommodationServiceTest {
     void updateAccommodationById_WithExistingIdAndValidRequestDto_ReturnAccommodationDto() {
         //Given
         Long accommodationId = 3L;
-        Accommodation oldAccommodation = new Accommodation();
-        oldAccommodation.setId(accommodationId);
-        oldAccommodation.setType(Type.HOSTEL);
-        oldAccommodation.setLocation(new Location());
-        oldAccommodation.setAmenities(Set.of());
-        oldAccommodation.setSize("cupsule room (6 places)");
-        oldAccommodation.setDailyRate(BigDecimal.valueOf(7));
-        oldAccommodation.setAvailability(6);
-
-        UpdateAccommodationRequestDto requestDto = new UpdateAccommodationRequestDto(
-                "hotel", "1 double room", BigDecimal.valueOf(16), 3);
+        Accommodation oldAccommodation = DataFactoryForServices
+                .createValidAccommodation(accommodationId);
+        UpdateAccommodationRequestDto requestDto = DataFactoryForServices
+                .createUpdateAccommodationRequestDto();
 
         Accommodation updatedAccommodation = new Accommodation();
         updatedAccommodation.setId(accommodationId);
@@ -272,28 +234,10 @@ class AccommodationServiceTest {
     void updateAccommodationById_WithExistingIdAndValidFullRequestDtoWith_ReturnAccommodationDto() {
         //Given
         Long accommodationId = 1L;
-        Accommodation oldAccommodation = new Accommodation();
-        oldAccommodation.setId(accommodationId);
-        oldAccommodation.setType(Type.HOSTEL);
-        oldAccommodation.setLocation(new Location());
-        oldAccommodation.setAmenities(Set.of());
-        oldAccommodation.setSize("cupsule room (6 places)");
-        oldAccommodation.setDailyRate(BigDecimal.valueOf(7));
-        oldAccommodation.setAvailability(6);
-
-        CreateAmenityRequestDto amenityRequestDto = new CreateAmenityRequestDto("TV", "Televition");
-        UpdateAllAccommodationRequestDto requestDto = new UpdateAllAccommodationRequestDto(
-                "house",
-                new CreateLocationRequestDto(
-                        "Country",
-                        "City",
-                        "Region",
-                        "zipCode",
-                        "Address",
-                        "Description"),
-                "some room size",
-                Set.of(amenityRequestDto),
-                BigDecimal.valueOf(20), 1);
+        CreateAmenityRequestDto amenityRequestDto = DataFactoryForServices
+                .createValidAmenityRequestDto();
+        UpdateAllAccommodationRequestDto requestDto = DataFactoryForServices
+                .createUpdateAllAccommodationRequestDto(amenityRequestDto);
 
         Location location = new Location();
         location.setId(1L);
@@ -304,10 +248,9 @@ class AccommodationServiceTest {
         location.setAddress(requestDto.location().address());
         location.setDescription(requestDto.location().description());
 
-        Amenity amenity = new Amenity();
-        amenity.setTitle("TV");
-        amenity.setDescription("Televition");
-
+        Amenity amenity = DataFactoryForServices.createValidAmenity();
+        Accommodation oldAccommodation = DataFactoryForServices
+                .createValidAccommodation(accommodationId);
         Accommodation updatedAccommodation = new Accommodation();
         updatedAccommodation.setId(oldAccommodation.getId());
         updatedAccommodation.setId(accommodationId);

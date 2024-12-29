@@ -6,7 +6,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
@@ -32,7 +31,7 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
-import stepanova.yana.model.Status;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class PaymentControllerTest {
@@ -79,16 +78,14 @@ class PaymentControllerTest {
         //Given
         CreatePaymentRequestDto requestDto = new CreatePaymentRequestDto(2L);
 
-        PaymentDto expected = new PaymentDto();
-        expected.setStatus(Status.PENDING);
-        expected.setBookingId(requestDto.bookingId());
-        expected.setAmountToPay(BigDecimal.valueOf(98.05));
+        PaymentDto expected = DataFactoryForControllers
+                .createExpectedPendingPaymentDto(requestDto.bookingId());
 
         //When
         MvcResult result = mockMvc.perform(post("/payments")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
@@ -115,17 +112,11 @@ class PaymentControllerTest {
         MvcResult result = mockMvc.perform(get("/payments/success")
                         .param("sessionId", sessionId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        PaymentDto expected = new PaymentDto();
-        expected.setId(10L);
-        expected.setBookingId(1L);
-        expected.setStatus(Status.PAID);
-        expected.setSessionID(sessionId);
-        expected.setAmountToPay(BigDecimal.valueOf(100.05));
-
+        PaymentDto expected = DataFactoryForControllers.createExpectedPaidPaymentDto(sessionId);
         PaymentDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), PaymentDto.class);
 
@@ -149,7 +140,7 @@ class PaymentControllerTest {
         MvcResult result = mockMvc.perform(get("/payments/cancel")
                         .param("sessionId", sessionId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
@@ -170,24 +161,18 @@ class PaymentControllerTest {
         //Given
         Long userId = 2L;
 
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setId(10L);
-        paymentDto.setBookingId(1L);
-        paymentDto.setStatus(Status.PENDING);
-        paymentDto.setAmountToPay(BigDecimal.valueOf(100.05));
-
         //When
         MvcResult result = mockMvc.perform(get("/payments")
                         .param("userId", String.valueOf(userId))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        List<PaymentDto> expected = List.of(paymentDto);
-
+        List<PaymentDto> expected = DataFactoryForControllers.getListOfOnePaymentDto();
         PaymentDto[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), PaymentDto[].class);
+
         Assertions.assertEquals(expected.size(), actual.length);
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertTrue(EqualsBuilder.reflectionEquals(
@@ -207,18 +192,14 @@ class PaymentControllerTest {
         //Given & When
         MvcResult result = mockMvc.perform(get("/payments/me")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
-        //Then
-        PaymentDto paymentDto = new PaymentDto();
-        paymentDto.setId(10L);
-        paymentDto.setBookingId(1L);
-        paymentDto.setStatus(Status.PENDING);
-        paymentDto.setAmountToPay(BigDecimal.valueOf(100.05));
-        List<PaymentDto> expected = List.of(paymentDto);
 
+        //Then
+        List<PaymentDto> expected = DataFactoryForControllers.getListOfOnePaymentDto();
         PaymentDto[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), PaymentDto[].class);
+
         Assertions.assertEquals(expected.size(), actual.length);
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertTrue(EqualsBuilder.reflectionEquals(

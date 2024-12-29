@@ -8,12 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 import javax.sql.DataSource;
 import lombok.SneakyThrows;
 import org.apache.commons.lang3.builder.EqualsBuilder;
@@ -34,16 +31,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-import stepanova.yana.dto.accommodation.AccommodationDtoWithoutAvailability;
 import stepanova.yana.dto.amenity.AmenityDto;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
 import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
-import stepanova.yana.dto.location.LocationDto;
-import stepanova.yana.dto.user.UserResponseDto;
-import stepanova.yana.model.Status;
-import stepanova.yana.model.Type;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookingControllerTest {
@@ -88,37 +81,20 @@ class BookingControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createBooking_GivenValidUserAndRequestDto_Success() throws Exception {
         //Given
-        CreateBookingRequestDto requestDto = new CreateBookingRequestDto(LocalDate.now(),
-                LocalDate.now().plusDays(1L), 1L);
+        CreateBookingRequestDto requestDto = DataFactoryForControllers
+                .createValidBookingRequestDto();
 
         //When
         MvcResult result = mockMvc.perform(post("/bookings")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        BookingDto expected = new BookingDto(3L,
-                requestDto.checkInDate(),
-                requestDto.checkOutDate(),
-                new AccommodationDtoWithoutAvailability(1L, Type.VACATION_HOME,
-                        new LocationDto(1L, "Ukraine", "Novy Yar",
-                                "Lviv region", "81050",
-                                "Yavorian Lake, SIRKA SPORT",
-                                "cell: +38(073)8761234, "
-                                        + "https://sirka.ua, Google Maps(49.951422, 23.488195)"),
-                        "1 Bedroom",
-                        Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
-                                new AmenityDto(2L, "Parking(secured)", "Private parking"),
-                                new AmenityDto(3L, "Hairdryer", null)),
-                        BigDecimal.valueOf(100.01)),
-                new UserResponseDto(2L,
-                        "user@example.com",
-                        "Someone",
-                        "Person",
-                        "CUSTOMER"),
-                Status.PENDING);
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDto(requestDto.checkInDate(),
+                requestDto.checkOutDate());
         BookingDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDto.class);
 
@@ -156,14 +132,12 @@ class BookingControllerTest {
                         .param("userId", String.valueOf(userId))
                         .param("statusName", statusName)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        BookingDtoWithoutDetails bookingDto = new BookingDtoWithoutDetails(1L,
-                LocalDate.of(2024, 11, 13),
-                LocalDate.of(2024, 11, 14),
-                1L,2L, Status.CANCELED);
+        BookingDtoWithoutDetails bookingDto = DataFactoryForControllers
+                .createValidBookingDtoWithoutDetails();
         List<BookingDtoWithoutDetails> expected = List.of(bookingDto);
 
         BookingDtoWithoutDetails[] actual = objectMapper.readValue(
@@ -182,22 +156,15 @@ class BookingControllerTest {
         //Given & When
         MvcResult result = mockMvc.perform(get("/bookings/my")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        BookingDtoWithoutDetails bookingDtoOne = new BookingDtoWithoutDetails(1L,
-                LocalDate.of(2024, 11, 13),
-                LocalDate.of(2024, 11, 14),
-                1L,2L, Status.CANCELED);
-        BookingDtoWithoutDetails bookingDtoTwo = new BookingDtoWithoutDetails(2L,
-                LocalDate.of(2023, 8, 30),
-                LocalDate.of(2023, 9, 2),
-                2L,2L, Status.PENDING);
-        List<BookingDtoWithoutDetails> expected = List.of(bookingDtoOne, bookingDtoTwo);
-
+        List<BookingDtoWithoutDetails> expected = DataFactoryForControllers
+                .getListOfTwoBookingDtoWitoutDetails();
         BookingDtoWithoutDetails[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDtoWithoutDetails[].class);
+
         Assertions.assertEquals(expected.size(), actual.length);
         for (int i = 0; i < expected.size(); i++) {
             Assertions.assertTrue(EqualsBuilder.reflectionEquals(
@@ -215,30 +182,11 @@ class BookingControllerTest {
         //When
         MvcResult result = mockMvc.perform(get("/bookings/{id}", bookingId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        BookingDto expected = new BookingDto(bookingId,
-                LocalDate.of(2024, 11, 13),
-                LocalDate.of(2024, 11, 14),
-                new AccommodationDtoWithoutAvailability(1L, Type.VACATION_HOME,
-                        new LocationDto(1L, "Ukraine", "Novy Yar",
-                                "Lviv region", "81050",
-                                "Yavorian Lake, SIRKA SPORT",
-                                "cell: +38(073)8761234, "
-                                        + "https://sirka.ua, Google Maps(49.951422, 23.488195)"),
-                        "1 Bedroom",
-                        Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
-                                new AmenityDto(2L, "Parking(secured)", "Private parking"),
-                                new AmenityDto(3L, "Hairdryer", null)),
-                        BigDecimal.valueOf(100.01)),
-                new UserResponseDto(2L,
-                        "user@example.com",
-                        "Someone",
-                        "Person",
-                        "CUSTOMER"),
-                Status.CANCELED);
+        BookingDto expected = DataFactoryForControllers.createExpectedBookingDto(bookingId);
 
         BookingDto actual = objectMapper.readValue(result.getResponse().getContentAsString(),
                 BookingDto.class);
@@ -273,32 +221,14 @@ class BookingControllerTest {
         ///When
         MvcResult result = mockMvc.perform(get("/bookings/{id}/extra", bookingId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
         //Then
-        BookingDto expected = new BookingDto(bookingId,
-                LocalDate.of(2024, 11, 13),
-                LocalDate.of(2024, 11, 14),
-                new AccommodationDtoWithoutAvailability(1L, Type.VACATION_HOME,
-                        new LocationDto(1L, "Ukraine", "Novy Yar",
-                                "Lviv region", "81050",
-                                "Yavorian Lake, SIRKA SPORT",
-                                "cell: +38(073)8761234, "
-                                        + "https://sirka.ua, Google Maps(49.951422, 23.488195)"),
-                        "1 Bedroom",
-                        Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
-                                new AmenityDto(2L, "Parking(secured)", "Private parking"),
-                                new AmenityDto(3L, "Hairdryer", null)),
-                        BigDecimal.valueOf(100.01)),
-                new UserResponseDto(2L,
-                        "user@example.com",
-                        "Someone",
-                        "Person",
-                        "CUSTOMER"),
-                Status.CANCELED);
-
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDtoForGettingById(bookingId);
         BookingDto actual = objectMapper.readValue(result.getResponse().getContentAsString(),
                 BookingDto.class);
+
         Assertions.assertNotNull(actual);
         Assertions.assertTrue(EqualsBuilder.reflectionEquals(expected, actual,
                 "user","accommodation"));
@@ -336,30 +266,11 @@ class BookingControllerTest {
         MvcResult result = mockMvc.perform(put("/bookings/{id}", bookingId)
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
         //Then
-        BookingDto expected = new BookingDto(bookingId,
-                LocalDate.of(2024, 12, 11),
-                LocalDate.of(2024, 12, 14),
-                new AccommodationDtoWithoutAvailability(2L,Type.HOTEL,
-                        new LocationDto(2L, "Ukraine", "Skhidnytsia", "Lviv region",
-                                "82391", "Boryslavska Street, 81",
-                                "cell: +38(097)7715102, https://www.lubo-kray.com.ua"),
-                        "apartment-room",
-                        Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
-                                new AmenityDto(3L, "Hairdryer", null),
-                                new AmenityDto(4L, "Swimming pool",
-                                        "Indoor pool with sauna and Finnish bath"),
-                                new AmenityDto(5L, "Parking(unsecured)", "Free parking")),
-                        BigDecimal.valueOf(98.02)),
-                new UserResponseDto(2L,
-                        "user@example.com",
-                        "Someone",
-                        "Person",
-                        "CUSTOMER"),
-                Status.PAID);
-
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDtoForUpdatingById(bookingId);
         BookingDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDto.class);
 
@@ -398,31 +309,12 @@ class BookingControllerTest {
         //When
         MvcResult result = mockMvc.perform(delete("/bookings/{id}", bookingId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        BookingDto expected = new BookingDto(bookingId,
-                LocalDate.of(2024, 12, 11),
-                LocalDate.of(2024, 12, 14),
-                new AccommodationDtoWithoutAvailability(2L,Type.HOTEL,
-                        new LocationDto(2L, "Ukraine", "Skhidnytsia", "Lviv region",
-                                "82391", "Boryslavska Street, 81",
-                                "cell: +38(097)7715102, https://www.lubo-kray.com.ua"),
-                        "apartment-room",
-                        Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
-                                new AmenityDto(3L, "Hairdryer", null),
-                                new AmenityDto(4L, "Swimming pool",
-                                        "Indoor pool with sauna and Finnish bath"),
-                                new AmenityDto(5L, "Parking(unsecured)", "Free parking")),
-                        BigDecimal.valueOf(98.02)),
-                new UserResponseDto(2L,
-                        "user@example.com",
-                        "Someone",
-                        "Person",
-                        "CUSTOMER"),
-                Status.CANCELED);
-
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDtoForDeletingById(bookingId);
         BookingDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDto.class);
 

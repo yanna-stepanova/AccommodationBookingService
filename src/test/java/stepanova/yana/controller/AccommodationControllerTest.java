@@ -8,10 +8,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import javax.sql.DataSource;
@@ -38,9 +36,9 @@ import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenit
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.amenity.AmenityDto;
-import stepanova.yana.dto.location.CreateLocationRequestDto;
 import stepanova.yana.dto.location.LocationDto;
 import stepanova.yana.model.Type;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AccommodationControllerTest {
@@ -87,11 +85,8 @@ class AccommodationControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createAccommodation_WithValidRequestDto_Success() throws Exception {
         //Given
-        CreateAccommodationRequestDto requestDto = new CreateAccommodationRequestDto(
-                "house",
-                new CreateLocationRequestDto("Ukraine", "Sumy", "Sumy region",
-                        null, "street Lushpy 7", null),
-                "1 bedroom", Set.of(), BigDecimal.valueOf(20L), 1);
+        CreateAccommodationRequestDto requestDto = DataFactoryForControllers
+                .createValidAccommodationRequestDto();
 
         LocationDto locationDto = new LocationDto();
         locationDto.setCountry(requestDto.location().country());
@@ -111,7 +106,7 @@ class AccommodationControllerTest {
         MvcResult result = mockMvc.perform(post("/accommodations")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
@@ -129,12 +124,13 @@ class AccommodationControllerTest {
     @DisplayName("Get all accommodations")
     void getAllAccommodation_GivenAccommodationsList_ReturnThree() throws Exception {
         //Given
-        List<AccommodationDtoWithoutLocationAndAmenities> expected = getAllAccommodationsDto();
+        List<AccommodationDtoWithoutLocationAndAmenities> expected = DataFactoryForControllers
+                .getAllAccommodationsDto();
 
         //When
         MvcResult result = mockMvc.perform(get("/accommodations")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
@@ -158,24 +154,15 @@ class AccommodationControllerTest {
         //When
         MvcResult result = mockMvc.perform(get("/accommodations/{id}", accommodationId)
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        AccommodationDto expected = new AccommodationDto(2L,Type.HOTEL,
-                new LocationDto(2L, "Ukraine", "Skhidnytsia", "Lviv region",
-                        "82391", "Boryslavska Street, 81",
-                        "cell: +38(097)7715102, https://www.lubo-kray.com.ua"),
-                "apartment-room",
-                Set.of(new AmenityDto(1L, "WiFi", "WiFi is free"),
-                        new AmenityDto(3L, "Hairdryer", null),
-                        new AmenityDto(4L, "Swimming pool",
-                                "Indoor pool with sauna and Finnish bath"),
-                        new AmenityDto(5L, "Parking(unsecured)", "Free parking")),
-                BigDecimal.valueOf(98.05), 5);
-
+        AccommodationDto expected = DataFactoryForControllers
+                .expectedAccommodationDtoForGettingById();
         AccommodationDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), AccommodationDto.class);
+
         Assertions.assertTrue(EqualsBuilder.reflectionEquals(expected, actual,
                 "location", "amenities"));
         Assertions.assertTrue(EqualsBuilder.reflectionEquals(expected.getLocation(),
@@ -200,20 +187,16 @@ class AccommodationControllerTest {
     void updateAccommodation_GivenValidIdAndRequestDto_Success() throws Exception {
         //Given
         Long accommodationId = 4L;
-        UpdateAccommodationRequestDto requestDto = new UpdateAccommodationRequestDto("hostel",
-                "6th capsul bedroom", BigDecimal.valueOf(9.35), 6);
-        AccommodationDto expected = new AccommodationDto(accommodationId,
-                Type.valueOf(requestDto.typeName().toUpperCase()),
-                new LocationDto(2L, "Ukraine", "Skhidnytsia", "Lviv region",
-                        "82391", "Boryslavska Street, 81",
-                        "cell: +38(097)7715102, https://www.lubo-kray.com.ua"),
-                requestDto.size(), Set.of(), requestDto.dailyRate(), requestDto.availability());
+        UpdateAccommodationRequestDto requestDto = DataFactoryForControllers
+                .createUpdateAccommodationRequestDto();
+        AccommodationDto expected = DataFactoryForControllers
+                .expectedAccommodationDtoForUpdatingById(accommodationId);
 
         //When
         MvcResult result = mockMvc.perform(put("/accommodations/{id}", accommodationId)
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
@@ -241,16 +224,5 @@ class AccommodationControllerTest {
                 .andExpect(result -> Assertions.assertEquals(
                         "The accommodation entity was deleted by id: " + accommodationId,
                         result.getResponse().getContentAsString()));
-    }
-
-    private List<AccommodationDtoWithoutLocationAndAmenities> getAllAccommodationsDto() {
-        List<AccommodationDtoWithoutLocationAndAmenities> dtoList = new ArrayList<>();
-        dtoList.add(new AccommodationDtoWithoutLocationAndAmenities(
-                1L, Type.VACATION_HOME, "1 Bedroom", BigDecimal.valueOf(100.05), 2));
-        dtoList.add(new AccommodationDtoWithoutLocationAndAmenities(
-                2L, Type.HOTEL, "apartment-room", BigDecimal.valueOf(98.05), 5));
-        dtoList.add(new AccommodationDtoWithoutLocationAndAmenities(
-                3L, Type.HOTEL, "mansard-room", BigDecimal.valueOf(80.05), 8));
-        return dtoList;
     }
 }
