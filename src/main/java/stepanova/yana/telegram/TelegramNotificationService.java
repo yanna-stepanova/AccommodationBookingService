@@ -17,10 +17,14 @@ public class TelegramNotificationService extends TelegramLongPollingBot
     private String botUsername;
     @Value("${telegram.group.id}")
     private String groupId;
+    private boolean isTestEnvironment;
     private List<Long> chatIds = new ArrayList<>();
 
-    public TelegramNotificationService(@Value("${telegram.bot.token}") String botToken) {
+    public TelegramNotificationService(@Value("${telegram.bot.token}") String botToken,
+                                       @Value("${app.test.environment}")
+                                               boolean isTestEnvironment) {
         super(botToken);
+        this.isTestEnvironment = isTestEnvironment;
     }
 
     @Override
@@ -33,7 +37,7 @@ public class TelegramNotificationService extends TelegramLongPollingBot
 
     @Override
     public void onUpdateReceived(Update update) {
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        if (!isTestEnvironment && update.hasMessage() && update.getMessage().hasText()) {
             Long chatId = update.getMessage().getChatId();
             if (!chatIds.contains(chatId)) {
                 chatIds.add(chatId);
