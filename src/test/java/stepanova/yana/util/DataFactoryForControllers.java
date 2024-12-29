@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-
 import stepanova.yana.dto.accommodation.AccommodationDto;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutAvailability;
 import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenities;
@@ -17,12 +16,14 @@ import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
 import stepanova.yana.dto.location.CreateLocationRequestDto;
 import stepanova.yana.dto.location.LocationDto;
+import stepanova.yana.dto.payment.PaymentDto;
 import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
+import stepanova.yana.model.RoleName;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.Type;
 
-public class TestDataFactory {
+public class DataFactoryForControllers {
     public static CreateAccommodationRequestDto createValidAccommodationRequestDto() {
         return new CreateAccommodationRequestDto(
                 "house",
@@ -104,25 +105,6 @@ public class TestDataFactory {
                 Status.PENDING);
     }
 
-    public static BookingDtoWithoutDetails createValidBookingDtoWithoutDetails() {
-        return new BookingDtoWithoutDetails(1L,
-                LocalDate.of(2024, 11, 13),
-                LocalDate.of(2024, 11, 14),
-                1L,2L, Status.CANCELED);
-    }
-
-    public static List<BookingDtoWithoutDetails> getListOfTwoBookingDtoWitoutDetails() {
-        return List.of(
-                new BookingDtoWithoutDetails(1L,
-                LocalDate.of(2024, 11, 13),
-                LocalDate.of(2024, 11, 14),
-                1L,2L, Status.CANCELED),
-                new BookingDtoWithoutDetails(2L,
-                LocalDate.of(2023, 8, 30),
-                LocalDate.of(2023, 9, 2),
-                2L,2L, Status.PENDING));
-    }
-
     public static BookingDto createExpectedBookingDto(Long id) {
         return new BookingDto(id,
                 LocalDate.of(2024, 11, 13),
@@ -144,6 +126,25 @@ public class TestDataFactory {
                         "Person",
                         "CUSTOMER"),
                 Status.CANCELED);
+    }
+
+    public static BookingDtoWithoutDetails createValidBookingDtoWithoutDetails() {
+        return new BookingDtoWithoutDetails(1L,
+                LocalDate.of(2024, 11, 13),
+                LocalDate.of(2024, 11, 14),
+                1L,2L, Status.CANCELED);
+    }
+
+    public static List<BookingDtoWithoutDetails> getListOfTwoBookingDtoWitoutDetails() {
+        return List.of(
+                new BookingDtoWithoutDetails(1L,
+                LocalDate.of(2024, 11, 13),
+                LocalDate.of(2024, 11, 14),
+                1L,2L, Status.CANCELED),
+                new BookingDtoWithoutDetails(2L,
+                LocalDate.of(2023, 8, 30),
+                LocalDate.of(2023, 9, 2),
+                2L,2L, Status.PENDING));
     }
 
     public static BookingDto createExpectedBookingDtoForGettingById(Long id) {
@@ -213,5 +214,50 @@ public class TestDataFactory {
                         "Person",
                         "CUSTOMER"),
                 Status.CANCELED);
+    }
+
+    public static PaymentDto createExpectedPendingPaymentDto(Long id) {
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setStatus(Status.PENDING);
+        paymentDto.setBookingId(id);
+        paymentDto.setAmountToPay(BigDecimal.valueOf(98.05));
+        return paymentDto;
+    }
+
+    public static PaymentDto createExpectedPaidPaymentDto(String sessionId) {
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setId(10L);
+        paymentDto.setBookingId(1L);
+        paymentDto.setStatus(Status.PAID);
+        paymentDto.setSessionID(sessionId);
+        paymentDto.setAmountToPay(BigDecimal.valueOf(100.05));
+        return paymentDto;
+    }
+
+    public static List<PaymentDto> getListOfOnePaymentDto() {
+        PaymentDto paymentDto = new PaymentDto();
+        paymentDto.setId(10L);
+        paymentDto.setBookingId(1L);
+        paymentDto.setStatus(Status.PENDING);
+        paymentDto.setAmountToPay(BigDecimal.valueOf(100.05));
+        return List.of(paymentDto);
+    }
+
+    public static UserResponseDto createExpectedUserResponseDto() {
+        return new UserResponseDto(2L,
+                "user@gmail.com", "Username", "UserSurname",
+                RoleName.CUSTOMER.getRoleName());
+    }
+
+    public static UserResponseDto createUpdatedRoleUserResponseDto(Long id) {
+        return new UserResponseDto(id,
+                "newAdmin@gmail.com", "New_admin", "employee",
+                RoleName.ADMIN.getRoleName());
+    }
+
+    public static UserResponseDto createUpdatedProfileUserResponseDto() {
+        return new UserResponseDto(3L,
+                "newAdmin@gmail.com", "Alice", "Alison",
+                RoleName.CUSTOMER.getRoleName());
     }
 }

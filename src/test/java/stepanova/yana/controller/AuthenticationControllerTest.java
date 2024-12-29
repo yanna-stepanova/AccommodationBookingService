@@ -27,7 +27,7 @@ import org.springframework.web.context.WebApplicationContext;
 import stepanova.yana.dto.user.UserRegistrationRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.model.RoleName;
-import stepanova.yana.util.TestDataFactory;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AuthenticationControllerTest {
@@ -68,7 +68,8 @@ class AuthenticationControllerTest {
     @DisplayName("Create a new user")
     void register_WithValidRequestDto_Success() throws Exception {
         //Given
-        UserRegistrationRequestDto requestDto = TestDataFactory.createValidUserRegistrationRequestDto();
+        UserRegistrationRequestDto requestDto = DataFactoryForControllers
+                .createValidUserRegistrationRequestDto();
         UserResponseDto expected = new UserResponseDto(3L,requestDto.email(),
                 requestDto.firstName(), requestDto.lastName(), RoleName.CUSTOMER.getRoleName());
 

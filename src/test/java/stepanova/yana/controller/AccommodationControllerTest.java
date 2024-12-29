@@ -38,7 +38,7 @@ import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.amenity.AmenityDto;
 import stepanova.yana.dto.location.LocationDto;
 import stepanova.yana.model.Type;
-import stepanova.yana.util.TestDataFactory;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class AccommodationControllerTest {
@@ -85,7 +85,8 @@ class AccommodationControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createAccommodation_WithValidRequestDto_Success() throws Exception {
         //Given
-        CreateAccommodationRequestDto requestDto = TestDataFactory.createValidAccommodationRequestDto();
+        CreateAccommodationRequestDto requestDto = DataFactoryForControllers
+                .createValidAccommodationRequestDto();
 
         LocationDto locationDto = new LocationDto();
         locationDto.setCountry(requestDto.location().country());
@@ -123,7 +124,8 @@ class AccommodationControllerTest {
     @DisplayName("Get all accommodations")
     void getAllAccommodation_GivenAccommodationsList_ReturnThree() throws Exception {
         //Given
-        List<AccommodationDtoWithoutLocationAndAmenities> expected = TestDataFactory.getAllAccommodationsDto();
+        List<AccommodationDtoWithoutLocationAndAmenities> expected = DataFactoryForControllers
+                .getAllAccommodationsDto();
 
         //When
         MvcResult result = mockMvc.perform(get("/accommodations")
@@ -156,7 +158,8 @@ class AccommodationControllerTest {
                 .andReturn();
 
         //Then
-        AccommodationDto expected = TestDataFactory.expectedAccommodationDtoForGettingById();
+        AccommodationDto expected = DataFactoryForControllers
+                .expectedAccommodationDtoForGettingById();
         AccommodationDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), AccommodationDto.class);
 
@@ -184,8 +187,10 @@ class AccommodationControllerTest {
     void updateAccommodation_GivenValidIdAndRequestDto_Success() throws Exception {
         //Given
         Long accommodationId = 4L;
-        UpdateAccommodationRequestDto requestDto = TestDataFactory.createUpdateAccommodationRequestDto();
-        AccommodationDto expected = TestDataFactory.expectedAccommodationDtoForUpdatingById(accommodationId);
+        UpdateAccommodationRequestDto requestDto = DataFactoryForControllers
+                .createUpdateAccommodationRequestDto();
+        AccommodationDto expected = DataFactoryForControllers
+                .expectedAccommodationDtoForUpdatingById(accommodationId);
 
         //When
         MvcResult result = mockMvc.perform(put("/accommodations/{id}", accommodationId)

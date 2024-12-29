@@ -36,7 +36,7 @@ import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
 import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
-import stepanova.yana.util.TestDataFactory;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class BookingControllerTest {
@@ -81,7 +81,8 @@ class BookingControllerTest {
             executionPhase = Sql.ExecutionPhase.AFTER_TEST_METHOD)
     void createBooking_GivenValidUserAndRequestDto_Success() throws Exception {
         //Given
-        CreateBookingRequestDto requestDto = TestDataFactory.createValidBookingRequestDto();
+        CreateBookingRequestDto requestDto = DataFactoryForControllers
+                .createValidBookingRequestDto();
 
         //When
         MvcResult result = mockMvc.perform(post("/bookings")
@@ -91,7 +92,8 @@ class BookingControllerTest {
                 .andReturn();
 
         //Then
-        BookingDto expected = TestDataFactory.createExpectedBookingDto(requestDto.checkInDate(),
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDto(requestDto.checkInDate(),
                 requestDto.checkOutDate());
         BookingDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDto.class);
@@ -134,7 +136,8 @@ class BookingControllerTest {
                 .andReturn();
 
         //Then
-        BookingDtoWithoutDetails bookingDto = TestDataFactory.createValidBookingDtoWithoutDetails();
+        BookingDtoWithoutDetails bookingDto = DataFactoryForControllers
+                .createValidBookingDtoWithoutDetails();
         List<BookingDtoWithoutDetails> expected = List.of(bookingDto);
 
         BookingDtoWithoutDetails[] actual = objectMapper.readValue(
@@ -157,7 +160,8 @@ class BookingControllerTest {
                 .andReturn();
 
         //Then
-        List<BookingDtoWithoutDetails> expected = TestDataFactory.getListOfTwoBookingDtoWitoutDetails();
+        List<BookingDtoWithoutDetails> expected = DataFactoryForControllers
+                .getListOfTwoBookingDtoWitoutDetails();
         BookingDtoWithoutDetails[] actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDtoWithoutDetails[].class);
 
@@ -182,7 +186,7 @@ class BookingControllerTest {
                 .andReturn();
 
         //Then
-        BookingDto expected = TestDataFactory.createExpectedBookingDto(bookingId);
+        BookingDto expected = DataFactoryForControllers.createExpectedBookingDto(bookingId);
 
         BookingDto actual = objectMapper.readValue(result.getResponse().getContentAsString(),
                 BookingDto.class);
@@ -220,7 +224,8 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         //Then
-        BookingDto expected = TestDataFactory.createExpectedBookingDtoForGettingById(bookingId);
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDtoForGettingById(bookingId);
         BookingDto actual = objectMapper.readValue(result.getResponse().getContentAsString(),
                 BookingDto.class);
 
@@ -264,7 +269,8 @@ class BookingControllerTest {
                 .andExpect(status().isOk())
                 .andReturn();
         //Then
-        BookingDto expected = TestDataFactory.createExpectedBookingDtoForUpdatingById(bookingId);
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDtoForUpdatingById(bookingId);
         BookingDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDto.class);
 
@@ -307,7 +313,8 @@ class BookingControllerTest {
                 .andReturn();
 
         //Then
-        BookingDto expected = TestDataFactory.createExpectedBookingDtoForDeletingById(bookingId);
+        BookingDto expected = DataFactoryForControllers
+                .createExpectedBookingDtoForDeletingById(bookingId);
         BookingDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), BookingDto.class);
 

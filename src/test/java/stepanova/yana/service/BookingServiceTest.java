@@ -1,7 +1,6 @@
 package stepanova.yana.service;
 
 import jakarta.persistence.EntityNotFoundException;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -25,7 +24,6 @@ import stepanova.yana.mapper.BookingMapper;
 import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Role;
-import stepanova.yana.model.RoleName;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
 import stepanova.yana.repository.AccommodationRepository;
@@ -33,6 +31,7 @@ import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.BookingServiceImpl;
 import stepanova.yana.telegram.TelegramNotificationService;
+import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
 class BookingServiceTest {
@@ -53,19 +52,10 @@ class BookingServiceTest {
     @DisplayName("Get correct BookingDto for valid requestDto")
     void save_WithValidUserAndRequestDto_ReturnBookingDto() {
         //Given
-        Role role = new Role();
-        role.setName(RoleName.CUSTOMER);
-        User user = new User();
-        user.setId(1L);
-        user.setEmail("userw@gmail.com");
-        user.setFirstName("Person");
-        user.setLastName("Default");
-        user.setPassword("password");
-        user.setRole(role);
+        Role role = DataFactoryForServices.createValidCustomerRole();
+        User user = DataFactoryForServices.createValidUser(role);
 
-        CreateBookingRequestDto requestDto = new CreateBookingRequestDto(
-                LocalDate.of(2024, 9, 9),
-                LocalDate.of(2024, 9, 11), 1L);
+        CreateBookingRequestDto requestDto = DataFactoryForServices.createValidBookingRequestDto();
         Accommodation accommodation = new Accommodation(requestDto.accommodationId());
         accommodation.setAvailability(3);
         Booking booking = new Booking();
@@ -115,13 +105,7 @@ class BookingServiceTest {
         String statusName = "paid";
         Status status = Status.valueOf(statusName.toUpperCase());
 
-        Booking booking = new Booking();
-        booking.setId(10L);
-        booking.setUser(user);
-        booking.setStatus(status);
-        booking.setAccommodation(new Accommodation(3L));
-        booking.setCheckInDate(LocalDate.of(2024, 12,5));
-        booking.setCheckOutDate(LocalDate.of(2024, 12, 10));
+        Booking booking = DataFactoryForServices.createValidBooking(user, status);
 
         BookingDtoWithoutDetails bookingDto = new BookingDtoWithoutDetails(booking.getId(),
                 booking.getCheckInDate(), booking.getCheckOutDate(),

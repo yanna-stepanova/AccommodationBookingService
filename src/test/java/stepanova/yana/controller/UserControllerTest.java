@@ -31,7 +31,7 @@ import org.springframework.web.context.WebApplicationContext;
 import stepanova.yana.dto.user.UserProfileRequestDto;
 import stepanova.yana.dto.user.UserResponseDto;
 import stepanova.yana.dto.user.UserRoleRequestDto;
-import stepanova.yana.model.RoleName;
+import stepanova.yana.util.DataFactoryForControllers;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class UserControllerTest {
@@ -76,13 +76,11 @@ class UserControllerTest {
         //Given & When
         MvcResult result = mockMvc.perform(get("/users/me")
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        UserResponseDto expected = new UserResponseDto(2L,
-                "user@gmail.com", "Username", "UserSurname",
-                RoleName.CUSTOMER.getRoleName());
+        UserResponseDto expected = DataFactoryForControllers.createExpectedUserResponseDto();
         UserResponseDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), UserResponseDto.class);
         Assertions.assertNotNull(actual);
@@ -106,13 +104,12 @@ class UserControllerTest {
         MvcResult result = mockMvc.perform(put("/users/{id}/role", userId)
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        UserResponseDto expected = new UserResponseDto(userId,
-                "newAdmin@gmail.com", "New_admin", "employee",
-                RoleName.ADMIN.getRoleName());
+        UserResponseDto expected = DataFactoryForControllers
+                .createUpdatedRoleUserResponseDto(userId);
         UserResponseDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), UserResponseDto.class);
         Assertions.assertNotNull(actual);
@@ -134,13 +131,11 @@ class UserControllerTest {
         MvcResult result = mockMvc.perform(put("/users/me")
                         .content(objectMapper.writeValueAsString(requestDto))
                         .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().is2xxSuccessful())
+                .andExpect(status().isOk())
                 .andReturn();
 
         //Then
-        UserResponseDto expected = new UserResponseDto(3L,
-                "newAdmin@gmail.com", "Alice", "Alison",
-                RoleName.CUSTOMER.getRoleName());
+        UserResponseDto expected = DataFactoryForControllers.createUpdatedProfileUserResponseDto();
         UserResponseDto actual = objectMapper.readValue(
                 result.getResponse().getContentAsString(), UserResponseDto.class);
         Assertions.assertNotNull(actual);
