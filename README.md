@@ -3,22 +3,22 @@
 
 <h3 style="color: #2e6c80;">Technologies and Tools Used:</h3>
 <ul>
-<li>Spring Boot</li>  
-<li>Spring MVC</li>
-<li>Spring Security</li>
-<li>Spring Data JPA</li>
-<li>Spring Data REST</li>
-<li>Spring Boot Testing</li>
-<li>Liquibase</li>
-<li>JWT</li>  
-<li>Swagger/OpenAPI</li>
-<li>MapStruct</li>
-<li>Stripe</li>
-<li>Telegram Bot</li>
-<li>Postman</li>
-<li>Docker</li>
+<li>Java SDK <b>17</b></li>
+<li>Spring Boot <b>3.3.2</b></li>  
+<li>Spring Security <b>3.3.2</b></li>
+<li>Spring Data JPA <b>3.3.2</b></li>
+<li>Spring Boot Testing <b>3.3.2</b></li>
+<li>Spring Boot Web <b>3.3.2</b></li>
+<li>PostgreSQL <b>42.7.3</b></li>
+<li>Liquibase <b>4.22.0</b></li>
+<li>JWT <b>0.12.6</b></li>  
+<li>Swagger/OpenAPI <b>2.6.0</b></li>
+<li>MapStruct <b>1.6.0</b></li>
+<li>Stripe Java SDK <b>27.1.0</b></li>
+<li>Telegram Bot API <b>6.9.7.1</b></li>
+<li>Postman (for testing APIs)<b>11.23.3</b></li>
+<li>Docker <b>4.34.3</b></li>
 </ul>
-
 
 <p>Components of the application:</p>
 <ol>
@@ -137,20 +137,43 @@
   <li><a href="https://github.com/yanna-stepanova/AccommodationBookingService/blob/master/img/swagger_2.png" target="_blank">Screenshot of swagger - part 2</a></li>
 </ul>
 
-<p>To run the project with Docker, use the following commands:</p>
-<pre><code>
-docker-compose build 
-docker-compose up -d
-</code></pre>
-
-<p>For running with updated images:</p>
-<pre><code>
-docker-compose up --build -d
-</code></pre>
-
-<p>To stop and remove the containers when done:</p>
-<pre><code>
-docker-compose down
-</code></pre>
-
-<p>This will start two containers: one for the application and one for the PostgreSQL database. API requests can be made on port 8081 (http://localhost:8081/api...).</p>
+<h3 style="color: #2e6c80;">Steps to Run the Project:</h3>
+<ol>
+    <li>Ensure that the following are installed on your system:
+        <ul>
+            <li>Java SDK 17+</li> 
+            <li>Maven 3.8+</li>
+            <li>Postman</li>
+            <li>Any browser(Google Chrome, for example)</li>
+            <li>Docker</li>
+        </ul>
+    </li>
+    <li>Running Locally (Without Docker):
+        <ul> 
+            <li>Clone the repository: <code>git clone https://github.com/yanna-stepanova/AccommodationBookingService.git</code></li> 
+            <li>Navigate to the project directory: <code>cd AccommodationBookingService</code></li> 
+            <li>Set up the PostgreSQL database: 
+                <ul> 
+                    <li>Update the `application.properties` file with your database credentials.</li> 
+                    <li>Run the SQL scripts located in <code>src/main/resources/database</code> to initialize the schema and data.</li> 
+                </ul> 
+            </li> 
+            <li>Build the project: <code>mvn clean install</code></li> 
+            <li>Run the application: <code>mvn spring-boot:run</code></li> 
+            <li>Access the application: 
+                <ul> 
+                    <li>API Base URL: <code>http://localhost:8080/api</code></li> 
+                    <li>Swagger Documentation: <code>http://localhost:8080/api/swagger-ui/index.html</code></li> 
+                </ul> 
+            </li> 
+        </ul>
+    </li>
+    <li>Running with Docker:
+        <ul>
+            <li>To build and run both images(database and application): <code>docker-compose up --build -d</code></li>
+            <li>To stop and remove the containers when done: <code>docker-compose down</code></li>
+        </ul>    
+    <p>Application will run on port <code>8081</code>.</p> 
+    <p>Database will run on port <code>5432</code>.</p>
+    </li>
+</ol>
