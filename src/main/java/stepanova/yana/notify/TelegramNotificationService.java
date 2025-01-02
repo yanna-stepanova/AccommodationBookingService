@@ -1,4 +1,4 @@
-package stepanova.yana.telegram;
+package stepanova.yana.notify;
 
 import java.util.ArrayList;
 import java.util.List;

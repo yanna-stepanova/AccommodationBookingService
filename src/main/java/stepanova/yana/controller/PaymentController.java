@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
 import stepanova.yana.model.User;
+import stepanova.yana.notify.NotificationAgent;
 import stepanova.yana.service.PaymentService;
 
 @Tag(name = "Payment manager", description = "Endpoints for managing payments")
@@ -30,6 +31,7 @@ import stepanova.yana.service.PaymentService;
 @Validated
 public class PaymentController {
     private final PaymentService paymentService;
+    private final NotificationAgent notificationAgent;
 
     @PostMapping
     @Operation(summary = "Create payment session",
@@ -45,7 +47,9 @@ public class PaymentController {
             description = "Handles successful payment processing through Stripe redirection")
     public PaymentDto getSuccess(@AuthenticationPrincipal User user,
                                  @RequestParam String sessionId) throws StripeException {
-        return paymentService.getSuccess(user.getId(), sessionId);
+        PaymentDto result = paymentService.getSuccess(user.getId(), sessionId);
+        notificationAgent.notifyTelegramAsync(result, "Successful");
+        return result;
     }
 
     @GetMapping(value = "/cancel", params = {"sessionId"}, produces = MediaType.TEXT_PLAIN_VALUE)

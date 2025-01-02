@@ -32,7 +32,6 @@ import stepanova.yana.model.User;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.PaymentServiceImpl;
-import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
@@ -45,8 +44,6 @@ class PaymentServiceTest {
     private PaymentMapper paymentMapper;
     @Mock
     private StripeService stripeService;
-    @Mock
-    private TelegramNotificationService telegramService;
     @InjectMocks
     private PaymentServiceImpl paymentService;
 

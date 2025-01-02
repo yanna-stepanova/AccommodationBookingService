@@ -1,13 +1,13 @@
 package stepanova.yana.util;
 
 import java.util.stream.Collectors;
-import stepanova.yana.model.Accommodation;
-import stepanova.yana.model.Amenity;
-import stepanova.yana.model.Booking;
-import stepanova.yana.model.Payment;
+import stepanova.yana.dto.accommodation.AccommodationDto;
+import stepanova.yana.dto.amenity.AmenityDto;
+import stepanova.yana.dto.booking.BookingDto;
+import stepanova.yana.dto.payment.PaymentDto;
 
 public class MessageFormatter {
-    public static String formatBookingMessage(Booking booking, String action) {
+    public static String formatBookingMessage(BookingDto bookingDto, String action) {
         return String.format("%s booking!!!%n"
                         + " id: %s%n"
                         + " status: %s%n"
@@ -16,15 +16,15 @@ public class MessageFormatter {
                         + " accommodation id: %s%n"
                         + " user id: %s",
                 action,
-                booking.getId(),
-                booking.getStatus(),
-                booking.getCheckInDate(),
-                booking.getCheckOutDate(),
-                booking.getAccommodation().getId(),
-                booking.getUser().getId());
+                bookingDto.getId(),
+                bookingDto.getStatus(),
+                bookingDto.getCheckInDate(),
+                bookingDto.getCheckOutDate(),
+                bookingDto.getAccommodation().getId(),
+                bookingDto.getUser().getId());
     }
 
-    public static String formatPaymentMessage(Payment payment, String action) {
+    public static String formatPaymentMessage(PaymentDto paymentDto, String action) {
         return String.format("%s payment!!!%n"
                         + " id: %s%n"
                         + " status: %s%n"
@@ -35,17 +35,17 @@ public class MessageFormatter {
                         + " session id: %s%n"
                         + " session url: %s",
                 action,
-                payment.getId(),
-                payment.getStatus(),
-                payment.getDateTimeCreated(),
-                payment.getBooking().getId(),
-                payment.getBooking().getAccommodation().getId(),
-                payment.getAmountToPay(),
-                payment.getSessionID(),
-                payment.getSessionUrl());
+                paymentDto.getId(),
+                paymentDto.getStatus(),
+                paymentDto.getDateTimeCreated(),
+                paymentDto.getBookingId(),
+                paymentDto.getAccommodation().getId(),
+                paymentDto.getAmountToPay(),
+                paymentDto.getSessionID(),
+                paymentDto.getSessionUrl());
     }
 
-    public static String formatAccommodationMessage(Accommodation accommodation, String action) {
+    public static String formatAccommodationMessage(AccommodationDto accommodation, String action) {
         return String.format("%s accommodation!!!%n"
                         + " id: %s%n"
                         + " type: %s%n"
@@ -67,7 +67,7 @@ public class MessageFormatter {
                 accommodation.getDailyRate(),
                 accommodation.getAvailability(),
                 accommodation.getAmenities().stream()
-                        .map(Amenity::getTitle)
+                        .map(AmenityDto::getTitle)
                         .collect(Collectors.joining(", ")),
                 accommodation.getLocation().getId(),
                 accommodation.getLocation().getCountry(),

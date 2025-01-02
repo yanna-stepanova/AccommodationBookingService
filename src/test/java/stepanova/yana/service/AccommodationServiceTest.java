@@ -35,7 +35,6 @@ import stepanova.yana.repository.AccommodationRepository;
 import stepanova.yana.repository.AmenityRepository;
 import stepanova.yana.repository.LocationRepository;
 import stepanova.yana.service.impl.AccommodationServiceImpl;
-import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
@@ -46,8 +45,6 @@ class AccommodationServiceTest {
     private LocationRepository locationRepo;
     @Mock
     private AmenityRepository amenityRepo;
-    @Mock
-    private TelegramNotificationService telegramService;
     @Mock
     private AmenityMapper amenityMapper;
     @Mock

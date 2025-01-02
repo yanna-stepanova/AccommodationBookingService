@@ -3,16 +3,12 @@ package stepanova.yana.service.impl;
 import jakarta.transaction.Transactional;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.booking.BookingDto;
 import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
 import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
-import stepanova.yana.exception.CustomTelegramApiException;
 import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.mapper.BookingMapper;
 import stepanova.yana.model.Accommodation;
@@ -24,17 +20,13 @@ import stepanova.yana.repository.AccommodationRepository;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.BookingService;
-import stepanova.yana.telegram.TelegramNotificationService;
-import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
 @Service
 public class BookingServiceImpl implements BookingService {
-    private static final Logger log = LogManager.getLogger(BookingServiceImpl.class);
     private final BookingRepository bookingRepo;
     private final BookingMapper bookingMapper;
     private final AccommodationRepository accommodationRepo;
-    private final TelegramNotificationService telegramNote;
     private final PaymentRepository paymentRepo;
 
     @Override
@@ -62,7 +54,6 @@ public class BookingServiceImpl implements BookingService {
             return bookingMapper.toDto(new Booking());
         }
         Booking savedBooking = bookingRepo.save(booking);
-        notifyTelegramAsync(savedBooking, "New");
         return bookingMapper.toDto(savedBooking);
     }
 
@@ -107,7 +98,6 @@ public class BookingServiceImpl implements BookingService {
                         String.format("Booking with id = %s not found", bookingId)));
         Booking savedBooking = bookingRepo.save(bookingMapper.updateBookingFromDto(
                 bookingFromDB, requestDto));
-        notifyTelegramAsync(savedBooking, "Updated");
         return bookingMapper.toDto(savedBooking);
     }
 
@@ -119,22 +109,20 @@ public class BookingServiceImpl implements BookingService {
                         String.format("Booking with id = %s not found for this user", bookingId)));
         bookingFromDB.setStatus(Status.CANCELED);
         Booking savedBooking = bookingRepo.save(bookingFromDB);
-        notifyTelegramAsync(savedBooking, "Canceled");
         return bookingMapper.toDto(savedBooking);
     }
 
     @Override
     @Transactional
-    public void expiredBookings() {
+    public List<BookingDto> expiredBookings() {
         List<Booking> bookingList = bookingRepo.findAllByStatusNotInAndCheckOutDateIs(
                 Status.CANCELED, Status.PAID, LocalDate.now().plusDays(1L));
         if (!bookingList.isEmpty()) {
             bookingList.forEach(booking -> booking.setStatus(Status.EXPIRED));
-            bookingList = bookingRepo.saveAll(bookingList);
-            bookingList.forEach(booking -> publishEvent(booking, "Expired"));
-        } else {
-            telegramNote.sendMessage("No expired bookings today!");
+            return bookingRepo.saveAll(bookingList).stream()
+                    .map(bookingMapper::toDto).toList();
         }
+        return List.of();
     }
 
     private Accommodation getAccommodationById(Long id) {
@@ -142,17 +130,4 @@ public class BookingServiceImpl implements BookingService {
                 new EntityNotFoundCustomException("Can't get accommodation by id = " + id));
     }
 
-    private void publishEvent(Booking booking, String option) {
-        String message = MessageFormatter.formatBookingMessage(booking, option);
-        try {
-            telegramNote.sendMessage(message);
-        } catch (CustomTelegramApiException ex) {
-            log.warn("Failed to notify Telegram for booking ID {}: {}",
-                    booking.getId(), ex.getMessage());
-        }
-    }
-
-    private void notifyTelegramAsync(Booking booking, String action) {
-        CompletableFuture.runAsync(() -> publishEvent(booking, action));
-    }
 }
