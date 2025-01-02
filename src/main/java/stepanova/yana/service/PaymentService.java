@@ -16,5 +16,5 @@ public interface PaymentService {
 
     List<PaymentDto> getAllByUser(Long userId);
 
-    void expiredPayments();
+    List<PaymentDto> expiredPayments();
 }

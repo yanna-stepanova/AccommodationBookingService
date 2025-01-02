@@ -6,9 +6,12 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.Period;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -33,7 +36,6 @@ public class PaymentServiceImpl implements PaymentService {
     private final BookingRepository bookingRepo;
     private final PaymentMapper paymentMapper;
     private final StripeService stripeService;
-    //private final TelegramNotificationService telegramNote;
 
     @Override
     @Transactional
@@ -75,7 +77,6 @@ public class PaymentServiceImpl implements PaymentService {
         bookingFromDB.setStatus(statusFromSession);
         bookingRepo.save(bookingFromDB);
         Payment savedPayment = paymentRepo.save(paymentFromDB);
-        //notifyTelegramAsync(savedPayment, "Successful");
         return paymentMapper.toDto(savedPayment);
     }
 
@@ -98,17 +99,19 @@ public class PaymentServiceImpl implements PaymentService {
 
     @Override
     @Transactional
-    public void expiredPayments() {
-        /*LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+    public List<PaymentDto> expiredPayments() {
+        LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
         List<Payment> paymentList = paymentRepo.findAllByStatusNotInAndDateBetween(
                 Set.of(Status.CANCELED.getStatusName(), Status.PAID.getStatusName()),
                 startDate, endDate);
         if (!paymentList.isEmpty()) {
             paymentList.forEach(payment -> payment.setStatus(Status.EXPIRED));
-            paymentRepo.saveAll(paymentList)
-                    .forEach(payment -> publishEvent(payment, "Expired"));
-        }*/
+            return paymentRepo.saveAll(paymentList).stream()
+                    .map(paymentMapper::toDto)
+                    .toList();
+        }
+        return null;
     }
 
     private Payment getPaymentByBookingId(Long bookingId) {
