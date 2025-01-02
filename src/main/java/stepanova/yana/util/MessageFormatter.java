@@ -1,8 +1,8 @@
 package stepanova.yana.util;
 
 import java.util.stream.Collectors;
-import stepanova.yana.model.Accommodation;
-import stepanova.yana.model.Amenity;
+import stepanova.yana.dto.accommodation.AccommodationDto;
+import stepanova.yana.dto.amenity.AmenityDto;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 
@@ -45,7 +45,7 @@ public class MessageFormatter {
                 payment.getSessionUrl());
     }
 
-    public static String formatAccommodationMessage(Accommodation accommodation, String action) {
+    public static String formatAccommodationMessage(AccommodationDto accommodation, String action) {
         return String.format("%s accommodation!!!%n"
                         + " id: %s%n"
                         + " type: %s%n"
@@ -67,7 +67,7 @@ public class MessageFormatter {
                 accommodation.getDailyRate(),
                 accommodation.getAvailability(),
                 accommodation.getAmenities().stream()
-                        .map(Amenity::getTitle)
+                        .map(AmenityDto::getTitle)
                         .collect(Collectors.joining(", ")),
                 accommodation.getLocation().getId(),
                 accommodation.getLocation().getCountry(),

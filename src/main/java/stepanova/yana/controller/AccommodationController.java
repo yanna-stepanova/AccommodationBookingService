@@ -24,6 +24,7 @@ import stepanova.yana.dto.accommodation.AccommodationDtoWithoutLocationAndAmenit
 import stepanova.yana.dto.accommodation.CreateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
+import stepanova.yana.notify.NotificationAgent;
 import stepanova.yana.service.AccommodationService;
 
 @Tag(name = "Accommodation manager", description = "Endpoints for managing accommodations")
@@ -33,6 +34,7 @@ import stepanova.yana.service.AccommodationService;
 @Validated
 public class AccommodationController {
     private final AccommodationService accommodationService;
+    private final NotificationAgent notificationAgent;
 
     @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping
@@ -40,7 +42,9 @@ public class AccommodationController {
             description = "Create a new accommodation entity in the database")
     public AccommodationDto createAccommodation(
             @RequestBody @Valid CreateAccommodationRequestDto requestDto) {
-        return accommodationService.save(requestDto);
+        AccommodationDto result = accommodationService.save(requestDto);
+        notificationAgent.notifyTelegramAsync(result, "New");
+        return result;
     }
 
     @GetMapping
@@ -65,7 +69,9 @@ public class AccommodationController {
     public AccommodationDto updateAccommodation(
             @PathVariable @Positive Long id,
             @RequestBody @Valid UpdateAccommodationRequestDto newRequestDto) {
-        return accommodationService.updateAccommodationById(id, newRequestDto);
+        AccommodationDto result = accommodationService.updateAccommodationById(id, newRequestDto);
+        notificationAgent.notifyTelegramAsync(result, "Update");
+        return result;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -75,7 +81,9 @@ public class AccommodationController {
     public AccommodationDto updateAccommodation(
             @PathVariable @Positive Long id,
             @RequestBody @Valid UpdateAllAccommodationRequestDto newRequestDto) {
-        return accommodationService.updateAccommodationById(id, newRequestDto);
+        AccommodationDto result = accommodationService.updateAccommodationById(id, newRequestDto);
+        notificationAgent.notifyTelegramAsync(result, "Deep update");
+        return result;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

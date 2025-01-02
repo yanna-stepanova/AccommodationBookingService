@@ -4,10 +4,7 @@ import jakarta.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.accommodation.AccommodationDto;
@@ -17,7 +14,6 @@ import stepanova.yana.dto.accommodation.UpdateAccommodationRequestDto;
 import stepanova.yana.dto.accommodation.UpdateAllAccommodationRequestDto;
 import stepanova.yana.dto.amenity.CreateAmenityRequestDto;
 import stepanova.yana.dto.location.CreateLocationRequestDto;
-import stepanova.yana.exception.CustomTelegramApiException;
 import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.mapper.AccommodationMapper;
 import stepanova.yana.mapper.AmenityMapper;
@@ -28,19 +24,15 @@ import stepanova.yana.repository.AccommodationRepository;
 import stepanova.yana.repository.AmenityRepository;
 import stepanova.yana.repository.LocationRepository;
 import stepanova.yana.service.AccommodationService;
-import stepanova.yana.telegram.TelegramNotificationService;
-import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
 @Service
 public class AccommodationServiceImpl implements AccommodationService {
-    private static final Logger log = LogManager.getLogger(AccommodationServiceImpl.class);
     private final AccommodationRepository accommodationRepo;
     private final AccommodationMapper accommodationMapper;
     private final LocationRepository locationRepo;
     private final AmenityRepository amenityRepo;
     private final AmenityMapper amenityMapper;
-    private final TelegramNotificationService telegramNote;
 
     @Override
     @Transactional
@@ -63,7 +55,6 @@ public class AccommodationServiceImpl implements AccommodationService {
         }
         accommodation.setAmenities(amenitySet);
         Accommodation savedAccommodation = accommodationRepo.save(accommodation);
-        notifyTelegramAsync(savedAccommodation, "New");
         return accommodationMapper.toDto(savedAccommodation);
     }
 
@@ -90,7 +81,6 @@ public class AccommodationServiceImpl implements AccommodationService {
         Accommodation updatedAccommodation = accommodationRepo.save(
                 accommodationMapper.updateAccommodationFromDto(
                 getAccommodationByIdFromDB(id), requestDto));
-        notifyTelegramAsync(updatedAccommodation, "Update");
         return accommodationMapper.toDto(updatedAccommodation);
     }
 
@@ -107,7 +97,6 @@ public class AccommodationServiceImpl implements AccommodationService {
 
         Accommodation updatedAccommodation = accommodationMapper.updateAccommodationFromDto(
                 accommodationFromDB, requestDto);
-        notifyTelegramAsync(updatedAccommodation, "Deep update");
         return accommodationMapper.toDto(accommodationRepo.save(updatedAccommodation));
     }
 
@@ -146,19 +135,5 @@ public class AccommodationServiceImpl implements AccommodationService {
     private Amenity getAmenityByTitleFromDB(Amenity amenity) {
         return amenityRepo.findByTitleContainsIgnoreCase(amenity.getTitle())
                 .orElseGet(() -> amenityRepo.save(amenity));
-    }
-
-    private void publishEvent(Accommodation accommodation, String option) {
-        String message = MessageFormatter.formatAccommodationMessage(accommodation, option);
-        try {
-            telegramNote.sendMessage(message);
-        } catch (CustomTelegramApiException ex) {
-            log.warn("Failed to notify Telegram for accommodation ID {}: {}",
-                    accommodation.getId(), ex.getMessage());
-        }
-    }
-
-    private void notifyTelegramAsync(Accommodation accommodation, String action) {
-        CompletableFuture.runAsync(() -> publishEvent(accommodation, action));
     }
 }

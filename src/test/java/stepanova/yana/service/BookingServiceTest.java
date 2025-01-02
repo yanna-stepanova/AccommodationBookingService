@@ -26,11 +26,11 @@ import stepanova.yana.model.Booking;
 import stepanova.yana.model.Role;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
+import stepanova.yana.notify.TelegramNotificationService;
 import stepanova.yana.repository.AccommodationRepository;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.BookingServiceImpl;
-import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)

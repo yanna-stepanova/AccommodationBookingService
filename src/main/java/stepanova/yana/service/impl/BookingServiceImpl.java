@@ -20,11 +20,11 @@ import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
+import stepanova.yana.notify.TelegramNotificationService;
 import stepanova.yana.repository.AccommodationRepository;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.BookingService;
-import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
@@ -62,7 +62,7 @@ public class BookingServiceImpl implements BookingService {
             return bookingMapper.toDto(new Booking());
         }
         Booking savedBooking = bookingRepo.save(booking);
-        notifyTelegramAsync(savedBooking, "New");
+        //notifyTelegramAsync(savedBooking, "New");
         return bookingMapper.toDto(savedBooking);
     }
 
@@ -107,7 +107,7 @@ public class BookingServiceImpl implements BookingService {
                         String.format("Booking with id = %s not found", bookingId)));
         Booking savedBooking = bookingRepo.save(bookingMapper.updateBookingFromDto(
                 bookingFromDB, requestDto));
-        notifyTelegramAsync(savedBooking, "Updated");
+        //notifyTelegramAsync(savedBooking, "Updated");
         return bookingMapper.toDto(savedBooking);
     }
 
@@ -119,7 +119,7 @@ public class BookingServiceImpl implements BookingService {
                         String.format("Booking with id = %s not found for this user", bookingId)));
         bookingFromDB.setStatus(Status.CANCELED);
         Booking savedBooking = bookingRepo.save(bookingFromDB);
-        notifyTelegramAsync(savedBooking, "Canceled");
+        //notifyTelegramAsync(savedBooking, "Canceled");
         return bookingMapper.toDto(savedBooking);
     }
 

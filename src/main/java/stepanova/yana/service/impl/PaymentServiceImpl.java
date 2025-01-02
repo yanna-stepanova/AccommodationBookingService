@@ -25,11 +25,11 @@ import stepanova.yana.mapper.PaymentMapper;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
+import stepanova.yana.notify.TelegramNotificationService;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.PaymentService;
 import stepanova.yana.service.StripeService;
-import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor

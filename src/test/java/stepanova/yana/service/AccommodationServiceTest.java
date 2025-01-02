@@ -31,11 +31,11 @@ import stepanova.yana.model.Accommodation;
 import stepanova.yana.model.Amenity;
 import stepanova.yana.model.Location;
 import stepanova.yana.model.Type;
+import stepanova.yana.notify.TelegramNotificationService;
 import stepanova.yana.repository.AccommodationRepository;
 import stepanova.yana.repository.AmenityRepository;
 import stepanova.yana.repository.LocationRepository;
 import stepanova.yana.service.impl.AccommodationServiceImpl;
-import stepanova.yana.telegram.TelegramNotificationService;
 import stepanova.yana.util.DataFactoryForServices;
 
 @ExtendWith(MockitoExtension.class)
