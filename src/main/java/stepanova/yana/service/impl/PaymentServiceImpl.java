@@ -6,31 +6,24 @@ import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.Period;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 import stepanova.yana.dto.payment.CreatePaymentRequestDto;
 import stepanova.yana.dto.payment.PaymentDto;
-import stepanova.yana.exception.CustomTelegramApiException;
 import stepanova.yana.exception.EntityNotFoundCustomException;
 import stepanova.yana.mapper.PaymentMapper;
 import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
-import stepanova.yana.notify.TelegramNotificationService;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.PaymentService;
 import stepanova.yana.service.StripeService;
-import stepanova.yana.util.MessageFormatter;
 
 @RequiredArgsConstructor
 @Service
@@ -40,7 +33,7 @@ public class PaymentServiceImpl implements PaymentService {
     private final BookingRepository bookingRepo;
     private final PaymentMapper paymentMapper;
     private final StripeService stripeService;
-    private final TelegramNotificationService telegramNote;
+    //private final TelegramNotificationService telegramNote;
 
     @Override
     @Transactional
@@ -82,7 +75,7 @@ public class PaymentServiceImpl implements PaymentService {
         bookingFromDB.setStatus(statusFromSession);
         bookingRepo.save(bookingFromDB);
         Payment savedPayment = paymentRepo.save(paymentFromDB);
-        notifyTelegramAsync(savedPayment, "Successful");
+        //notifyTelegramAsync(savedPayment, "Successful");
         return paymentMapper.toDto(savedPayment);
     }
 
@@ -106,7 +99,7 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     @Transactional
     public void expiredPayments() {
-        LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
+        /*LocalDateTime startDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(0, 0, 0));
         LocalDateTime endDate = LocalDateTime.of(LocalDate.now(), LocalTime.of(23, 59, 59));
         List<Payment> paymentList = paymentRepo.findAllByStatusNotInAndDateBetween(
                 Set.of(Status.CANCELED.getStatusName(), Status.PAID.getStatusName()),
@@ -115,7 +108,7 @@ public class PaymentServiceImpl implements PaymentService {
             paymentList.forEach(payment -> payment.setStatus(Status.EXPIRED));
             paymentRepo.saveAll(paymentList)
                     .forEach(payment -> publishEvent(payment, "Expired"));
-        }
+        }*/
     }
 
     private Payment getPaymentByBookingId(Long bookingId) {
@@ -128,19 +121,5 @@ public class PaymentServiceImpl implements PaymentService {
                 .orElseThrow(() -> new EntityNotFoundCustomException(
                         String.format("There isn't such payment session by id = %s for userId = %s",
                                 sessionId, userId)));
-    }
-
-    private void publishEvent(Payment payment, String option) {
-        String message = MessageFormatter.formatPaymentMessage(payment, option);
-        try {
-            telegramNote.sendMessage(message);
-        } catch (CustomTelegramApiException ex) {
-            log.warn("Failed to notify Telegram for payment ID {}: {}",
-                    payment.getId(), ex.getMessage());
-        }
-    }
-
-    private void notifyTelegramAsync(Payment payment, String action) {
-        CompletableFuture.runAsync(() -> publishEvent(payment, action));
     }
 }

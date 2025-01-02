@@ -23,6 +23,7 @@ import stepanova.yana.dto.booking.BookingDtoWithoutDetails;
 import stepanova.yana.dto.booking.CreateBookingRequestDto;
 import stepanova.yana.dto.booking.UpdateBookingStatusRequestDto;
 import stepanova.yana.model.User;
+import stepanova.yana.notify.NotificationAgent;
 import stepanova.yana.service.BookingService;
 
 @Tag(name = "Booking manager", description = "Endpoints for managing bookings")
@@ -32,13 +33,16 @@ import stepanova.yana.service.BookingService;
 @Validated
 public class BookingController {
     private final BookingService bookingService;
+    private final NotificationAgent notificationAgent;
 
     @PostMapping
     @Operation(summary = "Create a new booking of some accommodation",
             description = "Permits the creation of new accommodation booking")
     public BookingDto createBooking(@AuthenticationPrincipal User user,
                                     @RequestBody @Valid CreateBookingRequestDto requestDto) {
-        return bookingService.save(user, requestDto);
+        BookingDto result = bookingService.save(user, requestDto);
+        notificationAgent.notifyTelegramAsync(result, "New");
+        return result;
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -80,7 +84,9 @@ public class BookingController {
             description = "Updates status of booking by id (only for admin)")
     public BookingDto updateBooking(@PathVariable @Positive Long id,
                                     @RequestBody @Valid UpdateBookingStatusRequestDto requestDto) {
-        return bookingService.updateBookingById(id, requestDto);
+        BookingDto result = bookingService.updateBookingById(id, requestDto);
+        notificationAgent.notifyTelegramAsync(result, "Updated");
+        return result;
     }
 
     @DeleteMapping("/{id}")
@@ -88,7 +94,8 @@ public class BookingController {
             description = "Enables the cancellation of booking")
     public BookingDto deleteBooking(@AuthenticationPrincipal User user,
                                     @PathVariable @Positive Long id) {
-        return bookingService.cancelBookingById(user.getId(), id);
+        BookingDto result = bookingService.cancelBookingById(user.getId(), id);
+        notificationAgent.notifyTelegramAsync(result, "Canceled");
+        return result;
     }
-
 }
