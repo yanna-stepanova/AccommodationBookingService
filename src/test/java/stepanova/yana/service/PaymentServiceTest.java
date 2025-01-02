@@ -29,7 +29,6 @@ import stepanova.yana.model.Booking;
 import stepanova.yana.model.Payment;
 import stepanova.yana.model.Status;
 import stepanova.yana.model.User;
-import stepanova.yana.notify.TelegramNotificationService;
 import stepanova.yana.repository.BookingRepository;
 import stepanova.yana.repository.PaymentRepository;
 import stepanova.yana.service.impl.PaymentServiceImpl;
@@ -45,8 +44,6 @@ class PaymentServiceTest {
     private PaymentMapper paymentMapper;
     @Mock
     private StripeService stripeService;
-    @Mock
-    private TelegramNotificationService telegramService;
     @InjectMocks
     private PaymentServiceImpl paymentService;
 
