@@ -1,5 +1,6 @@
 package stepanova.yana.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -38,7 +39,8 @@ public class Accommodation {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Type type;
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @OneToOne(fetch = FetchType.LAZY, optional = false,
+            cascade = CascadeType.REMOVE, orphanRemoval = true)
     @JoinColumn(name = "location_id", nullable = false)
     private Location location;
     @Column(nullable = false)
