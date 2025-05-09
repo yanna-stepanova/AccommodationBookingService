@@ -1,5 +1,6 @@
 package stepanova.yana.model;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.time.LocalDate;
 import lombok.Getter;
@@ -35,7 +37,7 @@ public class Booking {
     private LocalDate checkInDate;
     @Column(nullable = false)
     private LocalDate checkOutDate;
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(fetch = FetchType.LAZY, optional = false, cascade = CascadeType.REMOVE)
     @JoinColumn(name = "accommodation_id", nullable = false)
     private Accommodation accommodation;
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
@@ -44,5 +46,8 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private Status status;
+
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.REMOVE, orphanRemoval = true)
+    private Payment payment;
 }
 

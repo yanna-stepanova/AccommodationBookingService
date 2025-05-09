@@ -100,7 +100,7 @@ GrantedAuthority <|.. Role
 
 Role "1" o- "n" User
 User "1" o- "n" Booking
-Location "1" o- "1" Accommodation
+Location "1" o- "n" Accommodation
 Accommodation "n" -o "n" Amenity
 Booking "n" --o "1" Accommodation
 Payment "1" --* "1" Booking
